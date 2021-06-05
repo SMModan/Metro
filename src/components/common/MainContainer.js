@@ -7,15 +7,16 @@ import { CustomHeader } from '.';
 export class MainContainer extends Component {
     render() {
         return (
-            
+
             <Container>
-                {this.props.header?<CustomHeader {...this.props.header}/> : null}
-               <View style={{flex:1}}>
-                
-                {this.props.children}
+                {this.props.header ? <CustomHeader {...this.props.header} /> : null}
+
+                <View style={{ flex: 1 }}>
+
+                    {this.props.children}
                 </View>
             </Container>
-           
+
         )
     }
 }

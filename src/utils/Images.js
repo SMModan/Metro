@@ -1,5 +1,5 @@
 export default ImageName = {
-  
+
   ///Skyward Images
   ic_Logo: require('../../res/images/ic_Logo.png'),
   ic_Person: require('../../res/images/ic_Person.png'),
@@ -24,4 +24,12 @@ export default ImageName = {
   ic_Email: require('../../res/images/ic_Email.png'),
   ic_ChevronDown: require('../../res/images/ic_ChevronDown.png'),
   ic_LoginLogo: require('../../res/images/ic_LoginLogo.png'),
+  ic_add_blue: require('../../res/images/ic_add_blue.png'),
+  ic_down: require('../../res/images/ic_down.png'),
+  ic_dot_menu: require('../../res/images/ic_dot_menu.png'),
+  ic_upload: require('../../res/images/ic_upload.png'),
+  ic_contact: require('../../res/images/ic_contact.png'),
+  ic_product: require('../../res/images/ic_product.png'),
+  ic_task: require('../../res/images/ic_task.png'),
+  ic_attachment: require('../../res/images/ic_attachment.png'),
 };

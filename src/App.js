@@ -4,10 +4,11 @@ import AppNavigator from './navigation/Routes'
 import reducers from './reducers'
 import ReduxThunk from 'redux-thunk'
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { LogBox, View } from 'react-native';
 import { Root } from 'native-base'
 import { AlertDialog } from './components/common';
-
+import { Portal, } from 'react-native-paper'
+import { Provider as PaperProvider } from 'react-native-paper';
 
 const store = createStore(
   reducers,
@@ -19,20 +20,24 @@ export default class App extends Component {
 
   componentDidMount() {
 
-   // EStyleSheet.build(lightTheme)
-    
+    // EStyleSheet.build(lightTheme)
+    LogBox.ignoreAllLogs(true)
   }
   render() {
 
     return (
+
       <Provider store={store}>
-        <Root>
-          <AlertDialog onRef={c => {
-            if (c)
-              AlertDialog.dialogInstance = c;
-          }} />
-          <AppNavigator />
-        </Root>
+        <PaperProvider>
+          <Root>
+            <AlertDialog onRef={c => {
+              if (c)
+                AlertDialog.dialogInstance = c;
+            }} />
+            <AppNavigator />
+          </Root>
+        </PaperProvider>
+
       </Provider>
     );
   }

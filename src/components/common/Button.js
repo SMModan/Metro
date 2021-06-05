@@ -9,13 +9,13 @@ import ResponsivePixels from '../../utils/ResponsivePixels';
 export default Button = (props) => {
     const { style, onPress, disabled, bordered, disableAllCaps } = props
     const button = {
-        backgroundColor: bordered ? "transparent" : disabled ? Colors.disablebtnColor : Colors.primaryColor500,
+        backgroundColor: bordered ? Colors.primaryColo100 : disabled ? Colors.disablebtnColor : Colors.primaryColor500,
         height: ResponsivePixels.size56,
-        borderColor: bordered ? Colors.btnBorderColor : undefined,
-        borderRadius: bordered ?  ResponsivePixels.size24 : ResponsivePixels.size8,
+        borderColor: bordered ? Colors.primaryColor500 : undefined,
+        borderRadius: ResponsivePixels.size8,
     }
     const textStyle = {
-        color: bordered ? Colors.btnBgColor : Colors.White,
+        color: bordered ? Colors.primaryColor500 : Colors.White,
         fontFamily: FontName.semibold,
         fontSize: FontSize.fontSize17,
     }

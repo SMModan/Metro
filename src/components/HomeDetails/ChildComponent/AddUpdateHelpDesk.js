@@ -10,7 +10,7 @@ import {Images, Colors} from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 
 
-class HelpDesk extends Component {
+class AddUpdateHelpDesk extends Component {
 
   state = {
     selectedIndex: 0,
@@ -74,10 +74,9 @@ class HelpDesk extends Component {
             image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
-          title: 'Help Desk',
+          title: 'Add Issue',
           hideUnderLine: true,
           light: true,
-          right: [{image: Images.ic_Search, onPress: () => this.props.navigation.push('Settings'),}],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>
@@ -104,7 +103,7 @@ class HelpDesk extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            this.props.navigation.push('AddUpdateHelpDesk')
+
           }}
         />
       </MainContainer>
@@ -116,4 +115,4 @@ const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(HelpDesk);
+export default connect(mapStateToProps, mapDispatchToProps)(AddUpdateHelpDesk);

@@ -8,6 +8,7 @@ import Splash from '../components/Splash/ChildComponent/Splash';
 import SignIn from '../components/Login/ChildComponent/SignIn';
 import MyBottomTab from '../components/Home/ChildComponent/MyBottomTab';
 import HelpDesk from '../components/HomeDetails/ChildComponent/HelpDesk';
+import AddUpdateHelpDesk from '../components/HomeDetails/ChildComponent/AddUpdateHelpDesk';
 import Opportunity from '../components/HomeDetails/ChildComponent/Opportunity';
 
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ export default () => {
           <Stack.Screen component={SignIn} name="SignIn" />
           <Stack.Screen component={HelpDesk} name="HelpDesk" />
           <Stack.Screen component={Opportunity} name="Opportunity" />
+          <Stack.Screen component={AddUpdateHelpDesk} name="AddUpdateHelpDesk" />
       </Stack.Navigator>
     </NavigationContainer>
   );

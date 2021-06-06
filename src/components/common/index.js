@@ -10,8 +10,7 @@ import GradientButton from './GradientButton';
 import EditText from './EditText';
 import FloatingEditText from './FloatingEditText';
 import Clickable from './Clickable';
-import MyIndicatorViewPager from './MyIndicatorViewPager';
 
 export {
-    AlertDialog,CustomHeader,PinView,ProgressDialog,ScrollContainer,MainContainer,Button,FloatingEditText,Clickable,EditText,GradientButton,MyIndicatorViewPager
+    AlertDialog,CustomHeader,PinView,ProgressDialog,ScrollContainer,MainContainer,Button,FloatingEditText,Clickable,EditText,GradientButton
 }

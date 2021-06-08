@@ -4,6 +4,7 @@ import { Header, Left, Right, Body, Icon, Text, Button, Title } from 'native-bas
 import Clickable from './Clickable';
 import { Images, FontName, FontSize, Colors } from '../../utils';
 import * as Animatable from 'react-native-animatable';
+import { Appbar } from 'react-native-paper';
 
 
 class CustomHeader extends Component {
@@ -14,20 +15,30 @@ class CustomHeader extends Component {
     }
 
     render() {
+        let { title, image, titleColor } = this.props;
 
         return (
-            // <Header androidStatusBarColor={this.props.androidStatusBarColor || 'transparent'} {...this.props} style={{ backgroundColor: this.props.backgroundColor || Colors.darkBlue, justifyContent: 'center' }} >
-            <Header onLayout={this.props.onLayout} transparent androidStatusBarColor={this.props.androidStatusBarColor || this.props.backgroundColor || 'transparent'} style={{ backgroundColor: this.props.backgroundColor || Colors.secondary500, justifyContent: 'center', borderBottomWidth: this.props.hideUnderLine ? 0 : 1, borderBottomColor: Colors.BlackColor200, ...this.props.style }}>
-                <Left style={{ flex: 1 }}>{this._renderOption(this.props.left)}</Left>
-                <Body style={{ flex: 2 }}>
-                    {this._renderTitle()}
-                </Body>
-                <Right style={{ flex: 1 }}>
-                    {this._renderRight()}
-                </Right>
+
+            <Appbar.Header style={{ elevation: 0, backgroundColor: this.props.backgroundColor || Colors.secondary500, justifyContent: 'center', ...this.props.style }} >
+                {this._renderOption(this.props.left)}
+                {this._renderTitle()}
+                {this._renderRight()}
                 <StatusBar
-                    translucent={true} barStyle={!this.props.light ? 'dark-content' : 'light-content'} />
-            </Header>
+                    backgroundColor={this.props.backgroundColor || Colors.secondary500} barStyle={!this.props.light ? 'dark-content' : 'light-content'} />
+
+            </Appbar.Header>
+            // <Header androidStatusBarColor={this.props.androidStatusBarColor || 'transparent'} {...this.props} style={{ backgroundColor: this.props.backgroundColor || Colors.darkBlue, justifyContent: 'center' }} >
+            // <Header onLayout={this.props.onLayout} transparent androidStatusBarColor={this.props.androidStatusBarColor || this.props.backgroundColor || 'transparent'} style={{ backgroundColor: this.props.backgroundColor || Colors.secondary500, justifyContent: 'center', ...this.props.style }}>
+            //     <Left style={{ flex: 1 }}>{this._renderOption(this.props.left)}</Left>
+            //     <Body style={{ flex: 2 }}>
+            //         {this._renderTitle()}
+            //     </Body>
+            //     <Right style={{ flex: 1 }}>
+            //         {this._renderRight()}
+            //     </Right>
+            //     <StatusBar
+            //         translucent={true} barStyle={!this.props.light ? 'dark-content' : 'light-content'} />
+            // </Header>
         )
     }
 
@@ -44,13 +55,12 @@ class CustomHeader extends Component {
     _renderTitle() {
 
         let { title, image, titleColor } = this.props;
-
-        if (title) {
-            return (<Title style={{ color: titleColor || Colors.white, alignSelf: 'center', ...styles.titleStyle }}>{title}</Title>)
-        } else if (image) {
-            return (<Image source={image} style={{ alignSelf: 'center', resizeMode: 'contain', tintColor: this.props.titleColor }}
-            />)
-        }
+        // if (title) {
+        return (<Appbar.Content title={title} titleStyle={{ color: titleColor || Colors.white, ...styles.titleStyle }} />)
+        // } else if (image) {
+        //     return (<Image source={image} style={{ alignSelf: 'center', resizeMode: 'contain', tintColor: this.props.titleColor }}
+        //     />)
+        // }
     }
 
     _renderOption(options) {
@@ -58,11 +68,10 @@ class CustomHeader extends Component {
         if (options) {
             let { icon, image, text, onPress, color, imageStyle } = options;
 
-            if (icon) {
-                return (<Clickable borderLess onPress={onPress} style={styles.iconStyle}><Icon name={icon} style={{ color: color || Colors.Defaultblack }} /></Clickable>)
-            } else if (image) {
-                return (<Clickable borderLess onPress={onPress}><Image source={image}
-                    style={{ marginHorizontal: 6, resizeMode: 'contain', ...imageStyle }} /></Clickable>)
+
+            if (icon || image) {
+                return <Appbar.Action size={16} icon={icon || image} onPress={onPress} />
+
             } else if (text) {
                 return (<Clickable borderLess style={styles.textContainerStyle} onPress={onPress}>
                     <Text style={{ ...styles.textStyle, color: color || Colors.white }}>{text}</Text>

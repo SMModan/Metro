@@ -46,7 +46,9 @@ class HelpDesk extends Component {
     console.log(index);
     const item = this.state.listData[index];
     return (
-      <Card style={{ margin: 5 }} key={item.index}>
+      <Card style={{ margin: 5 }} key={item.index} onPress={() => {
+        this.props.navigation.push('UpdateHelpDesk')
+      }}>
         <View style={{ margin: 15 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, width: '70%', }}>{item.date}</Text>
@@ -104,7 +106,7 @@ class HelpDesk extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            this.props.navigation.push('AddUpdateHelpDesk')
+            this.props.navigation.push('AddHelpDesk')
           }}
         />
       </MainContainer>

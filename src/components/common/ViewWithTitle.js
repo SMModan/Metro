@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         fontSize: ResponsivePixels.size15,
         lineHeight: ResponsivePixels.size22,
         fontWeight: "600",
-        fontFamily: FontName.regular,
+        fontFamily: FontName.medium,
         paddingTop: ResponsivePixels.size24,
         paddingHorizontal: ResponsivePixels.size16,
         paddingBottom: ResponsivePixels.size8

@@ -86,8 +86,22 @@ class Home extends Component {
       index === 0 ? <View style={styles.cellStyle} key={index}/> :
       <View style={styles.cellStyle} key={index}>
         <Clickable onPress={()=>{ 
-          if(index == 6) { this.props.navigation.push('HelpDesk') }
-          else if(index == 3) { this.props.navigation.push('Opportunity') }
+            switch (index) {
+              case 3:
+                this.props.navigation.push('Opportunity')
+                break;
+
+              case 5:
+                this.props.navigation.push('Appointments')
+                break;
+
+              case 6:
+                this.props.navigation.push('HelpDesk')
+                break;
+            
+              default:
+                break;
+            }
           }} style={styles.btnMain}>
           <Image source={data[index - 1].icon} style={{marginTop: 30}}/>
           <Text style={styles.leftText}>{data[index - 1].title}</Text>

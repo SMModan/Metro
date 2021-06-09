@@ -32,4 +32,6 @@ export default ImageName = {
   ic_product: require('../../res/images/ic_product.png'),
   ic_task: require('../../res/images/ic_task.png'),
   ic_attachment: require('../../res/images/ic_attachment.png'),
+  ic_issue: require('../../res/images/ic_issue.png'),
+  ic_solution: require('../../res/images/ic_solution.png'),
 };

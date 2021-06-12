@@ -87,6 +87,10 @@ class Home extends Component {
       <View style={styles.cellStyle} key={index}>
         <Clickable onPress={()=>{ 
             switch (index) {
+              case 2:
+                this.props.navigation.push('Contacts')
+                break;
+
               case 3:
                 this.props.navigation.push('Opportunity')
                 break;

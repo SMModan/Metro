@@ -5783,7 +5783,7 @@ lodash@4.17.14:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
   integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
 
-lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.3.0, lodash@^4.7.0:
+lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.3.0, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -7376,6 +7376,13 @@ react-native-screens@^2.9.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-2.18.1.tgz#47b9991c6f762d00d0ed3233e5283d523e859885"
   integrity sha512-r5WZLpmx2hHjC1RgMdPq5YpSU9tEhBpUaZ5M1SUtNIONyiLqQVxabhRCINdebIk4depJiIl7yw2Q85zJyeX6fw==
+
+react-native-sectionlist-contacts@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-sectionlist-contacts/-/react-native-sectionlist-contacts-1.1.3.tgz#da200e1fa9667082e9418929087e0d807ea8eee8"
+  integrity sha512-CG7UPDQz+QoYZPGhDhJ/VCArU7B3LRo5Ac6qnr7NI3oPzJGQR5fX7ZkbS9OrFeIH2G5lxQ3xGpVUvFIJelgrFQ==
+  dependencies:
+    lodash "^4.17.11"
 
 react-native-segmented-control-tab@^3.4.1:
   version "3.4.1"

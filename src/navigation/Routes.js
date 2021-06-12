@@ -9,12 +9,14 @@ import SignIn from '../components/Login/ChildComponent/SignIn';
 import MyBottomTab from '../components/Home/ChildComponent/MyBottomTab';
 import HelpDesk from '../components/HomeDetails/ChildComponent/HelpDesk';
 import Appointments from '../components/HomeDetails/ChildComponent/Appointments';
+import Contacts from '../components/HomeDetails/ChildComponent/Contacts';
 import AddAppointments from '../components/Appointments/AddAppointments';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
 import Opportunity from '../components/HomeDetails/ChildComponent/Opportunity';
 import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportunity';
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
+import AddContacts from '../components/Contacts/AddContacts';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +36,10 @@ export default () => {
         <Stack.Screen component={AddOppContact} name="AddOppContact" />
         <Stack.Screen component={Appointments} name="Appointments" />
         <Stack.Screen component={AddAppointments} name="AddAppointments" />
+
+        <Stack.Screen component={Contacts} name="Contacts" />
+        <Stack.Screen component={AddContacts} name="AddContacts" />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -6,6 +6,7 @@ import Home from './Home';
 import DummyView from './DummyView';
 import { Images, Colors, FontName, FontSize } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
+import NotificationList from '../../Notification/NotificationList';
 // import ReportsMain from '../../Reports/ChildComponent/ReportsMain';
 // import MonieMattersMain from '../../MonieMatters/ChildComponent/MonieMattersMain';
 // import PaymentMain from '../../Payments/ChildComponent/PaymentMain';
@@ -77,7 +78,7 @@ export default function HomeTabs() {
           ),
         }}
         name="Notifications"
-        component={DummyView}
+        component={NotificationList}
       />
 
       <Tab.Screen

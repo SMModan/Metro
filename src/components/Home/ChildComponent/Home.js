@@ -86,11 +86,17 @@ class Home extends Component {
       index === 0 ? <View style={styles.cellStyle} key={index}/> :
       <View style={styles.cellStyle} key={index}>
         <Clickable onPress={()=>{ 
+
             switch (index) {
+              case 1:
+                this.props.navigation.push('AddCustomer')
+                break;
               case 3:
                 this.props.navigation.push('Opportunity')
                 break;
-
+                case 4:
+                this.props.navigation.push('Tasks')
+                  break;
               case 5:
                 this.props.navigation.push('Appointments')
                 break;
@@ -99,6 +105,7 @@ class Home extends Component {
                 this.props.navigation.push('HelpDesk')
                 break;
             
+             
               default:
                 break;
             }

@@ -24,6 +24,7 @@ export default {
   competition_status: "Competiton status",
   description: "Description",
   save: "Save",
+  saveContinue: "Save And Continue",
 
   prod_category: "Product Category",
   prod_group: "Product Group",

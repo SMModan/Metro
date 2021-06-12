@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView } from 'react-native';
+import { View, Text, FlatList, ScrollView,Image} from 'react-native';
+import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-native-paper'
+
 import {
   MainContainer,
 } from '../../common';
@@ -8,12 +10,15 @@ import styles from '../styles/HelpDesk.style';
 import { strings } from '../../../language/Language';
 import { Images, Colors } from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
-
+import {  AirbnbRating } from 'react-native-ratings';
+import ResponsivePixels from '../../../utils/ResponsivePixels';
 
 class HelpDesk extends Component {
 
+
   state = {
     selectedIndex: 0,
+    contactDialogVisible:false,
     listData: [
       {
         index: 0,
@@ -45,6 +50,7 @@ class HelpDesk extends Component {
   renderCell = ({ index }) => {
     console.log(index);
     const item = this.state.listData[index];
+  
     return (
       <Card style={{ margin: 5 }} key={item.index} onPress={() => {
         this.props.navigation.push('UpdateHelpDesk')
@@ -61,14 +67,20 @@ class HelpDesk extends Component {
           <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.description}</Text>
           {
             item.status === 'Open' ?
-              <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }} uppercase={false}> View ratings & digital signature </Button> : null
+              <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }} 
+              onPress={()=>{ this.setState({contactDialogVisible:true})}}
+              uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
+
+        
+       
       </Card>
     );
   };
 
   render() {
+    const {contactDialogVisible} = this.state
     return (
       <MainContainer
         header={{
@@ -99,6 +111,30 @@ class HelpDesk extends Component {
               keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
             />
+
+
+<Portal>
+                <Dialog visible={contactDialogVisible} onDismiss={()=>{this.setState({contactDialogVisible:false})}}>
+                    <Dialog.Title> Ratting & Digital signature </Dialog.Title>
+                    <Dialog.ScrollArea>
+                      <Image source={Images.ic_signature} style={{width:'100%',height:'30%',resizeMode:'stretch',alignItems:'flex-start',marginTop:25}} />
+                    <AirbnbRating
+                      count={5}
+                      defaultRating={11}
+                      size={30}
+                      style={{height:'30%'}}
+                    />
+
+<View style={{ width: '100%', backgroundColor: Colors.BlueColor50, borderRadius: 5 ,marginTop:20}}>
+              <Text style={{ textAlign: 'center', fontSize: ResponsivePixels.size16, color: Colors.BlueColor500, margin: 3 }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </Text>
+            </View>
+                     
+                    </Dialog.ScrollArea>
+                    <Dialog.Actions>
+                        <DialogButton color={Colors.blueGray600} style={{}} onPress={()=>{this.setState({contactDialogVisible:false})}}>Close</DialogButton>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
           </View>
         </View>
         <FAB

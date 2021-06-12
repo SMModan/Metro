@@ -34,4 +34,5 @@ export default ImageName = {
   ic_attachment: require('../../res/images/ic_attachment.png'),
   ic_issue: require('../../res/images/ic_issue.png'),
   ic_solution: require('../../res/images/ic_solution.png'),
+  ic_signature: require('../../res/images/ic_FakeSignature.png'),
 };

@@ -1,14 +1,11 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-native-paper'
 import { strings } from '../../../../language/Language'
 import { push } from '../../../../navigation/Navigator'
-import { Colors, FontName, Images, Utils } from '../../../../utils'
+import { Colors, FontName, Images } from '../../../../utils'
 import ResponsivePixels from '../../../../utils/ResponsivePixels'
-import { Button, ChipViewContainer, SegmentView, Clickable, FloatingEditText, ScrollContainer, ViewWithTitle } from '../../../common'
-import { Paragraph, Dialog, Portal, Button as DialogButton, RadioButton } from 'react-native-paper';
-import { ScrollView } from 'react-native'
-import { FlatList } from 'react-native'
-import SegmentedControlTab from "react-native-segmented-control-tab";
+import { Button, ChipViewContainer, Clickable, FloatingEditText, ScrollContainer, SegmentView, ViewWithTitle } from '../../../common'
 
 const AddOppCustomerUi = ({ contactDialogVisible, selectedContactIndex, onContactSelect, contactList, onSelectContact, onDismiss }) => {
     return (
@@ -26,7 +23,9 @@ const AddOppCustomerUi = ({ contactDialogVisible, selectedContactIndex, onContac
                         // Utils.showToast("Test")
                         console.log("Print")
                     }} label={strings.terriory} editable={false} rightIcon={Images.ic_down} />
-                    <FloatingEditText label={strings.stage} rightIcon={Images.ic_down} />
+                   
+                   
+                   
                 </ViewWithTitle>
 
                 <ViewWithTitle title={strings.contact}>

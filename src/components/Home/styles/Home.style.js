@@ -122,9 +122,9 @@ export default styles = StyleSheet.create({
         marginBottom: ResponsivePixels.size8,
     },
     cellStyle: {
-        width: '30%', 
-        marginRight: '5%',
-        marginBottom: '5%', 
+        width: '33%', 
+        marginRight: '1%',
+        marginBottom: '2%', 
         height: 100,
     }
 });

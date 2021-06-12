@@ -20,7 +20,6 @@ class AddOppCustomer extends Component {
 
                 this.setState({ selectedContactIndex: index })
             }} contactList={contactList} onSelectContact={() => {
-
                 this.setState({ contactDialogVisible: true })
             }} onDismiss={() => {
                 this.setState({ contactDialogVisible: false })

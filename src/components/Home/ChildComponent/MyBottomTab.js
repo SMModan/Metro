@@ -3,6 +3,7 @@ import { Text, View, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home';
+import Analytics from './Analytics';
 import DummyView from './DummyView';
 import { Images, Colors, FontName, FontSize } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
@@ -63,7 +64,7 @@ export default function HomeTabs() {
           ),
         }}
         name="Analytics"
-        component={DummyView}
+        component={Analytics}
       />
 
       <Tab.Screen

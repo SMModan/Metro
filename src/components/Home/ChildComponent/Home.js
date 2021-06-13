@@ -91,6 +91,10 @@ class Home extends Component {
               case 1:
                 this.props.navigation.push('AddCustomer')
                 break;
+              case 2:
+                this.props.navigation.push('Contacts')
+                break;
+
               case 3:
                 this.props.navigation.push('Opportunity')
                 break;

@@ -11,7 +11,7 @@ import { push } from '../../../navigation/Navigator';
 import SectionListContacts from 'react-native-sectionlist-contacts'
 
 
-class Contacts extends Component {
+class Customer extends Component {
 
   state = {
     selectedIndex: 0,
@@ -30,16 +30,42 @@ class Contacts extends Component {
 
   _renderItem = (item, index, section) => {
     return (
-      <Card style={{ margin: 7, marginLeft: 15, marginRight: 25 }} key={index} onPress={()=>{push("ViewContact")}}>
-        <View style={{ margin: 15, flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ width: 40, height: 40, borderRadius: 30, backgroundColor: this._getRandomColor(), justifyContent: 'center', marginRight: 15 }}>
-            <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: '600' }}>{item.name[0]}</Text>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Title style={{ fontSize: 16 }}>{item.name}</Title>
-            <Text style={{ fontSize: 12, color: Colors.grayColor, marginTop: 3 }}>{item.company}</Text>
-          </View>
-          <Image source={Images.ic_Call} style={{ width: 20, height: 20, marginRight: 10 }} resizeMode='center' />
+      <Card style={{ margin: 7, marginLeft: 15, marginRight: 25 ,padding:10}} key={index}>
+         <View style={{flexDirection:'row'}}>
+         <Title style={{ fontSize: 16 ,width:'50%'}}>{item.company}</Title>
+         <View style={{backgroundColor:'#F1F5FB',borderRadius:5, width:'50%',textAlign:'center',justifyContent:'center',paddingLeft:5}}>
+        <Text style={{ textAlign: 'left', fontSize: 15,color:'$687799',margin:2}}>Customer Category</Text>
+        </View>
+         </View>
+         <Title style={{ fontSize: 12,color:'#485780' }}>Megha Shah</Title>
+         <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop:5
+        }}>
+                <Image source={Images.ic_Call} style={{width:15,height:15,resizeMode:'contain',}} />
+
+            <Text style={{
+                    fontSize: 15,
+                    color: "black",
+                    marginLeft:10,
+                    color:'#485780'
+                }}>9725499721</Text>
+        </View>
+
+        <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop:10
+        }}>
+                <Image source={Images.ic_Email} style={{width:15,height:15,resizeMode:'contain',}} />
+
+            <Text style={{
+                    fontSize: 15,
+                    color: "black",
+                    marginLeft:10,
+                    color:'#485780'
+                }}>shahilce@gmail.com</Text>
         </View>
       </Card>
     )
@@ -74,7 +100,7 @@ class Contacts extends Component {
             initialNumToRender={this.state.listData.length}
             showsVerticalScrollIndicator={false}
             SectionListClickCallback={(item, index) => {
-              
+              console.log('---SectionListClickCallback--:', item, index)
             }}
             otherAlphabet="#"
             renderHeader={this._renderHeader}
@@ -96,11 +122,11 @@ class Contacts extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push("AddContacts")
+            push("AddCustomer")
           }}
         />
       </MainContainer>
-      <Searchbar placeholder={'Search Contact & Company'} style={{ position: 'absolute', top:10,height:40,width:'80%', marginLeft: 50, marginRight: 20, backgroundColor: 'rgba(0, 0, 0, 0.2)',  shadowColor: 'transparent' }} inputStyle={{ color:'white'}}  placeholderTextColor={'#8F9BB3'} iconColor={'#8F9BB3'}/>
+      <Searchbar placeholder={'Search Customer'} style={{ position: 'absolute', top:10,height:40,width:'80%', marginLeft: 50, marginRight: 20, backgroundColor: 'rgba(0, 0, 0, 0.2)',  shadowColor: 'transparent' }} inputStyle={{ color:'white'}}  placeholderTextColor={'#8F9BB3'} iconColor={'#8F9BB3'}/>
       </>
     );
   }
@@ -110,4 +136,4 @@ const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
+export default connect(mapStateToProps, mapDispatchToProps)(Customer);

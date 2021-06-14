@@ -89,7 +89,7 @@ class Home extends Component {
 
             switch (index) {
               case 1:
-                this.props.navigation.push('AddCustomer')
+                this.props.navigation.push('Customer')
                 break;
               case 2:
                 this.props.navigation.push('Contacts')

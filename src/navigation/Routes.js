@@ -11,7 +11,6 @@ import Appointments from '../components/HomeDetails/ChildComponent/Appointments'
 import Contacts from '../components/HomeDetails/ChildComponent/Contacts';
 import AddAppointments from '../components/Appointments/AddAppointments';
 import AddContact from '../components/Customer/AddContact';
-import AddCustomer from '../components/Customer/ViewCustomer';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
 import Opportunity from '../components/HomeDetails/ChildComponent/Opportunity';
@@ -24,7 +23,9 @@ import Attachment from '../components/Task/attachment/Attachment';
 import TaskList from '../components/Task/TaskList';
 import { navigationRef } from './Navigator';
 
-import AddContacts from '../components/Contacts/AddContacts';
+import AddCustomer from '../components/Customer/AddCustomer';
+import Customer from '../components/HomeDetails/ChildComponent/Customer';
+import ViewCustomer from '../components/Customer/ViewCustomer';
 
 const Stack = createStackNavigator();
 
@@ -47,11 +48,14 @@ export default () => {
         <Stack.Screen component={TaskList} name="Tasks" />
         <Stack.Screen component={AddTask} name="AddTask" />
         <Stack.Screen component={Attachment} name="AddTaskAttachment" />
-        <Stack.Screen component={AddContact} name="AddCustomer" />
+        <Stack.Screen component={AddCustomer} name="AddCustomer" />
+        <Stack.Screen component={AddContact} name="AddContacts" />
+        <Stack.Screen component={ViewCustomer} name="ViewContact" />
+        
         <Stack.Screen component={NotificationList} name="Notifications" />
 
         <Stack.Screen component={Contacts} name="Contacts" />
-        <Stack.Screen component={AddContacts} name="AddContacts" />
+        <Stack.Screen component={Customer} name="Customer" />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -54,7 +54,7 @@ class Analytics extends Component {
       <MainContainer
         header={{
           left: {
-            image: Images.ic_Menu,
+            image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
           title: 'Analytics',

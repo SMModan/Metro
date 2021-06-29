@@ -26,14 +26,15 @@ class Splash extends Component {
   }
   render() {
     return (
-        <View
-          style={{
-            flex: 1,
-            backgroundColor:Colors.Defaultwhite,
-            alignItems:'center'
-          }}>
-          <Image source={Images.ic_LoginLogo} />
-        </View>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: Colors.Defaultwhite,
+          justifyContent: "center",
+          alignItems: 'center'
+        }}>
+        <Image source={Images.ic_LoginLogo} />
+      </View>
     );
   }
 }

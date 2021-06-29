@@ -1,51 +1,43 @@
 import React, { Component } from 'react'
-import Picker from "react-native-picker-select";
 import { Image, View } from 'react-native'
-import { Colors,FontName } from '../../utils';
+import { Colors, FontName } from '../../utils';
+import FloatingEditText from './FloatingEditText';
+import SelectionView from './SelectionView';
 
 export default class CustomPicker extends Component {
+
+
+    state = {
+
+        selectedItem: { name: "" }
+    }
 
     render() {
         const iconStyle = this.props.iconStyle ? this.props.iconStyle : {}
         return (
 
             <View style={{ ...this.props.containerStyle }}>
-                <Picker useNativeAndroidPickerStyle={false}
-                    style={{
-                        inputIOS: {
-                            fontSize: 15,
-                            paddingVertical: 12,
-                            borderRadius: this.props.containerStyle.borderRadius || 0,
-                            height: 56,
-                            //backgroundColor: 'white',
-                            marginHorizontal:16,
-                            fontFamily:FontName.medium,
-                            borderColor: this.props.containerStyle.borderColor || "transparent",
-                            color: this.props.containerStyle.color || Colors.Info500,
-                            paddingRight: 10, // to ensure the text is never behind the icon
+                <FloatingEditText multiline={false} onPress={() => {
+                    // Utils.showToast("Test")
+                    // console.log("Print")
+                    // console.log("this.props.list", this.props.list)
+                    SelectionView.show({
+                        title: this.props.label,
+                        onSelect: (item) => {
+
+                            if (this.props.onSelect)
+                                this.props.onSelect(item)
+
+                            this.setState({ selectedItem: item })
                         },
-                        inputAndroid: {
-                            fontSize: 15,
-                            paddingVertical: 12,
-
-                           // backgroundColor: 'white',
-                            borderRadius: this.props.containerStyle.borderRadius || 0,
-                            height: 56,
-                            borderColor: this.props.containerStyle.borderColor || "transparent",
-                            marginHorizontal:16,
-                            fontFamily:FontName.medium,
-                            // borderWidth: this.props.containerStyle.borderWidth || 0,
-                            color: this.props.containerStyle.color || Colors.Info500,
-                            paddingRight: 10, // to ensure the text is never behind the icon
-                        },
-                        iconContainer: iconStyle
-
-                    }}
-                    Icon={() => {
-                        return <Image source={this.props.icon}
-                            style={{ width: iconStyle.width || 24, height: iconStyle.height || 24,top:15,tintColor:Colors.Info500 }} />;
-                    }} {...this.props} />
-
+                        data: this.props.list || []
+                    })
+                }} value={this.state.selectedItem.name} label={this.props.label} editable={false}
+                    rightIcon={this.props.rightIcon}
+                    leftIcon={this.props.leftIcon}
+                    onPressLeftIcon={this.props.onPressLeftIcon}
+                    onPressRightIcon={this.props.onPressRightIcon}
+                />
             </View>
         );
     }

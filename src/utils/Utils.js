@@ -1,8 +1,8 @@
 // import {Toast} from 'native-base';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import moment from 'moment';
-import {AlertDialog} from '../components/common/AlertDialog';
-import {Snackbar} from 'react-native-snackbar-material';
+import { AlertDialog } from '../components/common/AlertDialog';
+import { Snackbar } from 'react-native-snackbar-material';
 //import RNFetchBlob from 'rn-fetch-blob';
 
 export default class Utils {
@@ -18,8 +18,10 @@ export default class Utils {
   }
 
   static formatDate(date, format = 'DD-MM-YYYY HH:mm', milis = false) {
-    const newDate = !milis ? date * 1000 : date;
-    return moment(newDate).format(format);
+    if (!date)
+      return ""
+    // const newDate = !milis ? date * 1000 : date;
+    return moment(date).format(format);
   }
   static isValidPassword(password) {
     let length = password.length;
@@ -39,7 +41,7 @@ export default class Utils {
         title: 'Login',
         onPress: () => {
           AlertDialog.hide();
-          this.resetNavigation(navigation, 'login');
+          // this.resetNavigation(navigation, 'login');
         },
       },
       negativeButton: {
@@ -57,7 +59,7 @@ export default class Utils {
       content: message,
       duration: duration,
       action: {
-        onPress: () => {},
+        onPress: () => { },
         label: 'CLOSE',
       },
     });

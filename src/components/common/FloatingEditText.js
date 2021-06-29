@@ -4,6 +4,7 @@ import { Item, Label, Input, Left, Right, Icon } from 'native-base';
 import { Images, FontName, FontSize, Colors } from '../../utils';
 import Clickable from './Clickable';
 import ResponsivePixels from '../../utils/ResponsivePixels';
+import ImageButton from './ImageButton';
 
 
 
@@ -21,7 +22,7 @@ export default class FloatingEditText extends Component {
     render() {
         const {
             label, value, onChangeText, style, password, fontSize, inputType, textColor, editable,
-            rightIcon, leftIcon, onClickCountry, onPress, country, hasCountry, multiline, minHeight
+            rightIcon, leftIcon, onClickCountry, onPress, country, hasCountry, onPressLeftIcon, onPressRightIcon, multiline, minHeight
         } = this.props
         let { isFocused, text } = this.state;
 
@@ -47,56 +48,63 @@ export default class FloatingEditText extends Component {
                     {label}
                 </Text>
 
-                <TouchableOpacity disabled={editable && editable != false} activeOpacity={0} onPress={onPress} style={{
-                    flexDirection: 'row', alignItems: 'center'
+                <View style={{
+                    flexDirection: 'row', alignItems: 'center',
                 }}>
+                    {leftIcon ? <ImageButton onPress={onPressLeftIcon} source={leftIcon} imageStyle={{ width: 24, height: 24, marginEnd: 10 }} resizeMode={'contain'} /> : null}
 
-                    {hasCountry ?
-                        <Clickable onPress={onClickCountry} style={styles.countryView}>
-                            <Image source={Images.ic_CountryImg} style={styles.CountryImg}></Image>
-                            <Text style={styles.Countrytext}>+91</Text>
-                            <View style={styles.SperatorLine}></View>
-                        </Clickable> : null}
-                    {leftIcon ? <Image source={leftIcon} style={{ width: 24, height: 24, marginEnd: 10 }} resizeMode={'contain'} /> : null}
-                    {editable == undefined || editable == true ?
-                        <TextInput
-                            value={value}
-                            multiline={multiline}
-                            placeholderTextColor={Colors.blueGray500}
-                            editable={editable}
-                            keyboardType={inputType}
-                            onChangeText={(text) => {
-                                this.setState({ text: text })
-                                if (onChangeText)
-                                    onChangeText(text)
-                            }}
-                            secureTextEntry={password}
-                            style={{
-                                //    marginStart:leftIcon ? 40 : 0,
-                                paddingVertical: 12, flex: 1,
-                                fontFamily: FontName.regular, fontSize: fontSize || 14, color: textColor ||
-                                    Colors.blueGray900, borderBottomWidth: 0,
-                                height: minHeight
-                            }}
-                            onFocus={this.handleFocus}
-                            selectionColor={Colors.blueGray900}
-                            onBlur={this.handleBlur}
-                        />
-                        :
-                        <Text style={{
-                            alignSelf: "center",
+                    <TouchableOpacity disabled={editable && editable != false} onPress={onPress}
+                        style={{
                             flex: 1,
-                            paddingVertical: 12,
-                            textAlignVertical: "center",
-                            fontFamily: FontName.regular, alignSelf: "center",
-                            fontSize: fontSize || 17,
-                            color: textColor || Colors.Black, borderBottomWidth: 0,
-                            height: minHeight
-                        }}>
-                            {value ? value.toString() : value}
-                        </Text>}
-                    {rightIcon ? <Image source={rightIcon} style={{ width: 16, height: 16 }} resizeMode={'contain'} /> : null}
-                </TouchableOpacity>
+                        }}
+                    >
+
+                        {hasCountry ?
+                            <Clickable onPress={onClickCountry} style={styles.countryView}>
+                                <Image source={Images.ic_CountryImg} style={styles.CountryImg}></Image>
+                                <Text style={styles.Countrytext}>+91</Text>
+                                <View style={styles.SperatorLine}></View>
+                            </Clickable> : null}
+                        {editable == undefined || editable == true ?
+                            <TextInput
+                                value={value}
+                                multiline={multiline}
+                                placeholderTextColor={Colors.blueGray500}
+                                editable={editable}
+                                keyboardType={inputType}
+                                onChangeText={(text) => {
+                                    this.setState({ text: text })
+                                    if (onChangeText)
+                                        onChangeText(text)
+                                }}
+                                secureTextEntry={password}
+                                style={{
+                                    //    marginStart:leftIcon ? 40 : 0,
+                                    paddingVertical: 12, flex: 1,
+                                    fontFamily: FontName.regular, fontSize: fontSize || 14, color: textColor ||
+                                        Colors.blueGray900, borderBottomWidth: 0,
+                                    height: minHeight,
+                                }}
+                                onFocus={this.handleFocus}
+                                selectionColor={Colors.blueGray900}
+                                onBlur={this.handleBlur}
+                            />
+                            :
+                            <Text style={{
+                                flex: 1,
+                                paddingVertical: 12,
+                                textAlignVertical: "center",
+                                fontFamily: FontName.regular,
+                                fontSize: fontSize || 17,
+                                color: textColor || Colors.Black, borderBottomWidth: 0,
+                                height: minHeight
+                            }}>
+                                {value ? value.toString() : value}
+                            </Text>}
+                    </TouchableOpacity>
+                    {rightIcon ? <ImageButton onPress={onPressRightIcon} source={rightIcon} imageStyle={{ width: 16, height: 16 }} resizeMode={'contain'} /> : null}
+
+                </View>
             </View>
         );
     }

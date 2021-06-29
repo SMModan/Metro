@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {View, Text, FlatList, Image} from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, FlatList, Image } from 'react-native';
 import {
   MainContainer,
   ScrollContainer,
@@ -7,10 +7,10 @@ import {
   Button,
   EditText,
 } from '../../common';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import styles from '../styles/Home.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors} from '../../../utils';
+import { strings } from '../../../language/Language';
+import { Images, Colors } from '../../../utils';
 
 
 const data = [
@@ -45,13 +45,13 @@ const data = [
 ];
 
 class Home extends Component {
-  renderHomeList = ({index}) => {
+  renderHomeList = ({ index }) => {
     return (
       <View style={styles.listMain}>
-        <Clickable onPress={()=>this.props.navigation.push('HomeDetail')} style={styles.btnMain}>
+        <Clickable onPress={() => this.props.navigation.push('HomeDetail')} style={styles.btnMain}>
           <View style={styles.ContainView}>
             <View style={styles.ImageView}>
-              <Image style={{resizeMode:'contain',width:"100%"}} source={Images.ListImage} />
+              <Image style={{ resizeMode: 'contain', width: "100%" }} source={Images.ListImage} />
             </View>
             <View style={styles.infoView}>
               <View style={styles.dateView}>
@@ -70,7 +70,7 @@ class Home extends Component {
                 <Image source={Images.ic_MapPInBlackIcon} />
                 <Text style={styles.leftText}>{strings.ChechIn}</Text>
               </Clickable>
-              <Clickable  onPress={() => this.props.navigation.push('TeamList')} style={styles.btnRight}>
+              <Clickable onPress={() => this.props.navigation.push('TeamList')} style={styles.btnRight}>
                 <Image source={Images.ic_GroupBlackIcon} />
                 <Text style={styles.leftText}>{strings.TeamText}</Text>
               </Clickable>
@@ -81,11 +81,11 @@ class Home extends Component {
     );
   };
 
-  renderHomeCell = ({index}) => {
+  renderHomeCell = ({ index }) => {
     return (
-      index === 0 ? <View style={styles.cellStyle} key={index}/> :
-      <View style={styles.cellStyle} key={index}>
-        <Clickable onPress={()=>{ 
+      index === 0 ? <View style={styles.cellStyle} key={index} /> :
+        <View style={styles.cellStyle} key={index}>
+          <Clickable onPress={() => {
             switch (index) {
               case 2:
                 this.props.navigation.push('Contacts')
@@ -102,15 +102,15 @@ class Home extends Component {
               case 6:
                 this.props.navigation.push('HelpDesk')
                 break;
-            
+
               default:
                 break;
             }
           }} style={styles.btnMain}>
-          <Image source={data[index - 1].icon} style={{marginTop: 30}}/>
-          <Text style={styles.leftText}>{data[index - 1].title}</Text>
-        </Clickable>
-      </View>
+            <Image source={data[index - 1].icon} style={{ marginTop: 30 }} />
+            <Text style={styles.leftText}>{data[index - 1].title}</Text>
+          </Clickable>
+        </View>
     );
   };
 
@@ -125,18 +125,18 @@ class Home extends Component {
           title: '',
           hideUnderLine: true,
           light: true,
-          right: [{image: Images.ic_Refresh, onPress: () => this.props.navigation.push('Settings'),}],
+          right: [{ image: Images.ic_Refresh, onPress: () => this.props.navigation.push('SyncData'), }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>
-            <Text style={styles.firstTitle}>Hi James</Text>
+            <Text style={styles.firstTitle}>Hi {this.props.session.user.FirstName || ""}</Text>
           </View>
           <View style={styles.MainList}>
             <FlatList
               horizontal={false}
               scrollEnabled={true}
               numColumns={3}
-              data={[1,2,3,4,5,6,7,8]}
+              data={[1, 2, 3, 4, 5, 6, 7, 8]}
               showsHorizontalScrollIndicator={false}
               renderItem={(item) => this.renderHomeCell(item)}
               keyExtractor={(item, index) => 'key' + index}
@@ -150,7 +150,10 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+
+  session: state.session
+});
 
 const mapDispatchToProps = {};
 

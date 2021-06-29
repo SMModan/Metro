@@ -8,24 +8,14 @@ export const navigate = (name, params) => {
 }
 
 export const push = (name, params) => {
-    navigationRef.current?.dispatch(
-        StackActions.push(name, params)
-    );
-}
-
-export const navigateFood = (name, params) => {
-    navigationRef.current?.navigate("FoodHome", { screenName: name, params });
-}
-
-export const getRoute = () => {
-    return navigationRef.current?.getCurrentRoute()
+    navigationRef.current?.dispatch(StackActions.push(name, params))
 }
 
 export const goBack = (name) => {
     navigationRef.current?.goBack(name);
 }
 
-export const resetNavigation = (name) => {
+export const reset = (name) => {
 
     navigationRef.current?.dispatch(
         CommonActions.reset({
@@ -37,13 +27,3 @@ export const resetNavigation = (name) => {
     );
 
 }
-
-export default {
-    goBack,
-    navigate,
-    push,
-    getRoute,
-    resetNavigation
-};
-
-

@@ -1,4 +1,4 @@
-import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 
 let ResponsivePixels;
 export default ResponsivePixels = {

@@ -1,39 +1,85 @@
 import React, { Component } from 'react';
-import {
-    StyleSheet,
-    View,
-    Text,
-    Modal,
-    ActivityIndicator
-} from 'react-native';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import Dialog from 'react-native-popup-dialog';
+import { Colors } from '../../utils';
 
-import Dialog, { DialogContent } from 'react-native-popup-dialog'
+export default class ProgressDialog extends Component {
 
-const ProgressDialog = props => {
-    const {
-        loading,
-        ...attributes
-    } = props;
+    state = {
 
-    return (
-        <Dialog
-            dialogStyle={styles.styleDialogContent}
-            footer={null}
-            visible={loading}>
+        visible: false
+    }
 
-            <View style={styles.activityIndicatorWrapper}>
-                <ActivityIndicator
-                    style={{ alignSelf: 'center' }}
-                    size='large' color='#111111' />
-            </View>
-        </Dialog>
-    )
+    static dialogInstance
+    static show(config) {
+
+        // console.log("dialogInstance", this.dialogInstance)
+
+        this.dialogInstance.showDialog(config)
+
+    }
+
+    static hide() {
+
+
+        this.dialogInstance.hideDialog()
+
+    }
+    showDialog(config) {
+
+
+        this.setState({
+            visible: true,
+            //   title: config.title,
+            //   message: config.message,
+            //   positiveButton: config.positiveButton,
+            //   negativeButton: config.negativeButton,
+            //   cancelable: config.cancelable,
+            //   children: config.extraView
+        })
+    }
+    hideDialog = () => {
+
+        this.setState({
+            visible: false
+        })
+
+    }
+    componentDidMount() {
+        if (this.props.onRef != null) {
+            this.props.onRef(this)
+        }
+    }
+
+    render() {
+        return (
+            <Dialog
+                dialogStyle={styles.styleDialogContent}
+                footer={null}
+                width={80}
+                height={80}
+                visible={this.state.visible}>
+
+                <View style={styles.activityIndicatorWrapper}>
+                    <ActivityIndicator
+                        style={{ alignSelf: 'center' }}
+                        size='large' color={Colors.white} />
+                </View>
+            </Dialog>
+        )
+    }
 }
+
+
+
 
 const styles = StyleSheet.create({
     styleDialogContent: {
         padding: 10,
-
+        backgroundColor: "black",
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -45,4 +91,3 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ProgressDialog;

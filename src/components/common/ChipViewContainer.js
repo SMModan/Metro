@@ -6,16 +6,17 @@ import ResponsivePixels from '../../utils/ResponsivePixels'
 
 const ChipViewContainer = ({ chips, onSelect, title }) => {
 
+    let finalChips = chips || []
     const [selectedIndex, setSelectedIndex] = useState(-1)
     return (
         <View>
             <Text style={styles.titleStyle}>{title}</Text>
 
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                {chips.map((item, index) => <Chip key={index} style={{ margin: 5, borderRadius: 4, backgroundColor: selectedIndex === index ? Colors.primaryColor500 : Colors.blueGray200 }} textStyle={{ fontSize: 13, color: selectedIndex === index ? Colors.white : Colors.black }} onPress={() => {
+                {finalChips.map((item, index) => <Chip key={index} style={{ margin: 5, borderRadius: 4, backgroundColor: selectedIndex === index ? Colors.primaryColor500 : Colors.blueGray200 }} textStyle={{ fontSize: 13, color: selectedIndex === index ? Colors.white : Colors.black }} onPress={() => {
                     setSelectedIndex(index)
                     if (onSelect)
-                        onSelect(index)
+                        onSelect(finalChips[index])
                 }}>{item.name}</Chip>)}
             </View>
         </View>

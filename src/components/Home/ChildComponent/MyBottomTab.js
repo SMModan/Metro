@@ -20,18 +20,18 @@ export default function HomeTabs() {
   return (
     <Tab.Navigator
       shifting
-      initialRouteName="Home"
+      initialRouteName="Dashboard"
       tabBarOptions={{
         activeTintColor: Colors.primaryColor500,
         inactiveTintColor: Colors.blueGray500,
         style: {
           backgroundColor: Colors.white,
           paddingTop: ResponsivePixels.size5,
-          height:ResponsivePixels.size70,
+          height: ResponsivePixels.size70,
           paddingBottom: ResponsivePixels.size5,
           // height:ResponsivePixels.size90,
-       //   borderTopColor: Colors.lightGreenColor,
-       //   borderTopWidth: 1
+          //   borderTopColor: Colors.lightGreenColor,
+          //   borderTopWidth: 1
         },
         labelStyle: {
           fontSize: FontSize.fontSize12,
@@ -74,7 +74,7 @@ export default function HomeTabs() {
           tabBarIcon: ({ color }) => (
             <Image
               source={Images.ic_BottomTab3}
-              style={{tintColor: color}}
+              style={{ tintColor: color }}
             />
           ),
         }}

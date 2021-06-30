@@ -45,7 +45,7 @@ const AddOpportunityUi = ({ }) => {
                 tabBarOptions={{
                     activeTintColor: 'white',
                     labelStyle: { textTransform: 'none', fontSize: 15, fontFamily: FontName.regular },
-                    scrollEnabled: true,
+                    scrollEnabled: false,
 
                     style: { backgroundColor: Colors.secondary500 },
                     showIcon: true,
@@ -63,7 +63,7 @@ const AddOpportunityUi = ({ }) => {
                     component={AddOppProduct}
                     options={{ tabBarLabel: 'Product', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_product} /> }}
                 />
-                <Tab.Screen
+                {/* <Tab.Screen
                     name="Task"
                     component={OppTaskList}
                     options={{ tabBarLabel: 'Task', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_task} /> }}
@@ -73,7 +73,7 @@ const AddOpportunityUi = ({ }) => {
                     name="Attachment"
                     component={OppAttachment}
                     options={{ tabBarLabel: 'Attachment', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_attachment} /> }}
-                />
+                /> */}
             </Tab.Navigator>
 
         </MainContainer>

@@ -1,24 +1,11 @@
-export const BASE_URL = 'https://api-mpds-beta.f3m.pt/';
-export const API_COMPATIBLE_VERSION = 'api/compatibleVersion';
-export const API_LOGIN_INSTITUTIONS = 'api/Login/Institutions';
-export const API_LOGIN_TOKEN = 'api/Login/Token';
-export const API_RESET_PASSWORD = 'api/ResetPassword';
-export const API_USER = 'api/User';
-export const API_USER_FETCH = 'api/User/fetch';
-export const API_FETCH_PATIENT_LIST = 'api/Patient/HistoryInterventions';
-export const API_GET_PATIENT_CARDS = 'api/StructureCardsPatient';
-export const API_PATIENT_SEARCH = 'api/Patient/Search';
-export const API_PATIENTS_WOUND = 'api/Wound/Patient';
-export const API_CLOSE_WOUND = 'api/Wound/Close';
-export const API_OPEN_WOUND = 'api/Wound/Open';
-export const API_LOGOUT = 'api/Logout';
-export const API_USER_PHOTO = 'api/User/Photo';
-export const API_GET_WOUND_TYPES = 'api/Institution/WoundTypologies';
-export const API_WOUND_PATIENT = 'api/Wound/Patient';
-export const API_WOUND_URITOUPLOAD = 'api/Wound/WoundPhto/URIForUpload';
-export const API_PATIENT = 'api/Patient';
-export const API_WOUND_NEXTINTERVENTION = 'api/Wound/NextIntervention';
-export const API_WOUND = 'api/Wound';
-export const API_PATIENT_INTERVENTION_BY_ID = 'api/Patient/Interventions';
-export const API_UPLOAD_NEW_INTERVENTION = 'api/Wound/Intervention/Patient';
-export const API_GET_CHANGELOG = 'api/ChangeLog';
+// export const BASE_URL = 'http://dev.skywardcrm.com/Services/CRMMobileapp.asmx/';
+export const BASE_URL = 'https://www.skywardcrm.com/Services/CRMMobileApp.asmx/';
+
+//LOGIN APIS
+export const GET_COMPANY_BY_USERNAME = "GetCompanyNameByUserName"
+export const USER_AUTHENTICATION = "UserAuthentication"
+export const GET_ALL_OPPORTUNITIES = "GetAllOpportunities"
+export const GET_CUSTOMER = "GetCustomers"
+export const GET_CONATACTS_BY_CUSTOMER_ID = "GetContactsDetailsByCustomerID"
+export const INSERT_OR_UPDATE_OPPORTUNITY = "InsertOrUpdateOpportunityVersion4"
+

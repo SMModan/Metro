@@ -4,28 +4,50 @@ import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-nativ
 import { strings } from '../../../../language/Language'
 import { push } from '../../../../navigation/Navigator'
 import { Colors, FontName, Images } from '../../../../utils'
+import Utils from '../../../../utils/Utils'
 import ResponsivePixels from '../../../../utils/ResponsivePixels'
-import { Button, ChipViewContainer, Clickable, FloatingEditText, ScrollContainer, SegmentView, ViewWithTitle } from '../../../common'
+import { Button, ChipViewContainer, SegmentView, Clickable, FloatingEditText, ScrollContainer, ViewWithTitle, CustomDatePicker } from '../../../common'
+import { Paragraph, Dialog, Portal, Button as DialogButton, RadioButton } from 'react-native-paper';
+import { ScrollView } from 'react-native'
+import { FlatList } from 'react-native'
+import SegmentedControlTab from "react-native-segmented-control-tab";
+import CustomPicker from '../../../common/CustomPicker'
 
-const AddOppCustomerUi = ({ contactDialogVisible, selectedContactIndex, onContactSelect, contactList, onSelectContact, onDismiss }) => {
+const AddOppCustomerUi = ({ contactDialogVisible,
+    selectedContactIndex,
+    onContactSelect,
+    contactList,
+    onSelectContact,
+    onSelectCustomer,
+    onTextChanged,
+    territories, stages, oppCategories, oppCurrencies, oppSalesStages, customers,
+    onSave,
+    onDismiss }) => {
     return (
         <ScrollContainer>
             <View style={styles.mainView}>
                 <ViewWithTitle innerStyle={{
                     backgroundColor: Colors.white, paddingHorizontal: ResponsivePixels.size16,
                 }} title="Opportunity Information">
-                    <FloatingEditText onPress={() => {
+                    <CustomPicker onSelect={(item) => {
+                        if (onSelectCustomer)
+                            onSelectCustomer(item)
+
+                        onTextChanged("CustomerID", item.id)
+                    }} list={customers} onPress={() => {
+                    }} editable={false} onPressLeftIcon={() => {
                         push("AddOppContact")
-                    }} editable={false} leftIcon={Images.ic_add_blue} label="Customer Name" />
-                    <FloatingEditText label={strings.opp_name} />
-                    <FloatingEditText label={strings.closing_date} />
-                    <FloatingEditText onPress={() => {
-                        // Utils.showToast("Test")
-                        console.log("Print")
-                    }} label={strings.terriory} editable={false} rightIcon={Images.ic_down} />
-                   
-                   
-                   
+
+                        console.log("Click")
+                    }} leftIcon={Images.ic_add_blue} label="Customer Name*" />
+                    <FloatingEditText onChangeText={(text) => onTextChanged("OpportunityName", text)} label={strings.opp_name + "*"} />
+                    <CustomDatePicker onDateChanged={(date) => {
+
+                        onTextChanged("CloseDate", Utils.formatDate(date, "DD-MM-YYYY"))
+
+                    }} label={strings.closing_date + "*"} rightIcon={Images.ic_down} />
+                    <CustomPicker onSelect={(item) => onTextChanged("TerritoryID", item.id)} list={territories} label={strings.terriory + "*"} editable={false} rightIcon={Images.ic_down} />
+                    <CustomPicker onSelect={(item) => onTextChanged("StageID", item.id)} list={stages} label={strings.stage + "*"} rightIcon={Images.ic_down} />
                 </ViewWithTitle>
 
                 <ViewWithTitle title={strings.contact}>
@@ -35,22 +57,22 @@ const AddOppCustomerUi = ({ contactDialogVisible, selectedContactIndex, onContac
 
 
                 <ViewWithTitle title={strings.revenue}>
-                    <FloatingEditText inputType="numeric" label={strings.amount} />
-                    <ChipViewContainer title="Currency" chips={[{ name: "GBP" }, { name: "INR" }, { name: "AED" }, { name: "USD" },]} />
+                    <FloatingEditText onChangeText={(text) => onTextChanged("Amount", text)} inputType="numeric" label={strings.amount} />
+                    <ChipViewContainer onSelect={(item) => onTextChanged("CurrencyID", item.id)} title="Currency" chips={oppCurrencies} />
                 </ViewWithTitle>
 
 
                 <ViewWithTitle title={strings.other_info}>
-                    <ChipViewContainer title={strings.opp_category} chips={[{ name: "Small business" }, { name: "Medium business" }, { name: "Large business" }, { name: "Stratagic business" }, { name: "Renewal" }]} />
+                    <ChipViewContainer onSelect={(item) => onTextChanged("OpportunityCategoryID", item.id)} title={strings.opp_category} chips={oppCategories} />
                     {/* <ChipViewContainer title={strings.sales_stage} chips={[{ name: "Hot" }, { name: "Warm" }, { name: "Cold" },]} /> */}
-                    <SegmentView title={strings.sales_stage} segments={[{ name: "Hot" }, { name: "Warm" }, { name: "Cold" },]} />
+                    <SegmentView onSelect={(item) => onTextChanged("OpportunitySalesStageID", item.id)} title={strings.sales_stage} segments={oppSalesStages} />
 
-                    <FloatingEditText label={strings.competition_status} />
-                    <FloatingEditText label={strings.description} />
+                    <FloatingEditText onChangeText={(text) => onTextChanged("CompetitionStatus", text)} multiline minHeight={80} label={strings.competition_status} />
+                    <FloatingEditText onChangeText={(text) => onTextChanged("OpportunityDescription", text)} multiline minHeight={80} label={strings.description} />
 
                 </ViewWithTitle>
 
-                <Button title={strings.save} style={{ margin: ResponsivePixels.size16 }} />
+                <Button title={strings.save} onPress={onSave} style={{ margin: ResponsivePixels.size16 }} />
             </View>
 
             <Portal>
@@ -65,7 +87,7 @@ const AddOppCustomerUi = ({ contactDialogVisible, selectedContactIndex, onContac
                                     <RadioButton onPress={() => onContactSelect(index)} value={item.checked} status={selectedContactIndex == index ? "checked" : "unchecked"} color={Colors.BlueColor500} />
                                     <View style={{ marginStart: 8 }}>
                                         <Text style={styles.contactName}>{item.name}</Text>
-                                        <Text style={styles.phoneNumber}>{item.phoneNumber}</Text>
+                                        <Text style={styles.phoneNumber}>{item.mobileNumber}</Text>
                                         <Text style={styles.email}>{item.email}</Text>
 
                                     </View>

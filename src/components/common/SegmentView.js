@@ -6,7 +6,7 @@ import { Colors, FontName } from '../../utils'
 import ResponsivePixels from '../../utils/ResponsivePixels'
 
 const SegmentView = ({ segments, onSelect, title }) => {
-
+    const finalSegments = segments || []
     const [selectedIndex, setSelectedIndex] = useState(-1)
     return (
         <View>
@@ -17,10 +17,10 @@ const SegmentView = ({ segments, onSelect, title }) => {
                     setSelectedIndex(index)
 
                     if (onSelect)
-                        onSelect
+                        onSelect(finalSegments[index])
                 }}
                 selectedIndex={selectedIndex}
-                values={segments.map((s) => s.name)}
+                values={finalSegments.map((s) => s.name)}
 
                 tabsContainerStyle={{
                     backgroundColor: Colors.blueGray200,

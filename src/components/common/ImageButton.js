@@ -1,11 +1,11 @@
 import React from 'react';
 import { Image, View, Text, TouchableOpacity } from 'react-native'
 
-const ImageButton = ({ source, style, onPress }) => {
+const ImageButton = ({ source, style, imageStyle, onPress, }) => {
 
-    return (<TouchableOpacity onPress={onPress} style={{ ...style }}>
+    return (<TouchableOpacity disabled={onPress == undefined} onPress={onPress} style={[style]}>
 
-        <Image style={{ ...styles.actionStyle, ...style }} source={source} />
+        <Image resizeMode="contain" style={{ ...styles.actionStyle, ...imageStyle }} source={source} />
 
     </TouchableOpacity>);
 }
@@ -14,9 +14,9 @@ const styles = {
 
 
     actionStyle: {
-        marginLeft: 16,
         width: 25,
         height: 25,
+
     },
 
 

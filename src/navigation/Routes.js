@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import React, { useEffect, useState } from 'react';
+>>>>>>> 68b17350cb4281944d2560e78c8cee15b04d2a17
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
@@ -13,28 +17,38 @@ import AddAppointments from '../components/Appointments/AddAppointments';
 import AddContact from '../components/Customer/AddContact';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
-import Opportunity from '../components/HomeDetails/ChildComponent/Opportunity';
-import NotificationList from '../components/Notification/NotificationList';
+import Opportunity from '../components/Opportunity/list/Opportunity';
 import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportunity';
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
-/////Skyward
-import AddTask from '../components/Task/AddTask';
-import Attachment from '../components/Task/attachment/Attachment';
-import TaskList from '../components/Task/TaskList';
-import { navigationRef } from './Navigator';
-
-import AddCustomer from '../components/Customer/AddCustomer';
-import Customer from '../components/HomeDetails/ChildComponent/Customer';
-import ViewCustomer from '../components/Customer/ViewCustomer';
-
+import AddContacts from '../components/Contacts/AddContacts';
+import SyncData from '../components/Login/ChildComponent/SyncData';
+import { store } from '../App';
+import SplashScreen from 'react-native-splash-screen';
+import { openSQLiteDB } from "../data/DatabaseHelper"
 const Stack = createStackNavigator();
 
 export default () => {
+
+  const [loaded, setLoaded] = useState(false)
+  const [initialRoue, setInitialRoute] = useState("SignIn")
+
+  useEffect(() => {
+    openSQLiteDB()
+
+    const session = store.getState().session
+
+    console.log("session.is_logged_in", session.is_logged_in)
+    setInitialRoute(session.is_logged_in ? "Home" : "SignIn")
+    SplashScreen.hide();
+
+    setLoaded(true)
+  }, [])
+
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator headerMode="none" initialRouteName="Splash">
+    loaded && <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator headerMode="none" initialRouteName={initialRoue}>
         {/* Skyward  */}
-        <Stack.Screen component={MyBottomTab} name="MyBottomTab" />
+        <Stack.Screen component={MyBottomTab} name="Home" />
         <Stack.Screen component={Splash} name="Splash" />
         <Stack.Screen component={SignIn} name="SignIn" />
         <Stack.Screen component={HelpDesk} name="HelpDesk" />
@@ -55,7 +69,8 @@ export default () => {
         <Stack.Screen component={NotificationList} name="Notifications" />
 
         <Stack.Screen component={Contacts} name="Contacts" />
-        <Stack.Screen component={Customer} name="Customer" />
+        <Stack.Screen component={AddContacts} name="AddContacts" />
+        <Stack.Screen component={SyncData} name="SyncData" />
 
       </Stack.Navigator>
     </NavigationContainer>

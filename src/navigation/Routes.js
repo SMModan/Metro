@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
-import React, { useEffect, useState } from 'react';
->>>>>>> 68b17350cb4281944d2560e78c8cee15b04d2a17
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {navigationRef} from './Navigator';
 
 /////Skyward
 import Splash from '../components/Splash/ChildComponent/Splash';
@@ -14,7 +11,6 @@ import HelpDesk from '../components/HomeDetails/ChildComponent/HelpDesk';
 import Appointments from '../components/HomeDetails/ChildComponent/Appointments';
 import Contacts from '../components/HomeDetails/ChildComponent/Contacts';
 import AddAppointments from '../components/Appointments/AddAppointments';
-import AddContact from '../components/Customer/AddContact';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
 import Opportunity from '../components/Opportunity/list/Opportunity';
@@ -22,57 +18,49 @@ import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportun
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import AddContacts from '../components/Contacts/AddContacts';
 import SyncData from '../components/Login/ChildComponent/SyncData';
-import { store } from '../App';
+import {store} from '../App';
 import SplashScreen from 'react-native-splash-screen';
-import { openSQLiteDB } from "../data/DatabaseHelper"
+import {openSQLiteDB} from '../data/DatabaseHelper';
 const Stack = createStackNavigator();
 
 export default () => {
-
-  const [loaded, setLoaded] = useState(false)
-  const [initialRoue, setInitialRoute] = useState("SignIn")
+  const [loaded, setLoaded] = useState(false);
+  const [initialRoue, setInitialRoute] = useState('SignIn');
 
   useEffect(() => {
-    openSQLiteDB()
+    openSQLiteDB();
 
-    const session = store.getState().session
+    const session = store.getState().session;
 
-    console.log("session.is_logged_in", session.is_logged_in)
-    setInitialRoute(session.is_logged_in ? "Home" : "SignIn")
+    console.log('session.is_logged_in', session.is_logged_in);
+    setInitialRoute(session.is_logged_in ? 'Home' : 'SignIn');
     SplashScreen.hide();
 
-    setLoaded(true)
-  }, [])
+    setLoaded(true);
+  }, []);
 
   return (
-    loaded && <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator headerMode="none" initialRouteName={initialRoue}>
-        {/* Skyward  */}
-        <Stack.Screen component={MyBottomTab} name="Home" />
-        <Stack.Screen component={Splash} name="Splash" />
-        <Stack.Screen component={SignIn} name="SignIn" />
-        <Stack.Screen component={HelpDesk} name="HelpDesk" />
-        <Stack.Screen component={AddHelpDesk} name="AddHelpDesk" />
-        <Stack.Screen component={UpdateHelpDesk} name="UpdateHelpDesk" />
-        <Stack.Screen component={Opportunity} name="Opportunity" />
-        <Stack.Screen component={AddOpportunity} name="AddOpportunity" />
-        <Stack.Screen component={AddOppContact} name="AddOppContact" />
-        <Stack.Screen component={Appointments} name="Appointments" />
-        <Stack.Screen component={AddAppointments} name="AddAppointments" />
-        <Stack.Screen component={TaskList} name="Tasks" />
-        <Stack.Screen component={AddTask} name="AddTask" />
-        <Stack.Screen component={Attachment} name="AddTaskAttachment" />
-        <Stack.Screen component={AddCustomer} name="AddCustomer" />
-        <Stack.Screen component={AddContact} name="AddContacts" />
-        <Stack.Screen component={ViewCustomer} name="ViewContact" />
-        
-        <Stack.Screen component={NotificationList} name="Notifications" />
+    loaded && (
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator headerMode="none" initialRouteName={initialRoue}>
+          {/* Skyward  */}
+          <Stack.Screen component={MyBottomTab} name="Home" />
+          <Stack.Screen component={Splash} name="Splash" />
+          <Stack.Screen component={SignIn} name="SignIn" />
+          <Stack.Screen component={HelpDesk} name="HelpDesk" />
+          <Stack.Screen component={AddHelpDesk} name="AddHelpDesk" />
+          <Stack.Screen component={UpdateHelpDesk} name="UpdateHelpDesk" />
+          <Stack.Screen component={Opportunity} name="Opportunity" />
+          <Stack.Screen component={AddOpportunity} name="AddOpportunity" />
+          <Stack.Screen component={AddOppContact} name="AddOppContact" />
+          <Stack.Screen component={Appointments} name="Appointments" />
+          <Stack.Screen component={AddAppointments} name="AddAppointments" />
 
-        <Stack.Screen component={Contacts} name="Contacts" />
-        <Stack.Screen component={AddContacts} name="AddContacts" />
-        <Stack.Screen component={SyncData} name="SyncData" />
-
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen component={Contacts} name="Contacts" />
+          <Stack.Screen component={AddContacts} name="AddContacts" />
+          <Stack.Screen component={SyncData} name="SyncData" />
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
   );
 };

@@ -4,13 +4,9 @@ import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-nativ
 import { strings } from '../../../../language/Language'
 import { push } from '../../../../navigation/Navigator'
 import { Colors, FontName, Images } from '../../../../utils'
-import Utils from '../../../../utils/Utils'
 import ResponsivePixels from '../../../../utils/ResponsivePixels'
-import { Button, ChipViewContainer, SegmentView, Clickable, FloatingEditText, ScrollContainer, ViewWithTitle, CustomDatePicker } from '../../../common'
-import { Paragraph, Dialog, Portal, Button as DialogButton, RadioButton } from 'react-native-paper';
-import { ScrollView } from 'react-native'
-import { FlatList } from 'react-native'
-import SegmentedControlTab from "react-native-segmented-control-tab";
+import Utils from '../../../../utils/Utils'
+import { Button, ChipViewContainer, Clickable, CustomDatePicker, FloatingEditText, ScrollContainer, SegmentView, ViewWithTitle } from '../../../common'
 import CustomPicker from '../../../common/CustomPicker'
 
 const AddOppCustomerUi = ({ contactDialogVisible,

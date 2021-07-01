@@ -61,6 +61,8 @@ export default () => {
           <Stack.Screen component={SyncData} name="SyncData" />
         </Stack.Navigator>
       </NavigationContainer>
+
+      
     )
   );
 };

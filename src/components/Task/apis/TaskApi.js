@@ -5,13 +5,14 @@ import {
   GET_CUSTOMER,
   INSERT_OR_UPDATE_OPPORTUNITY,
   USER_AUTHENTICATION,
+  GET_ALL_TASKLIST
 } from '../../../network/ApiConstants';
 import apiCall, {METHOD} from '../../../network/ApiService';
 
-const opportunityApi = {
-  getAllOpportunities(params, onDone, onError) {
+const TaskApi = {
+  getAllTaskList(params, onDone, onError) {
     apiCall(
-      GET_ALL_OPPORTUNITIES,
+      GET_ALL_TASKLIST,
       params,
       res => {
         if (onDone) {
@@ -119,4 +120,4 @@ const opportunityApi = {
   },
 };
 
-export default opportunityApi;
+export default TaskApi;

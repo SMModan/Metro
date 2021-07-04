@@ -28,17 +28,16 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                     <CustomPicker onSelect={(item) => {
                         if (onSelectCustomer)
                             onSelectCustomer(item)
-
                         onTextChanged("CustomerID", item.id)
                     }} list={customers} onPress={() => {
                     }} editable={false} onPressLeftIcon={() => {
                         push("AddOppContact")
-
                         console.log("Click")
                     }} leftIcon={Images.ic_add_blue} label="Customer Name*" />
+                   
+                   
                     <FloatingEditText onChangeText={(text) => onTextChanged("OpportunityName", text)} label={strings.opp_name + "*"} />
                     <CustomDatePicker onDateChanged={(date) => {
-
                         onTextChanged("CloseDate", Utils.formatDate(date, "DD-MM-YYYY"))
 
                     }} label={strings.closing_date + "*"} rightIcon={Images.ic_down} />
@@ -48,7 +47,6 @@ const AddOppCustomerUi = ({ contactDialogVisible,
 
                 <ViewWithTitle title={strings.contact}>
                     <FloatingEditText value={selectedContactIndex > -1 ? contactList[selectedContactIndex].name : ""} editable={false} onPress={onSelectContact} leftIcon={Images.ic_add_blue} label={strings.select_contact} />
-
                 </ViewWithTitle>
 
 
@@ -79,7 +77,7 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                             style={{ height: "70%" }}
                             data={contactList}
                             renderItem={({ item, index }) => (
-                                <Clickable onPress={() => onContactSelect(index)} style={{ flexDirection: "row", alignItems: "flex-start", paddingVertical: 16 }}>
+                                <Clickable onPress={() => onStatusSlected(index)} style={{ flexDirection: "row", alignItems: "flex-start", paddingVertical: 16 }}>
                                     <RadioButton onPress={() => onContactSelect(index)} value={item.checked} status={selectedContactIndex == index ? "checked" : "unchecked"} color={Colors.BlueColor500} />
                                     <View style={{ marginStart: 8 }}>
                                         <Text style={styles.contactName}>{item.name}</Text>
@@ -115,7 +113,6 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         marginBottom: 8,
         fontFamily: FontName.bold,
-
     },
     phoneNumber: {
         color: Colors.blueGray700,

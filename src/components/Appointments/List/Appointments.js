@@ -4,7 +4,7 @@ import {
   MainContainer,
 } from '../../common';
 import { connect } from 'react-redux';
-import styles from '../styles/HelpDesk.style';
+import styles from '../../HomeDetails/styles/HelpDesk.style';
 import { strings } from '../../../language/Language';
 import { Images, Colors, FontName } from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';

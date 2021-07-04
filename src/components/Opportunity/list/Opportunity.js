@@ -25,7 +25,11 @@ class Opportunity extends Component {
     listData: []
   };
 
-  renderCell = ({ item, index }) => {
+  renderCell = ({  index }) => {
+    console.log(index);
+
+    const item = this.state.listData[index];
+    
     return (
       <Card style={{ margin: 5 }} key={index}>
         <View style={{ margin: 15 }}>
@@ -45,12 +49,10 @@ class Opportunity extends Component {
   };
 
   componentDidMount = () => {
-
     this.getAllOpportunities()
   }
 
   getAllOpportunities = () => {
-
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
@@ -65,11 +67,7 @@ class Opportunity extends Component {
       let isLast = true
       if (Table) {
         let totalPage = Table[0].TotalCount / 10
-
         isLast = this.state.page == totalPage
-
-
-
         this.setState({
           listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
           loading: false, refreshing: false, loadMore: false, isLast
@@ -116,7 +114,6 @@ class Opportunity extends Component {
                 })
               }}
               footerComponent={() => {
-
                 return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
               }}
               onEndReached={() => {

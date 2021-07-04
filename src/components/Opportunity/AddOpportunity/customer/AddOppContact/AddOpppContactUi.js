@@ -29,10 +29,6 @@ const AddOppContactUi = () => {
                         }} label={strings.terriory} editable={false} rightIcon={Images.ic_down} />
                     </ViewWithTitle>
 
-
-
-
-
                     <ViewWithTitle title={strings.other_info}>
 
                         <FloatingEditText label={strings.phone_number} />

@@ -135,26 +135,4 @@ export default styles = StyleSheet.create({
         backgroundColor: Colors.Orange500,
         color: Colors.white
       },
-
-      
-  mainView: {
-    flex: 1,
-    backgroundColor: Colors.secondary50
-},
-contactName: {
-    color: Colors.blueGray900,
-    fontSize: ResponsivePixels.size17,
-    lineHeight: ResponsivePixels.size24,
-    fontWeight: "600",
-    marginBottom: 0,
-    fontFamily: FontName.bold,
-},
-phoneNumber: {
-    color: Colors.blueGray700,
-    fontSize: ResponsivePixels.size15,
-    lineHeight: ResponsivePixels.size24,
-    fontWeight: "600",
-    fontFamily: FontName.regular,
-
-}
 });

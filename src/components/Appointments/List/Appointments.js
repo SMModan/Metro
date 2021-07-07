@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ScrollView, ActivityIndicator } from 'react-native';
 import {
-  MainContainer, MyFlatList,
+  MainContainer,
 } from '../../common';
 import { connect } from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import { strings } from '../../../language/Language';
-import { Images, Colors } from '../../../utils';
-import { Card, Title, FAB } from 'react-native-paper';
-import { push } from '../../../navigation/Navigator';
-import opportunityApi from '../apis/OpportunityApis';
+import { Images, Colors, FontName } from '../../../utils';
+import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
+import AppointmentApi from '../Api/AppointmentApi';
 
 
-class Opportunity extends Component {
+class Appointments extends Component {
+
 
   state = {
     selectedIndex: 0,
@@ -25,37 +25,11 @@ class Opportunity extends Component {
     listData: []
   };
 
-  renderCell = ({  index }) => {
-    console.log(index);
-
-    const item = this.state.listData[index];
-    
-    return (
-      <Card onPress={() => {
-        push("AddOpportunity", { opportunityId: item.ID })
-
-      }} style={{ margin: 5 }} key={index}>
-        <View style={{ margin: 15 }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 13, width: '70%', }}>{item.CloseDate}</Text>
-            <View style={{ width: 80, backgroundColor: Colors.BlueColor50, borderRadius: 5 }}>
-              <Text style={{ textAlign: 'center', fontSize: 12, color: Colors.BlueColor500, margin: 3 }}>{item.OpportunityStage}</Text>
-            </View>
-          </View>
-          <Title style={{ fontSize: 16, marginTop: 8 }}>{item.CustomerName}</Title>
-          <Text style={{ fontSize: 12, color: Colors.darkGray, }}>{item.Owner}</Text>
-          {/* <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 16 }}>{"item.header"}</Text> */}
-          <Text style={{ fontSize: 15, color: Colors.darkGray, marginTop: 4 }}>{item.OpportunityName}</Text>
-        </View>
-      </Card>
-    );
-  };
-
   componentDidMount = () => {
-    this.getAllOpportunities()
+    this.getAllAppointment()
   }
 
-  getAllOpportunities = () => {
+  getAllAppointment = () => {
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
@@ -64,9 +38,8 @@ class Opportunity extends Component {
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
     })
-    opportunityApi.getAllOpportunities(params, (res) => {
+    AppointmentApi.getAllAppointment(params, (res) => {
       const { Table } = res
-      console.log("Table", Table)
       let isLast = true
       if (Table) {
         let totalPage = Table[0].TotalCount / 10
@@ -76,18 +49,41 @@ class Opportunity extends Component {
           loading: false, refreshing: false, loadMore: false, isLast
         })
       }
-
-    }, () => {
+      }, () => {
       this.setState({
         loading: !this.state.refreshing && !this.state.loadMore
       })
     })
   }
 
+  renderCell = ({ index }) => {
+    console.log(index);
+    const item = this.state.listData[index];
+    console.log('item', item);
+    var date = new Date(item.CreatedDate);
+    date.toISOString().substring(0, 10);
+    let myDate = `${date.getDay()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()} ${date.getHours()} : ${date.getMinutes()}`;
+    return (
+      <Card style={{ margin: 5 }} key={item.index} onPress={() => {
+        this.props.navigation.push('AddAppointments')
+      }}>
+        <View style={{ margin: 15 }}>
+          <Text style={{ fontSize: 12 }}>{item.date}</Text>
+          <Text style={{ fontSize: 18, fontFamily: FontName.medium, marginTop: 8 }}>{item.Subject}</Text>
+          <Title style={{ fontSize: 13, fontFamily: FontName.regular }}> Created By {item.OwnerName}</Title>
 
+          <Text style={{ fontSize: 13, fontFamily: FontName.medium, marginTop: 8 }}>{item.Regarding}</Text>
+          <Text style={{ fontSize: 12, fontFamily: FontName.regular, color: Colors.darkGray, marginTop: 5 }}>{myDate}</Text>
+        </View>
+      </Card>
+    );
+  };
 
   render() {
     const { listData, refreshing, loading, loadMore, isLast } = this.state
+
     return (
       <MainContainer
         header={{
@@ -95,17 +91,22 @@ class Opportunity extends Component {
             image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
-          title: 'Opportunity',
+          title: 'Appointments',
           hideUnderLine: true,
           light: true,
           right: [{ image: Images.ic_Search, onPress: () => this.props.navigation.push('Settings'), }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>
-            <MyFlatList
-              data={listData}
+            <FlatList
+              horizontal={false}
+              scrollEnabled={true}
+              data={listData || []}
+              showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
+              keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
+
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
@@ -113,7 +114,7 @@ class Opportunity extends Component {
                   page: 0,
                   refreshing: true
                 }, () => {
-                  this.getAllOpportunities()
+                  this.getAllAppointment()
                 })
               }}
               footerComponent={() => {
@@ -127,7 +128,7 @@ class Opportunity extends Component {
                     page: this.state.page + 1,
                     loadMore: true
                   }, () => {
-                    this.getAllOpportunities()
+                    this.getAllAppointment()
                   })
 
                 }
@@ -140,7 +141,7 @@ class Opportunity extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push("AddOpportunity")
+            this.props.navigation.push('AddAppointments')
           }}
         />
       </MainContainer>
@@ -152,4 +153,4 @@ const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Opportunity);
+export default connect(mapStateToProps, mapDispatchToProps)(Appointments);

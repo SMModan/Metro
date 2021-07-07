@@ -3,6 +3,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { store } from '../App';
+import { navigationRef } from './Navigator';
+
+/////Skyward
+import Splash from '../components/Splash/ChildComponent/Splash';
+import SignIn from '../components/Login/ChildComponent/SignIn';
+import MyBottomTab from '../components/Home/ChildComponent/MyBottomTab';
+import HelpDesk from '../components/HelpDesk/List/HelpDesk';
+import Appointments from '../components/Appointments/List/Appointments';
+import Contacts from '../components/Contacts/List/Contacts';
+import Customer from '../components/Customer/List/Customer';
 import AddAppointments from '../components/Appointments/AddAppointments';
 import AddContacts from '../components/Contacts/AddContacts';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
@@ -17,9 +27,13 @@ import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportun
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import Opportunity from '../components/Opportunity/list/Opportunity';
 /////Skyward
-import Splash from '../components/Splash/ChildComponent/Splash';
-import { navigationRef } from './Navigator';
 
+import AddContacts from '../components/Contacts/AddContacts';
+import SyncData from '../components/Login/ChildComponent/SyncData';
+import { store } from '../App';
+import SplashScreen from 'react-native-splash-screen';
+import { openSQLiteDB } from '../data/DatabaseHelper';
+import TaskList from '../components/Task/List/TaskList';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -55,9 +69,11 @@ export default () => {
           <Stack.Screen component={Appointments} name="Appointments" />
           <Stack.Screen component={AddAppointments} name="AddAppointments" />
 
+          <Stack.Screen component={Customer} name="Customer" />
           <Stack.Screen component={Contacts} name="Contacts" />
           <Stack.Screen component={AddContacts} name="AddContacts" />
           <Stack.Screen component={SyncData} name="SyncData" />
+          <Stack.Screen component={TaskList} name="Tasks" />
         </Stack.Navigator>
       </NavigationContainer>
 

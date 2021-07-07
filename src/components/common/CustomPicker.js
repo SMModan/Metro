@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import React, { Component } from 'react';
+import { Image, View } from 'react-native';
 import { Colors, FontName } from '../../utils';
 import FloatingEditText from './FloatingEditText';
 import SelectionView from './SelectionView';

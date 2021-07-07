@@ -14,3 +14,26 @@ export const GET_PRODUCT_GROUPS = "GetProductGroup"
 export const GET_PRODUCT_CATEGORIES = "GetProductCategory"
 export const GET_PRODUCTS_FOR_OPP = "GetProductsForOpportunity"
 
+
+// TaskList Api end points
+
+export const GET_ALL_TASKLIST = "GetAllTaskActivityVersion1"
+
+
+// Contact Api end points
+export const GET_ALL_CONTACT = "GetAllContacts"
+
+
+// Notificaiton Api end points
+export const GET_ALL_NOTIFICATION = "GetUserNotificationDetailsByUserID"
+
+
+// Get All customer Api end points
+export const GET_ALL_CUSTOMER = "GetAllCustomers"
+
+// Get All Appointment Api end points
+export const GET_ALL_APPOINTMENT = "GetAllAppointmentActivity"
+
+
+// Get All HelpDesk List Api end points
+export const GET_ALL_HELPDESK_LIST = "GetHelpDesksVersion1"

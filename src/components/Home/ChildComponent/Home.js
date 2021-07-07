@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import styles from '../styles/Home.style';
 import { strings } from '../../../language/Language';
 import { Images, Colors } from '../../../utils';
+import { syncAllData } from '../../../utils/SyncDataManager';
 
 
 const data = [
@@ -97,9 +98,9 @@ class Home extends Component {
               case 3:
                 this.props.navigation.push('Opportunity')
                 break;
-                case 4:
+              case 4:
                 this.props.navigation.push('Tasks')
-                  break;
+                break;
               case 5:
                 this.props.navigation.push('Appointments')
                 break;
@@ -129,7 +130,10 @@ class Home extends Component {
           title: '',
           hideUnderLine: true,
           light: true,
-          right: [{ image: Images.ic_Refresh, onPress: () => this.props.navigation.push('SyncData'), }],
+          right: [{
+            image: Images.ic_Refresh, onPress: () => syncAllData()
+            ,
+          }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>

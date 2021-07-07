@@ -3,10 +3,10 @@ import { Text, View } from 'react-native'
 import { getDropDowns } from '../../../../data/DatabaseHelper'
 import Utils from '../../../../utils/Utils'
 import { DROPDWON_GET_OPPORTUNITY_CATEGORY, DROPDWON_GET_OPPORTUNITY_CURRENCY, DROPDWON_GET_OPPORTUNITY_SALES_STAGE, DROPDWON_GET_OPPORTUNITY_STAGE, DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY } from '../../../../utils/AppConstants'
-import { ProgressDialog } from '../../../common'
+import { AlertDialog, ProgressDialog } from '../../../common'
 import opportunityApi from '../../apis/OpportunityApis'
 import AddOppCustomerUi from './AddOppCustomerUi'
-import { goBack } from '../../../../navigation/Navigator'
+import { goBack, push } from '../../../../navigation/Navigator'
 
 class AddOppCustomer extends Component {
 
@@ -15,7 +15,7 @@ class AddOppCustomer extends Component {
         contactList: [],
         selectedContactIndex: -1,
         loading: true,
-        opportunityId: this.props.route?.params?.opportunityId
+        opportunityId: this.props.route?.params?.opportunityId || 0
 
     }
 
@@ -111,8 +111,26 @@ class AddOppCustomer extends Component {
                 OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
                 OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: opportunityId, ProductDetails: "", AssignUserName: ""
             }
-            opportunityApi.addOrUpdateOpportunity(params, () => {
+            opportunityApi.addOrUpdateOpportunity(params, (res) => {
                 ProgressDialog.hide()
+
+                AlertDialog.show({
+                    title: "Attachment",
+                    message: "Do you want to add attachment",
+                    positiveButton: {
+                        onPress: () => {
+                            AlertDialog.hide()
+                            push("OppAttachment", { id: res.ID })
+                        },
+                        title: "Yes"
+                    },
+                    negativeButton: {
+                        onPress: () => {
+                            AlertDialog.hide()
+                        },
+                        title: "No"
+                    }
+                })
                 goBack()
             }, (error) => {
 

@@ -1,13 +1,14 @@
 import _ from 'lodash';
-import React, {Component} from 'react';
-import {Image, Keyboard, Text, View} from 'react-native';
-import {connect} from 'react-redux';
-import {store} from '../../../App';
-import {createDefaultTables} from '../../../data/DatabaseHelper';
-import {strings} from '../../../language/Language';
-import {navigate, reset} from '../../../navigation/Navigator';
-import {setSessionField} from '../../../reducers/SessionReducer';
-import {Colors, Images} from '../../../utils';
+import React, { Component } from 'react';
+import { Image, Keyboard, Text, View } from 'react-native';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { createDefaultTables } from '../../../data/DatabaseHelper';
+import { strings } from '../../../language/Language';
+import { navigate, reset } from '../../../navigation/Navigator';
+import { setSessionField } from '../../../reducers/SessionReducer';
+import { Colors, Images } from '../../../utils';
+import { syncAllData } from '../../../utils/SyncDataManager';
 import Utils from '../../../utils/Utils';
 import {
   Button,
@@ -42,10 +43,10 @@ class SignIn extends Component {
         // console.log("Res", res)
 
         if (res) {
-          const {Table1} = res;
+          const { Table1 } = res;
 
           if (Table1) {
-            const {CompanyName, DBName} = Table1;
+            const { CompanyName, DBName } = Table1;
             this.setState({
               companyName: CompanyName,
               companyId: DBName,
@@ -74,17 +75,21 @@ class SignIn extends Component {
         // console.log("Res", res)
 
         if (res) {
-          const {Table} = res;
+          const { Table } = res;
 
           store.dispatch(setSessionField('user', Table));
           store.dispatch(setSessionField('is_logged_in', true));
 
-          if (!this.props.session.isSync) navigate('SyncData');
+          if (!this.props.session.isSync)
+            syncAllData()
           else {
+            ProgressDialog.hide();
+
             reset('Home');
           }
-        }
-        ProgressDialog.hide();
+        } else
+          ProgressDialog.hide();
+
       },
       error => {
         ProgressDialog.hide();
@@ -95,7 +100,7 @@ class SignIn extends Component {
 
   searchCompany = text => {
     console.log('Text', text);
-    this.setState({userName: text});
+    this.setState({ userName: text });
 
     if (Utils.isValidEmail(text)) {
       // ProgressDialog.show()
@@ -109,7 +114,7 @@ class SignIn extends Component {
   render() {
     return (
       <MainContainer
-        header={{hideUnderLine: true, backgroundColor: Colors.white}}>
+        header={{ hideUnderLine: true, backgroundColor: Colors.white }}>
         <ScrollContainer>
           {/* <ProgressDialog visible={true} /> */}
           <View style={styles.ContainerView}>
@@ -132,7 +137,7 @@ class SignIn extends Component {
                 leftIcon={Images.ic_Password}
                 style={styles.textPassword}
                 value={this.state.password}
-                onChangeText={text => this.setState({password: text})}
+                onChangeText={text => this.setState({ password: text })}
                 label={strings.txtPassword}
               />
               <FloatingEditText
@@ -140,7 +145,7 @@ class SignIn extends Component {
                 leftIcon={Images.ic_Company}
                 style={styles.textPassword}
                 value={this.state.companyName}
-                onChangeText={text => this.setState({companyName: text})}
+                onChangeText={text => this.setState({ companyName: text })}
                 label={strings.textSelectCompany}
               />
               {/* <View style={styles.forgotPasswordView}>

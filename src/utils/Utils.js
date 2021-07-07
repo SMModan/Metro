@@ -89,6 +89,8 @@ export default class Utils {
     return Platform.OS === 'ios';
   }
 
+
+
   // static downloadFile = (uri,fileName,callback) => {
 
   //     let path = RNFetchBlob.fs.dirs.DownloadDir + "/" + fileName

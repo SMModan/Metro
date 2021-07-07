@@ -23,6 +23,7 @@ import CustomDatePicker from './CustomDatePicker';
 import ImageButton from './ImageButton';
 import SearchBar from './SearchBar';
 import CustomPicker from './CustomPicker';
+import NoDataView from './NoDataView';
 
 export {
     AlertDialog, CustomHeader, PinView, ProgressDialog, ScrollContainer, MainContainer, Button, FloatingEditText, Clickable, EditText, GradientButton, ViewWithTitle, TextButton, SegmentView, ChipViewContainer, UploadView, Checkbox, DatePicker,
@@ -31,5 +32,6 @@ export {
     CustomDatePicker,
     ImageButton,
     SearchBar,
-    CustomPicker
+    CustomPicker,
+    NoDataView
 }

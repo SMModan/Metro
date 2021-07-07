@@ -1,4 +1,4 @@
-import { GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_BY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, INSERT_OR_UPDATE_OPPORTUNITY, USER_AUTHENTICATION } from "../../../network/ApiConstants"
+import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_BY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
 import apiCall, { METHOD } from "../../../network/ApiService"
 
 const opportunityApi = {
@@ -35,6 +35,63 @@ const opportunityApi = {
     addOrUpdateOpportunity(params, onDone, onError) {
 
         apiCall(INSERT_OR_UPDATE_OPPORTUNITY, params, (res) => {
+
+
+            if (onDone) {
+                onDone(res)
+            }
+        }, (error) => {
+            if (onError) {
+                onError(error)
+            }
+        })
+    },
+
+    insertOpportunityAttachment(params, onDone, onError) {
+
+        apiCall(INSERT_OPPORTUNITY_ATTACHMENT, params, (res) => {
+
+
+            if (onDone) {
+                onDone(res)
+            }
+        }, (error) => {
+            if (onError) {
+                onError(error)
+            }
+        })
+    },
+    updateOpportunityAttachment(params, onDone, onError) {
+
+        apiCall(UPDATE_OPPORTUNITY_ATTACHMENT, params, (res) => {
+
+
+            if (onDone) {
+                onDone(res)
+            }
+        }, (error) => {
+            if (onError) {
+                onError(error)
+            }
+        })
+    },
+    deleteOpportunityAttachment(params, onDone, onError) {
+
+        apiCall(DELETE_OPPORTUNITY_ATTACHMENT, params, (res) => {
+
+
+            if (onDone) {
+                onDone(res)
+            }
+        }, (error) => {
+            if (onError) {
+                onError(error)
+            }
+        })
+    },
+    getOpportunityAttachment(OpportunityID, onDone, onError) {
+
+        apiCall(GET_OPPORTUNITY_ATTACHMENT, { OpportunityID }, (res) => {
 
 
             if (onDone) {

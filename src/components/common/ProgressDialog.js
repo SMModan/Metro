@@ -76,7 +76,7 @@ export default class ProgressDialog extends Component {
 const styles = StyleSheet.create({
     styleDialogContent: {
         padding: 10,
-        backgroundColor: "black",
+        backgroundColor: Colors.primary,
         width: 80,
         height: 80,
         borderRadius: 40,

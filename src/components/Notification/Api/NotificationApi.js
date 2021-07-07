@@ -21,7 +21,7 @@ const NotificationApi = {
     );
   },
 
- 
+
 };
 
-export default NotificationApi;
+export default NotificationApi

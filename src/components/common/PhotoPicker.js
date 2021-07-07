@@ -1,7 +1,6 @@
 import { ActionSheet } from "native-base";
-import { Platform } from "react-native";
+import { Platform, PermissionsAndroid } from "react-native";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { request } from "react-native-permissions";
 
 export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage, extraParam = {} }) => {
 
@@ -14,6 +13,7 @@ export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage
         title: "Select",
         quality: 0.3,
         saveToPhotos: false,
+        includeBase64: true
 
     };
 
@@ -55,13 +55,13 @@ export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage
                     let result;
                     try {
 
-                        result = await request("android.permission.CAMERA", {
+                        result = await PermissionsAndroid.request("android.permission.CAMERA", {
                             buttonPositive: "Okay",
                             message: "Please grant camera permission if you want set profile picture from camera.",
                             buttonNegative: "Close",
                         })
                     } catch (error) {
-
+                        console.log("CameraError", error)
                     }
 
                     if (!result || result != "granted")
@@ -73,7 +73,6 @@ export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage
                 launchCamera(config, (response) => {
 
                     const { assets } = response
-                    console.log("response", response)
                     if (response.didCancel) {
                         console.log('User cancelled image picker');
                     } else if (response.errorCode) {
@@ -93,6 +92,8 @@ export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage
                         // }, (image) => {
 
                         // })
+                        // console.log("finalResponse", finalResponse)
+
                         onFileSelect(finalResponse)
                     }
 

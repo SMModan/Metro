@@ -17,23 +17,13 @@ import AddAppointments from '../components/Appointments/AddAppointments';
 import AddContacts from '../components/Contacts/AddContacts';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
-import MyBottomTab from '../components/Home/ChildComponent/MyBottomTab';
-import Appointments from '../components/HomeDetails/ChildComponent/Appointments';
-import Contacts from '../components/HomeDetails/ChildComponent/Contacts';
-import HelpDesk from '../components/HomeDetails/ChildComponent/HelpDesk';
-import SignIn from '../components/Login/ChildComponent/SignIn';
 import SyncData from '../components/Login/ChildComponent/SyncData';
 import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportunity';
+import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/OppAttachment';
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import Opportunity from '../components/Opportunity/list/Opportunity';
-/////Skyward
-
-import AddContacts from '../components/Contacts/AddContacts';
-import SyncData from '../components/Login/ChildComponent/SyncData';
-import { store } from '../App';
-import SplashScreen from 'react-native-splash-screen';
-import { openSQLiteDB } from '../data/DatabaseHelper';
 import TaskList from '../components/Task/List/TaskList';
+
 const Stack = createStackNavigator();
 
 export default () => {
@@ -68,6 +58,7 @@ export default () => {
           <Stack.Screen component={AddOppContact} name="AddOppContact" />
           <Stack.Screen component={Appointments} name="Appointments" />
           <Stack.Screen component={AddAppointments} name="AddAppointments" />
+          <Stack.Screen component={OppAttachment} name="OppAttachment" />
 
           <Stack.Screen component={Customer} name="Customer" />
           <Stack.Screen component={Contacts} name="Contacts" />

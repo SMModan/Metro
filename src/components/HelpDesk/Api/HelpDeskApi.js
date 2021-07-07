@@ -1,12 +1,10 @@
-import {
-  GET_ALL_CONTACT
-} from '../../../network/ApiConstants';
+import { GET_ALL_HELPDESK_LIST } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
 const HelpDeskApi = {
-  getAllContactList(params, onDone, onError) {
+  getAllList(params, onDone, onError) {
     apiCall(
-      GET_ALL_CONTACT,
+      GET_ALL_HELPDESK_LIST,
       params,
       res => {
         if (onDone) {
@@ -20,7 +18,6 @@ const HelpDeskApi = {
       },
     );
   },
-
 };
 
 export default HelpDeskApi;

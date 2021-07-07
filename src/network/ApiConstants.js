@@ -28,3 +28,7 @@ export const GET_ALL_CUSTOMER = "GetAllCustomers"
 
 // Get All Appointment Api end points
 export const GET_ALL_APPOINTMENT = "GetAllAppointmentActivity"
+
+
+// Get All HelpDesk List Api end points
+export const GET_ALL_HELPDESK_LIST = "GetHelpDesksVersion1"

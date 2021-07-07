@@ -7,7 +7,7 @@ import {navigationRef} from './Navigator';
 import Splash from '../components/Splash/ChildComponent/Splash';
 import SignIn from '../components/Login/ChildComponent/SignIn';
 import MyBottomTab from '../components/Home/ChildComponent/MyBottomTab';
-import HelpDesk from '../components/HomeDetails/ChildComponent/HelpDesk';
+import HelpDesk from '../components/HelpDesk/List/HelpDesk';
 import Appointments from '../components/Appointments/List/Appointments';
 import Contacts from '../components/Contacts/List/Contacts';
 import Customer from '../components/Customer/List/Customer';

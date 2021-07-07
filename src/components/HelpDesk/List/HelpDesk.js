@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView,Image} from 'react-native';
+import { View, Text, FlatList, ScrollView,Image, ActivityIndicator} from 'react-native';
 import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-native-paper'
 
 import {
@@ -12,75 +12,95 @@ import { Images, Colors } from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 import {  AirbnbRating } from 'react-native-ratings';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
+import HelpDeskApi from '../Api/HelpDeskApi';
 
 class HelpDesk extends Component {
-
-
   state = {
     selectedIndex: 0,
+    page: 0,
+    totalPage: 0,
+    refreshing: false,
+    loading: true,
+    loadMore: false,
+    isLast: false,
+    listData: [],
     contactDialogVisible:false,
-    listData: [
-      {
-        index: 0,
-        date: "24-5-2021 • 12:32",
-        status: "Open",
-        header: "HEL052021-11",
-        title: "Laxmi Packaging",
-        description: "Megha Shah",
-      },
-      {
-        index: 1,
-        date: "24-5-2021 • 12:32",
-        status: "Completed",
-        header: "HEL052021-12",
-        title: "Abaris Health Care Ltd.",
-        description: "Rahul Vyas",
-      },
-      {
-        index: 2,
-        date: "24-5-2021 • 12:32",
-        status: "On hold",
-        header: "HEL052021-5",
-        title: "Skyward Techno Solution",
-        description: "Ramesh Jain",
-      },
-    ]
+
   };
 
+  componentDidMount = () => {
+    this.getAllList()
+  }
+
+  getAllList = () => {
+    const params = {
+      PageIndex: this.state.page,
+      PageSize: 10,
+      Filter: "",
+      HelpDeskStatusID:1
+    }
+    this.setState({
+      loading: !this.state.refreshing && !this.state.loadMore
+    })
+    HelpDeskApi.getAllList(params, (res) => {
+      const { Table } = res
+      console.log("Table", Table)
+      let isLast = true
+      if (Table) {
+        let totalPage = Table[0].Count / 10
+        isLast = this.state.page == totalPage
+        this.setState({
+          listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
+          loading: false, refreshing: false, loadMore: false, isLast
+        })
+      }
+
+    }, () => {
+      this.setState({
+        loading: !this.state.refreshing && !this.state.loadMore
+      })
+    })
+  }
+
+
   renderCell = ({ index }) => {
-    console.log(index);
     const item = this.state.listData[index];
-  
+    console.log("item",item)
+    var date = new Date(item.CreatedDate);
+    date.toISOString().substring(0, 10);
+
+    let myDate = `${date.getDay()}-${
+      date.getMonth() + 1
+    }-${date.getFullYear()}`;
     return (
       <Card style={{ margin: 5 }} key={item.index} onPress={() => {
         this.props.navigation.push('UpdateHelpDesk')
       }}>
         <View style={{ margin: 15 }}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 13, width: '70%', }}>{item.date}</Text>
-            <View style={{ width: 80, backgroundColor: item.status.toLowerCase() == 'open' ? Colors.secondary100 : item.status.toLowerCase() == 'completed' ? Colors.Green100 : Colors.Orange100, borderRadius: 5 }}>
-              <Text style={{ textAlign: 'center', fontSize: 12, color: item.status.toLowerCase() == 'open' ? Colors.secondary900 : item.status.toLowerCase() == 'completed' ? Colors.Green800 : Colors.Orange900, margin: 3 }}>{item.status}</Text>
+            <Text style={{ fontSize: 13, width: '70%', }}>{myDate}</Text>
+            <View style={{ width: 80, backgroundColor: item.Status.toLowerCase() == 'open' ? Colors.secondary100 : item.Status.toLowerCase() == 'completed' ? Colors.Green100 : Colors.Orange100, borderRadius: 5 }}>
+              <Text style={{ textAlign: 'center', fontSize: 12, color: item.Status.toLowerCase() == 'open' ? Colors.secondary900 : item.Status.toLowerCase() == 'completed' ? Colors.Green800 : Colors.Orange900, margin: 3 }}>{item.Status}</Text>
             </View>
           </View>
-          <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 8 }}>{item.header}</Text>
-          <Title style={{ fontSize: 16, marginTop: 8 }}>{item.title}</Title>
-          <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.description}</Text>
+          <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 8 }}>{item.CustomerName}</Text>
+          <Title style={{ fontSize: 16, marginTop: 8 }}>{item.ContactPersonName}</Title>
+          <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.AssignedToName}</Text>
           {
-            item.status === 'Open' ?
+            item.Status === 'Open' ?
               <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }} 
               onPress={()=>{ this.setState({contactDialogVisible:true})}}
               uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
-
-        
        
       </Card>
     );
   };
 
   render() {
-    const {contactDialogVisible} = this.state
+    const { listData, refreshing, loading, loadMore, isLast ,contactDialogVisible} = this.state
+
     return (
       <MainContainer
         header={{
@@ -105,11 +125,38 @@ class HelpDesk extends Component {
             <FlatList
               horizontal={false}
               scrollEnabled={true}
-              data={[0, 1, 2]}
+              data={listData||[]}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
               keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
+
+              loading={loading}
+              refreshing={refreshing}
+              onRefresh={() => {
+                this.setState({
+                  page: 0,
+                  refreshing: true
+                }, () => {
+                  this.getAllList()
+                })
+              }}
+              footerComponent={() => {
+                return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
+              }}
+              onEndReached={() => {
+                console.log("End")
+
+                if (!loadMore && !isLast) {
+                  this.setState({
+                    page: this.state.page + 1,
+                    loadMore: true
+                  }, () => {
+                    this.getAllList()
+                  })
+
+                }
+              }}
             />
 
 

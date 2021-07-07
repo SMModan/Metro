@@ -103,8 +103,8 @@ class Opportunity extends Component {
               data={listData}
               renderItem={item => this.renderCell(item)}
               style={{ flex: 1, margin: 10 }}
-              refreshing={refreshing}
               loading={loading}
+              refreshing={refreshing}
               onRefresh={() => {
                 this.setState({
                   page: 0,

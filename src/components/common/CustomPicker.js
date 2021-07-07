@@ -12,6 +12,32 @@ export default class CustomPicker extends Component {
         selectedItem: { name: "" }
     }
 
+    componentDidMount = () => {
+
+        if (this.props.selectedItem?.id && this.props.list) {
+            this.updateSelectedItem()
+        }
+    }
+    updateSelectedItem = () => {
+        const item = this.props.list.find((item) => {
+            return item.id == this.props.selectedItem?.id
+        })
+        if (item)
+            this.setState({ selectedItem: item })
+        else
+            this.setState({ selectedItem: { name: "", id: "" } })
+
+
+    }
+    componentDidUpdate = (prevProps, prevState, snapShot) => {
+
+
+
+        if (this.props.selectedItem?.id != this.state.selectedItem.id) {
+            this.updateSelectedItem()
+
+        }
+    }
     render() {
         const iconStyle = this.props.iconStyle ? this.props.iconStyle : {}
         return (

@@ -8,6 +8,7 @@ export default {
   textSelectCompany: "Select Company",
   btnLogin: "LOGIN",
   addOpportunity: "Add Opportunity",
+  editOpportunity: "Edit Opportunity",
 
   opp_name: "Opportunity Name",
   closing_date: "Closing Date",

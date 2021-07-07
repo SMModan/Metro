@@ -22,6 +22,7 @@ import ProgressView from './ProgressView';
 import CustomDatePicker from './CustomDatePicker';
 import ImageButton from './ImageButton';
 import SearchBar from './SearchBar';
+import CustomPicker from './CustomPicker';
 
 export {
     AlertDialog, CustomHeader, PinView, ProgressDialog, ScrollContainer, MainContainer, Button, FloatingEditText, Clickable, EditText, GradientButton, ViewWithTitle, TextButton, SegmentView, ChipViewContainer, UploadView, Checkbox, DatePicker,
@@ -29,5 +30,6 @@ export {
     ProgressView,
     CustomDatePicker,
     ImageButton,
-    SearchBar
+    SearchBar,
+    CustomPicker
 }

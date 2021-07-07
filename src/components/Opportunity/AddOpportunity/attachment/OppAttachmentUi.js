@@ -5,33 +5,36 @@ import { strings } from '../../../../language/Language'
 import { push } from '../../../../navigation/Navigator'
 import { Colors, Images, Utils } from '../../../../utils'
 import ResponsivePixels from '../../../../utils/ResponsivePixels'
-import { Button, ChipViewContainer, FloatingEditText, ScrollContainer, ViewWithTitle } from '../../../common'
+import { Button, MainContainer, ChipViewContainer, Clickable, FloatingEditText, ScrollContainer, ViewWithTitle } from '../../../common'
 
-const OppAttachmentUi = () => {
+const OppAttachmentUi = ({ onBrowse, attachment, editMode = true }) => {
     return (
-        <ScrollContainer>
-            <View style={styles.mainView}>
+        <MainContainer header={!editMode ? { title: "Attachment" } : {}}>
+            <ScrollContainer>
+                <View style={styles.mainView}>
+                    <Clickable onPress={onBrowse} >
+                        <ImageBackground source={attachment.source} style={styles.uploadView}>
 
-                <View style={styles.uploadView}>
+                            <Image source={Images.ic_upload} />
+                            <Text style={styles.uploadText}>Upload here</Text>
+                        </ImageBackground>
+                    </Clickable>
+                    <ViewWithTitle innerStyle={{
+                        backgroundColor: Colors.white, paddingHorizontal: ResponsivePixels.size16,
+                    }} title="Document(s)">
 
-                    <Image source={Images.ic_upload} />
-                    <Text style={styles.uploadText}>Upload here</Text>
+                        <FloatingEditText onPress={() => {
+                            // Utils.showToast("Test")
+                            console.log("Print")
+                        }} label={"Business Presentation"} editable={false} rightIcon={Images.ic_dot_menu} />
+                        <FloatingEditText label={"Project Proposal"} editable={false} rightIcon={Images.ic_dot_menu} />
+                    </ViewWithTitle>
+
+
+                    <Button title={strings.save} style={{ margin: ResponsivePixels.size16 }} />
                 </View>
-                <ViewWithTitle innerStyle={{
-                    backgroundColor: Colors.white, paddingHorizontal: ResponsivePixels.size16,
-                }} title="Document(s)">
-
-                    <FloatingEditText onPress={() => {
-                        // Utils.showToast("Test")
-                        console.log("Print")
-                    }} label={"Business Presentation"} editable={false} rightIcon={Images.ic_dot_menu} />
-                    <FloatingEditText label={"Project Proposal"} editable={false} rightIcon={Images.ic_dot_menu} />
-                </ViewWithTitle>
-
-
-                {/* <Button title={strings.save} style={{ margin: ResponsivePixels.size16 }} /> */}
-            </View>
-        </ScrollContainer>
+            </ScrollContainer>
+        </MainContainer>
     )
 }
 

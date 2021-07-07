@@ -14,19 +14,41 @@ class AddOppCustomer extends Component {
         contactDialogVisible: false,
         contactList: [],
         selectedContactIndex: -1,
-
+        loading: true,
+        opportunityId: this.props.route?.params?.opportunityId
 
     }
 
     componentDidMount = () => {
 
-        this.getAllDropDowns()
+        if (this.state.opportunityId) {
 
+            this.getOppertunityById()
+        } else
+            this.getAllDropDowns()
+
+    }
+
+    getOppertunityById = () => {
+
+        opportunityApi.getOpportunityByID(this.state.opportunityId, (res) => {
+
+            const { Table } = res
+            const { OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, } = Table
+
+            this.setState({ OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription: OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, })
+            this.getAllDropDowns()
+
+        }, (error) => {
+
+            Utils.showToast(error)
+            goBack()
+        })
     }
 
     getAllDropDowns = async () => {
 
-        ProgressDialog.show()
+        // ProgressDialog.show()
         try {
 
 
@@ -37,14 +59,18 @@ class AddOppCustomer extends Component {
             const oppCurrencies = await getDropDowns(DROPDWON_GET_OPPORTUNITY_CURRENCY)
             const oppSalesStages = await getDropDowns(DROPDWON_GET_OPPORTUNITY_SALES_STAGE)
             console.log("territories", territories)
+
             this.setState({
+                loading: false,
                 territories, customers, stages, oppCategories, oppCurrencies, oppSalesStages
             })
         } catch (error) {
-
+            this.setState({
+                loading: false,
+            })
             console.log("Error", error)
         }
-        ProgressDialog.hide()
+        // ProgressDialog.hide()
 
     }
 
@@ -57,7 +83,7 @@ class AddOppCustomer extends Component {
 
     saveOpportunity = () => {
 
-        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, } = this.state
+        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, opportunityId } = this.state
 
         if (Utils.isEmpty(CustomerID)) {
             Utils.showToast("Please select Customer")
@@ -83,7 +109,7 @@ class AddOppCustomer extends Component {
             ProgressDialog.show()
             const params = {
                 OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
-                OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: 0, ProductDetails: "", AssignUserName: ""
+                OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: opportunityId, ProductDetails: "", AssignUserName: ""
             }
             opportunityApi.addOrUpdateOpportunity(params, () => {
                 ProgressDialog.hide()
@@ -97,9 +123,9 @@ class AddOppCustomer extends Component {
     }
 
     render() {
-        const { contactDialogVisible, selectedContactIndex, contactList, territories, stages, oppCategories, oppCurrencies, oppSalesStages, customers } = this.state
+        const { contactDialogVisible, loading, selectedContactIndex, contactList, territories, stages, oppCategories, oppCurrencies, oppSalesStages, customers, OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, opportunityId } = this.state
         return (
-            <AddOppCustomerUi onTextChanged={this.onTextChanged} customers={customers} territories={territories} stages={stages} oppCategories={oppCategories} oppCurrencies={oppCurrencies} oppSalesStages={oppSalesStages} selectedContactIndex={selectedContactIndex} onContactSelect={(index) => {
+            <AddOppCustomerUi opportunity={{ ID: opportunityId, OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, }} loading={loading} onTextChanged={this.onTextChanged} customers={customers} territories={territories} stages={stages} oppCategories={oppCategories} oppCurrencies={oppCurrencies} oppSalesStages={oppSalesStages} selectedContactIndex={selectedContactIndex} onContactSelect={(index) => {
 
                 this.setState({ selectedContactIndex: index })
             }} contactList={contactList} onSelectContact={() => {

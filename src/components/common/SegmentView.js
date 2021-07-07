@@ -1,13 +1,29 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Chip } from 'react-native-paper'
 import ReactNativeSegmentedControlTab from 'react-native-segmented-control-tab'
 import { Colors, FontName } from '../../utils'
 import ResponsivePixels from '../../utils/ResponsivePixels'
 
-const SegmentView = ({ segments, onSelect, title }) => {
+const SegmentView = ({ segments, onSelect, title, selectedSegment }) => {
     const finalSegments = segments || []
     const [selectedIndex, setSelectedIndex] = useState(-1)
+
+
+    useEffect(() => {
+
+        if (selectedSegment) {
+            const itemIndex = segments.findIndex((item) => {
+                return item.id == selectedSegment.id
+            })
+            console.log("itemIndex", segments)
+
+            if (itemIndex >= 0)
+                setSelectedIndex(itemIndex)
+        }
+    }, [])
+
     return (
         <View>
             <Text style={styles.titleStyle}>{title}</Text>

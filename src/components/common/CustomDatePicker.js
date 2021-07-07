@@ -8,7 +8,7 @@ export default class CustomDatePicker extends Component {
 
     state = {
         isDatePickerVisible: false,
-        selectedDate: null
+        selectedDate: this.props.selectedDate
     }
     render() {
         const iconStyle = this.props.iconStyle ? this.props.iconStyle : {}
@@ -22,11 +22,12 @@ export default class CustomDatePicker extends Component {
                     this.setState({
                         isDatePickerVisible: true
                     })
-                }} label={this.props.label} value={Utils.formatDate(this.state.selectedDate, "DD-MM-YYYY")} editable={false} rightIcon={this.props.rightIcon} />
+                }} onChangeText={() => this.props.onDateChanged(this.state.selectedDate)
+                } label={this.props.label} value={Utils.formatDate(this.state.selectedDate, "DD-MM-YYYY")} editable={false} rightIcon={this.props.rightIcon} />
                 <DateTimePickerModal
                     isVisible={this.state.isDatePickerVisible}
                     mode={this.props.mode || "date"}
-
+                    date={this.state.selectedDate}
                     onConfirm={(date) => {
                         console.log("date", date)
 

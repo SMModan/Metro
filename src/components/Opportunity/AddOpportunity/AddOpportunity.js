@@ -3,9 +3,13 @@ import { Text, View } from 'react-native'
 import AddOpportunityUi from './AddOpportunityUi'
 
 class AddOpportunity extends Component {
+
+
     render() {
+        // console.log("opportunityId", this.props.route?.params)
+
         return (
-            <AddOpportunityUi />
+            <AddOpportunityUi opportunityId={this.props.route?.params?.opportunityId} />
         )
     }
 }

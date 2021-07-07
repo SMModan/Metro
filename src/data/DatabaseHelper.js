@@ -2,9 +2,12 @@ import SQLite from "react-native-sqlite-storage";
 
 let db;
 
-export const openSQLiteDB = async () => {
+const openSQLiteDB = async () => {
 
-    global.db = await SQLite.openDatabase({ name: 'skyward.db', location: 'default' }, () => console.log("DB Opened"), (error) => console.log("DB ERROR", error));
+    if (db)
+        return db
+
+    db = await SQLite.openDatabase({ name: 'skyward.db', location: 'default' }, () => console.log("DB Opened"), (error) => console.log("DB ERROR", error));
 
     return db
 }
@@ -13,9 +16,9 @@ export const openSQLiteDB = async () => {
 
 export const createDefaultTables = async () => {
 
+    const db = await openSQLiteDB()
 
-
-    global.db.transaction((tx) => {
+    db.transaction((tx) => {
         tx.executeSql(`
         CREATE TABLE IF NOT EXISTS dropdowns (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +27,7 @@ export const createDefaultTables = async () => {
             type TEXT 
         );`, [], (tx, results) => {
 
-            console.log("Query completed", results);
+            // console.log("Query completed", results);
 
             // Get rows with Web SQL Database spec compliance.
 
@@ -64,20 +67,22 @@ export const createDefaultTables = async () => {
 }
 
 
-export const insertDropDowns = (key, value, type) => {
+export const insertDropDowns = async (key, value, type) => {
 
 
 
     // db = await openSQLiteDB()
+    const db = await openSQLiteDB()
 
     return new Promise((resolve, reject) => {
 
-        global.db.transaction((tx) => {
-            console.log("Going to insert")
+
+        db.transaction((tx) => {
+            // console.log("Going to insert")
 
             tx.executeSql(`INSERT INTO dropdowns (key,name,type)
         VALUES (?,?,?)`, [key, value, type], (tx, results) => {
-                console.log("Query completed", results);
+                // console.log("Query completed", results);
                 resolve(results)
             }, (error) => {
                 console.log("insert error", error)
@@ -93,19 +98,20 @@ export const insertDropDowns = (key, value, type) => {
 }
 
 
-export const deleteDropDowns = () => {
+export const deleteDropDowns = async () => {
 
 
 
     // db = await openSQLiteDB()
+    const db = await openSQLiteDB()
 
     return new Promise((resolve, reject) => {
 
-        global.db.transaction((tx) => {
+        db.transaction((tx) => {
             console.log("Going to delete")
 
             tx.executeSql(`DELETE FROM dropdowns`, [], (tx, results) => {
-                console.log("Query completed", results);
+                // console.log("Query completed", results);
                 resolve(results)
             }, (error) => {
                 console.log("delete error", error)
@@ -120,19 +126,20 @@ export const deleteDropDowns = () => {
 
 }
 
-export const getDropDowns = (type) => {
+export const getDropDowns = async (type) => {
 
+    const db = await openSQLiteDB()
 
 
     // db = await openSQLiteDB()
 
     return new Promise((resolve, reject) => {
 
-        global.db.transaction((tx) => {
-            console.log("Going to delete")
+        db.transaction((tx) => {
+            // console.log("Going to delete")
 
             tx.executeSql(`Select * from dropdowns where type=?`, [type], (tx, results) => {
-                console.log("Query completed", results);
+                // console.log("Query completed", results);
                 var len = results.rows.length;
                 const dropDown = []
                 for (let i = 0; i < len; i++) {

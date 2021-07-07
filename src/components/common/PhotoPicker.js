@@ -1,52 +1,99 @@
-import React from 'react'
 import { ActionSheet } from "native-base";
-import ImagePicker from 'react-native-image-picker'
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-import Images from '../../Images';
+import { Platform } from "react-native";
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { request } from "react-native-permissions";
 
-export default showPhotoPicker = ({ onFileSelect, document, title, noImage }) => {
+export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage, extraParam = {} }) => {
 
     let options = []
     if (!noImage) {
-        options.push('Camera')
-        options.push('Gallery')
+        options.push({ key: "Camera", title: "Camera" })
+        options.push({ key: "Gallery", title: "Gallery" })
     }
     const config = {
-        title: 'Select photo',
-        storageOptions: {
-            skipBackup: true,
-            waitUntilSaved: true,
-            cameraRoll: true,
-            path: 'images',
-        },
+        title: "Select",
+        quality: 0.3,
+        saveToPhotos: false,
+
     };
 
-    if (document)
-        options.push('Document')
 
-    options.push('Cancel')
+    if (extraParam.value)
+        options.push({ key: "extra", title: extraParam.value })
 
-    ActionSheet.show({ options: options, title: title || 'Select Option', cancelButtonIndex: 3 }, (actionIndex) => {
+    options.push({ key: "cancel", title: "Cancel" })
 
+    ActionSheet.show({ options: options.map(v => v.title), title: title || "Select Option", cancelButtonIndex: options.length - 1 }, async (actionIndex) => {
 
-        switch (options[actionIndex]) {
+        if (actionIndex > options.length - 1)
+            return
+
+        const { key } = options[actionIndex]
+
+        if (!key)
+            return
+
+        switch (key) {
 
             case 'Camera': {
-                ImagePicker.launchCamera(config, (response) => {
 
+                // ImageCropPicker.openCamera({
+
+                //     width: 300,
+                //     height: 400,
+                //     cropping: crop,
+                //     cropperCircleOverlay: crop
+                // }, (image) => {
+                //     if (image) {
+                //         image.source = { uri: image.path }
+                //         onFileSelect(image)
+                //     }
+                // })
+
+                if (Platform.OS == "android") {
+
+                    let result;
+                    try {
+
+                        result = await request("android.permission.CAMERA", {
+                            buttonPositive: "Okay",
+                            message: "Please grant camera permission if you want set profile picture from camera.",
+                            buttonNegative: "Close",
+                        })
+                    } catch (error) {
+
+                    }
+
+                    if (!result || result != "granted")
+                        return
+
+
+                }
+
+                launchCamera(config, (response) => {
+
+                    const { assets } = response
+                    console.log("response", response)
                     if (response.didCancel) {
                         console.log('User cancelled image picker');
-                    } else if (response.error) {
-                        console.log('ImagePicker Error: ', response.error);
-                    } else if (response.customButton) {
-                        console.log('User tapped custom button: ', response.customButton);
+                    } else if (response.errorCode) {
+                        console.log('ImagePicker errorCode: ', response.errorCode);
                     } else {
 
+                        const finalResponse = assets[0]
                         // You can also display the image using data:
                         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                        response.source = { uri: response.uri }
+                        finalResponse.source = { uri: assets[0].uri }
+                        // ImageCropPicker.openCropper({
+                        //     path: response.path,
+                        //     cropping: true,
+                        //     cropperCircleOverlay: true,
+                        //     width: 1000,
+                        //     height: 1000
+                        // }, (image) => {
 
-                        onFileSelect(response)
+                        // })
+                        onFileSelect(finalResponse)
                     }
 
                 })
@@ -55,37 +102,51 @@ export default showPhotoPicker = ({ onFileSelect, document, title, noImage }) =>
             }
             case 'Gallery': {
 
-                ImagePicker.launchImageLibrary(config, (response) => {
+
+                // ImageCropPicker.openPicker({
+                //     width: 300,
+                //     height: 400,
+                //     cropping: crop,
+                //     cropperCircleOverlay: crop,
+                // }).then(image => {
+                //     image.uri = image.path
+                //     image.source = { uri: image.path }
+                //     onFileSelect(image)
+                // });
+
+                launchImageLibrary(config, (response) => {
+                    const { assets } = response
+
                     if (response.didCancel) {
                         console.log('User cancelled image picker');
-                    } else if (response.error) {
-                        console.log('ImagePicker Error: ', response.error);
-                    } else if (response.customButton) {
-                        console.log('User tapped custom button: ', response.customButton);
+                    } else if (response.errorCode) {
+                        console.log('ImagePicker errorCode: ', response.errorCode);
                     } else {
 
+                        // You can also displa
+                        const finalResponse = assets[0]
                         // You can also display the image using data:
                         // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                        response.source = { uri: response.uri }
+                        finalResponse.source = { uri: assets[0].uri }
+                        // ImageCropPicker.openCropper({
+                        //     path: response.path,
+                        //     cropping: true,
+                        //     cropperCircleOverlay: true,
+                        //     width: 1000,
+                        //     height: 1000
+                        // }, (image) => {
 
-                        onFileSelect(response)
+                        // })
+                        onFileSelect(finalResponse)
                     }
                 })
                 break;
             }
-            case 'Document': {
 
-                DocumentPicker.show({
-                    filetype: [DocumentPickerUtil.pdf()],
-                }, (error, res) => {
-                    // Android
+            case "extra": {
 
-                    if (!error) {
-                        res.source = Images.pdf
-                        onFileSelect(res)
-                    }
-                });
-                break;
+                if (extraParam.callback)
+                    extraParam.callback()
             }
 
         }

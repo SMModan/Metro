@@ -11,10 +11,11 @@ import AddOppProduct from './product/AddOppProduct'
 import OppTaskList from './task/OppTaskList'
 
 const Tab = createMaterialTopTabNavigator();
-const AddOpportunityUi = ({ }) => {
+const AddOpportunityUi = ({ opportunityId }) => {
+
     return (
         <MainContainer header={{
-            title: strings.addOpportunity, left: {
+            title: !opportunityId ? strings.addOpportunity : strings.editOpportunity, left: {
                 image: Images.ic_BackWhite,
                 onPress: () => goBack(),
             },
@@ -40,12 +41,13 @@ const AddOpportunityUi = ({ }) => {
             <Tab.Navigator
                 initialRouteName="Customer"
                 swipeEnabled
+                lazy
                 backBehavior="initialRoute"
                 keyboardDismissMode="auto"
                 tabBarOptions={{
                     activeTintColor: 'white',
                     labelStyle: { textTransform: 'none', fontSize: 15, fontFamily: FontName.regular },
-                    scrollEnabled: false,
+                    scrollEnabled: opportunityId ? true : false,
 
                     style: { backgroundColor: Colors.secondary500 },
                     showIcon: true,
@@ -55,7 +57,7 @@ const AddOpportunityUi = ({ }) => {
                 <Tab.Screen
                     name="Customer"
                     component={AddOppCustomer}
-
+                    initialParams={{ opportunityId: opportunityId }}
                     options={{ title: 'Customer', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_contact} /> }}
                 />
                 <Tab.Screen
@@ -63,17 +65,21 @@ const AddOpportunityUi = ({ }) => {
                     component={AddOppProduct}
                     options={{ tabBarLabel: 'Product', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_product} /> }}
                 />
-                {/* <Tab.Screen
-                    name="Task"
-                    component={OppTaskList}
-                    options={{ tabBarLabel: 'Task', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_task} /> }}
-                />
+                {opportunityId ?
 
-                <Tab.Screen
+                    <Tab.Screen
+                        name="Task"
+                        component={OppTaskList}
+                        options={{ tabBarLabel: 'Task', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_task} /> }}
+                    /> : null}
+
+                {opportunityId ? <Tab.Screen
                     name="Attachment"
                     component={OppAttachment}
                     options={{ tabBarLabel: 'Attachment', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_attachment} /> }}
-                /> */}
+                />
+
+                    : null}
             </Tab.Navigator>
 
         </MainContainer>

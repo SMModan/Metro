@@ -27,7 +27,10 @@ class Opportunity extends Component {
 
   renderCell = ({ item, index }) => {
     return (
-      <Card style={{ margin: 5 }} key={index}>
+      <Card onPress={() => {
+        push("AddOpportunity", { opportunityId: item.ID })
+
+      }} style={{ margin: 5 }} key={index}>
         <View style={{ margin: 15 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, width: '70%', }}>{item.CloseDate}</Text>

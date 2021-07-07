@@ -1,13 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Chip } from 'react-native-paper'
 import { Colors, FontName } from '../../utils'
 import ResponsivePixels from '../../utils/ResponsivePixels'
 
-const ChipViewContainer = ({ chips, onSelect, title }) => {
+const ChipViewContainer = ({ chips, onSelect, title, selectedChip }) => {
 
     let finalChips = chips || []
     const [selectedIndex, setSelectedIndex] = useState(-1)
+
+    useEffect(() => {
+
+        if (selectedChip) {
+            const itemIndex = chips.findIndex((item) => {
+                return item.id == selectedChip.id
+            })
+
+            if (itemIndex >= 0)
+                setSelectedIndex(itemIndex)
+        }
+    }, [])
     return (
         <View>
             <Text style={styles.titleStyle}>{title}</Text>

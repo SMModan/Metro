@@ -10,6 +10,7 @@ import { Images, Colors } from '../../../utils';
 import { Card, Title, FAB } from 'react-native-paper';
 import { push } from '../../../navigation/Navigator';
 import opportunityApi from '../apis/OpportunityApis';
+import _ from "lodash"
 
 
 class Opportunity extends Component {
@@ -17,19 +18,21 @@ class Opportunity extends Component {
   state = {
     selectedIndex: 0,
     page: 0,
-    totalPage: 0,
+    totalCount: 0,
     refreshing: false,
     loading: true,
     loadMore: false,
     isLast: false,
+    showSearch: false,
+    searchQuery: false,
     listData: []
   };
 
-  renderCell = ({  index }) => {
-    console.log(index);
+  renderCell = ({ index }) => {
+    // console.log(index);
 
     const item = this.state.listData[index];
-    
+
     return (
       <Card onPress={() => {
         push("AddOpportunity", { opportunityId: item.ID })
@@ -55,11 +58,24 @@ class Opportunity extends Component {
     this.getAllOpportunities()
   }
 
+
+  searchOpp = async (text) => {
+
+
+    this.getAllOpportunities(text)
+
+
+  }
+
+  searchOppDelayed = _.debounce(this.searchOpp, 1000)
+
   getAllOpportunities = () => {
+
+    const { searchQuery } = this.state
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
-      Filter: ""
+      Filter: searchQuery || ""
     }
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
@@ -69,17 +85,24 @@ class Opportunity extends Component {
       console.log("Table", Table)
       let isLast = true
       if (Table) {
+        this.setState({ totalCount: Table[0].TotalCount })
         let totalPage = Table[0].TotalCount / 10
         isLast = this.state.page == totalPage
         this.setState({
           listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
           loading: false, refreshing: false, loadMore: false, isLast
         })
+      } else {
+        this.setState({
+          loading: false, refreshing: false, loadMore: false, isLast: true
+        })
       }
 
     }, () => {
+      // let totalPage = this.state.totalCount / 10
+      // let isLast = this.state.page == totalPage
       this.setState({
-        loading: !this.state.refreshing && !this.state.loadMore
+        loading: !this.state.refreshing && !this.state.loadMore, loadMore: false,
       })
     })
   }
@@ -87,7 +110,7 @@ class Opportunity extends Component {
 
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast } = this.state
+    const { listData, refreshing, loading, loadMore, isLast, showSearch } = this.state
     return (
       <MainContainer
         header={{
@@ -98,7 +121,20 @@ class Opportunity extends Component {
           title: 'Opportunity',
           hideUnderLine: true,
           light: true,
-          right: [{ image: Images.ic_Search, onPress: () => this.props.navigation.push('Settings'), }],
+          onChangeSearch: (text) => {
+
+            this.setState({ searchQuery: text })
+            this.searchOppDelayed(text)
+          },
+          onCloseSearch: () => {
+            this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true, }, () => {
+
+              this.getAllOpportunities()
+
+            })
+          },
+          showSearch,
+          right: [{ image: Images.ic_Search, onPress: () => this.setState({ showSearch: true }), }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>

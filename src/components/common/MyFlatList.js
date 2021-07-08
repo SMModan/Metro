@@ -23,7 +23,7 @@ export default function MyFlatList({ renderItem,
         return (<FlatList
             onLayout={(e) => {
 
-                console.log("e".e)
+                // console.log("e".e)
             }}
             data={data}
             ref={flatList}

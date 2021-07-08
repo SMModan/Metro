@@ -5,6 +5,7 @@ import { KEY_TOKEN } from '../data/PrefKeys';
 import { BASE_URL } from './ApiConstants';
 import queryString from "query-string"
 import { setSessionField } from '../reducers/SessionReducer';
+import { fetch } from "@react-native-community/netinfo";
 export const METHOD = {
 
     POST: "post",
@@ -30,7 +31,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
     console.log("connectionString", connectionString);
 
 
-    const isConnected = { isConnected: true }//await NetInfo.fetch()
+    const isConnected = await fetch()
     console.log("Internet connection", isConnected);
 
     if (!isConnected.isConnected)

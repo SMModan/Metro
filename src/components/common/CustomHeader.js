@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, Image, TouchableOpacity, StatusBar, StatusBarIOS } from 'react-native'
+import { View, Image, TouchableOpacity, StatusBar, StatusBarIOS, ImageStore } from 'react-native'
 import { Header, Left, Right, Body, Icon, Text, Button, Title } from 'native-base'
 import Clickable from './Clickable';
 import { Images, FontName, FontSize, Colors } from '../../utils';
 import * as Animatable from 'react-native-animatable';
 import { Appbar } from 'react-native-paper';
+import { Searchbar } from 'react-native-paper';
 
 
 class CustomHeader extends Component {
@@ -15,19 +16,30 @@ class CustomHeader extends Component {
     }
 
     render() {
-        let { title, image, titleColor } = this.props;
+        let { title, image, titleColor, showSearch, onChangeSearch, onCloseSearch, searchQuery } = this.props;
 
         return (
+            showSearch ? <Searchbar
+                placeholder="Search"
+                iconColor={Colors.black}
+                icon={Images.ic_BackWhite}
 
-            <Appbar.Header style={{ elevation: 0, backgroundColor: this.props.backgroundColor || Colors.secondary500, justifyContent: 'center', ...this.props.style }} >
-                {this._renderOption(this.props.left)}
-                {this._renderTitle()}
-                {this._renderRight()}
-                <StatusBar
+                onIconPress={onCloseSearch}
+                clearIcon="camera"
 
-                    backgroundColor={this.props.backgroundColor || Colors.secondary500} barStyle={!this.props.light ? 'dark-content' : 'light-content'} />
+                clearButtonMode="unless-editing"
+                onChangeText={onChangeSearch}
+                value={searchQuery}
+            /> :
+                <Appbar.Header style={{ elevation: 0, backgroundColor: this.props.backgroundColor || Colors.secondary500, justifyContent: 'center', ...this.props.style }} >
+                    {this._renderOption(this.props.left)}
+                    {this._renderTitle()}
+                    {this._renderRight()}
+                    <StatusBar
 
-            </Appbar.Header>
+                        backgroundColor={this.props.backgroundColor || Colors.secondary500} barStyle={!this.props.light ? 'dark-content' : 'light-content'} />
+
+                </Appbar.Header>
             // <Header androidStatusBarColor={this.props.androidStatusBarColor || 'transparent'} {...this.props} style={{ backgroundColor: this.props.backgroundColor || Colors.darkBlue, justifyContent: 'center' }} >
             // <Header onLayout={this.props.onLayout} transparent androidStatusBarColor={this.props.androidStatusBarColor || this.props.backgroundColor || 'transparent'} style={{ backgroundColor: this.props.backgroundColor || Colors.secondary500, justifyContent: 'center', ...this.props.style }}>
             //     <Left style={{ flex: 1 }}>{this._renderOption(this.props.left)}</Left>

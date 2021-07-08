@@ -1,8 +1,9 @@
 import { store } from "../App";
 import { ProgressDialog } from "../components/common";
 import { deleteDropDowns, insertDropDowns } from "../data/DatabaseHelper";
+import { reset } from "../navigation/Navigator";
 import apiCall from '../network/ApiService';
-
+import { setSessionField } from "../reducers/SessionReducer"
 let index = 0
 const offlineData = [
     {

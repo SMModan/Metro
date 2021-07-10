@@ -1,4 +1,4 @@
-import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_BY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
+import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_BY_ID, GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_BY_ID, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
 import apiCall, { METHOD } from "../../../network/ApiService"
 
 const opportunityApi = {
@@ -251,6 +251,43 @@ const opportunityApi = {
         })
 
     },
+    getPriceBookLevelByCurrencyId(CurrencyID) {
+
+
+
+        return new Promise((resolve, reject) => {
+
+            apiCall(GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID, { CurrencyID }, (res) => {
+
+                const { Table } = res
+                let results = []
+                if (Table) {
+                    if (Array.isArray(Table)) {
+
+                        results = Table.map((t) => ({
+                            id: t.ID,
+                            name: t.Name
+                        }))
+                    } else {
+                        results = [{
+                            id: Table.ID,
+                            name: Table.Name
+                        }]
+                    }
+                }
+
+                // results = results.filter((t) => t.name.length > 0)
+
+                // console.log("results", results)
+
+                resolve(results)
+            }, (error) => {
+                resolve([])
+            })
+
+        })
+
+    },
     getContactByCustomerId(CustomerID) {
 
 
@@ -287,6 +324,44 @@ const opportunityApi = {
                 resolve(results)
             }, (error) => {
                 resolve([])
+            })
+
+        })
+
+    },
+    getProductByID(ID) {
+
+
+
+        return new Promise((resolve, reject) => {
+
+            apiCall(GET_PRODUCT_BY_ID, { ID }, (res) => {
+
+                const { Table } = res
+
+                resolve(Table)
+
+            }, (error) => {
+                resolve(error)
+            })
+
+        })
+
+    },
+    getProductRateByCurrencyIdLevelId(params) {
+
+
+
+        return new Promise((resolve, reject) => {
+
+            apiCall(GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID, params, (res) => {
+
+                const { Table } = res
+
+                resolve(Table)
+
+            }, (error) => {
+                resolve(error)
             })
 
         })

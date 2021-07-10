@@ -43,17 +43,17 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                     <FloatingEditText value={OpportunityName} onChangeText={(text) => onTextChanged("OpportunityName", text)} label={strings.opp_name + "*"} />
                     <CustomDatePicker selectedDate={moment(CloseDate).toDate()} onDateChanged={(date) => {
 
-                        onTextChanged("CloseDate", Utils.formatDate(date, "DD-MM-YYYY"))
+                        onTextChanged("CloseDate", date)
 
                     }} label={strings.closing_date + "*"} rightIcon={Images.ic_down} />
                     <CustomPicker selectedItem={{ id: TerritoryID }} onSelect={(item) => onTextChanged("TerritoryID", item.id)} list={territories} label={strings.terriory + "*"} editable={false} rightIcon={Images.ic_down} />
                     <CustomPicker selectedItem={{ id: StageID }} onSelect={(item) => onTextChanged("StageID", item.id)} list={stages} label={strings.stage + "*"} rightIcon={Images.ic_down} />
                 </ViewWithTitle>
 
-                <ViewWithTitle title={strings.contact}>
+                {/* <ViewWithTitle title={strings.contact}>
                     <FloatingEditText value={selectedContactIndex > -1 ? contactList[selectedContactIndex].name : ""} editable={false} onPress={onSelectContact} leftIcon={Images.ic_add_blue} label={strings.select_contact} />
                 </ViewWithTitle>
-
+ */}
 
                 <ViewWithTitle title={strings.revenue}>
                     <FloatingEditText value={Amount?.toString()} onChangeText={(text) => onTextChanged("Amount", text)} inputType="numeric" label={strings.amount} />

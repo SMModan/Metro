@@ -17,7 +17,11 @@ export default class FloatingEditText extends Component {
     };
 
     handleFocus = () => this.setState({ isFocused: true, underlineColor: Colors.blueGray900 });
-    handleBlur = () => this.setState({ isFocused: false, underlineColor: Colors.blueGray200 });
+    handleBlur = () => {
+        if (this.props.onBlur)
+            this.props.onBlur()
+        this.setState({ isFocused: false, underlineColor: Colors.blueGray200 });
+    }
 
     render() {
         const {
@@ -72,6 +76,7 @@ export default class FloatingEditText extends Component {
                                 placeholderTextColor={Colors.blueGray500}
                                 editable={editable}
                                 keyboardType={inputType}
+
                                 onChangeText={(text) => {
                                     this.setState({ text: text })
                                     if (onChangeText)
@@ -81,10 +86,11 @@ export default class FloatingEditText extends Component {
                                 style={{
                                     //    marginStart:leftIcon ? 40 : 0,
                                     paddingVertical: 12, flex: 1,
-                                    fontFamily: FontName.regular, fontSize: fontSize || 14, color: textColor ||
+                                    fontFamily: FontName.regular, fontSize: fontSize || 17, color: textColor ||
                                         Colors.blueGray900, borderBottomWidth: 0,
                                     height: minHeight,
                                 }}
+                                textAlignVertical={minHeight ? "top" : undefined}
                                 onFocus={this.handleFocus}
                                 selectionColor={Colors.blueGray900}
                                 onBlur={this.handleBlur}
@@ -95,8 +101,9 @@ export default class FloatingEditText extends Component {
                                 paddingVertical: 12,
                                 textAlignVertical: "center",
                                 fontFamily: FontName.regular,
+
                                 fontSize: fontSize || 17,
-                                color: textColor || Colors.Black, borderBottomWidth: 0,
+                                color: textColor || Colors.blueGray900, borderBottomWidth: 0,
                                 height: minHeight
                             }}>
                                 {value ? value.toString() : value}

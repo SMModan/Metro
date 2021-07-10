@@ -3,24 +3,33 @@ import { Text, View } from 'react-native'
 import opportunityApi from '../../apis/OpportunityApis'
 import AddOppProductUi from './AddOppProductUi'
 import _ from "lodash"
+import { OpportunityContext } from '../AddOpportunity'
+import WrappedComponentOpportunity from '../WrappedComponentOpportunity'
+import { ProgressDialog } from '../../../common'
+import { Utils } from '../../../../utils'
+import { goBack } from '../../../../navigation/Navigator'
+
 class AddOppProduct extends Component {
 
     state = {
         products: [{
+            id: 0,
             name: "Product 1",
             productId: "",
             productGroupId: "",
             productCategoryId: "",
-            qty: "",
+            qty: "0",
             amount: "",
-            rate: "",
+            rate: "0",
             specification: "",
             description: "",
             productLevel: "",
+            state: 0,
         }],
 
         productGroups: [],
         productCategories: [],
+        productLevels: [],
         loading: true,
 
         selectedIndex: 0,
@@ -29,8 +38,39 @@ class AddOppProduct extends Component {
 
     componentDidMount = () => {
 
-        console.log("componentDidMount", "componentDidMount")
+        let { opportunity } = this.props.oppContext;
+
+        // console.log("componentDidMount", opportunity)
+        if (opportunity.products && opportunity.products.length) {
+
+            const products = opportunity.products.map((p, index) => {
+
+                const { ProductID, ID, ProductDescription, ProductName, ProductGroupID, ProductCategoryID, Quantity, Rate, Amount, Specification } = p
+                return {
+
+                    name: `Product ${index + 1}`,
+                    productId: ProductID,
+                    id: ID,
+                    productName: ProductName,
+                    productGroupId: ProductGroupID,
+                    productCategoryId: ProductCategoryID,
+                    qty: Quantity.toString(),
+                    amount: Amount.toString(),
+                    rate: Rate.toString(),
+                    specification: Specification,
+                    description: ProductDescription,
+                    productLevel: "",
+                    state: 4,
+                }
+            })
+
+            // console.log("products", products)
+            this.setState({
+                products: [...products]
+            })
+        }
         this.getAllDropDowns()
+
 
     }
 
@@ -50,20 +90,39 @@ class AddOppProduct extends Component {
         }
     }
 
-    searchOppDelayed = _.debounce(this.searchOpp, 1000)
+    getProductById = async (id) => {
+
+        const product = await opportunityApi.getProductByID(id)
+
+        if (product) {
+
+            const { ProductCategoryID, ProductGroupID, UnitPrice, ProductDescription, Description } = product
+
+            this.onTextChanged("productGroupId", ProductGroupID)
+            this.onTextChanged("productCategoryId", ProductCategoryID)
+            this.onTextChanged("description", ProductDescription)
+            this.onTextChanged("specification", Description)
+            console.log("UnitPrice", UnitPrice)
+            // this.onTextChanged("rate", UnitPrice?.toString())
+        }
+
+    }
+    searchOppDelayed = _.debounce(this.searchOpp, 300)
     getAllDropDowns = async () => {
 
         // ProgressDialog.show()
         try {
 
+            let { opportunity } = this.props.oppContext;
 
             const productGroups = await opportunityApi.getProductGroups()
             const productCategories = await opportunityApi.getProductCategories()
+            const productLevels = opportunity.CurrencyID ? await opportunityApi.getPriceBookLevelByCurrencyId(opportunity.CurrencyID) : []
 
             // console.log("productCategories", productCategories)
             this.setState({
                 loading: false,
-                productGroups, productCategories,
+                productGroups, productCategories, productLevels
             })
         } catch (error) {
             this.setState({
@@ -75,6 +134,31 @@ class AddOppProduct extends Component {
 
     }
 
+    getProductRate = async () => {
+        let { opportunity } = this.props.oppContext;
+        const { products, selectedIndex } = this.state
+
+        const { CurrencyID } = opportunity
+        const { productLevel, productId } = products[selectedIndex]
+
+        if (CurrencyID && productLevel && productId) {
+            const productRate = await opportunityApi.getProductRateByCurrencyIdLevelId({
+                CurrencyID,
+                LevelID: productLevel,
+                ProductID: productId
+            })
+
+            if (productRate) {
+
+                const { Rate } = productRate
+
+                this.onTextChanged("rate", Rate?.toString())
+            }
+
+        }
+
+    }
+
     onTextChanged = (key, value) => {
 
         const { products, selectedIndex } = this.state
@@ -83,30 +167,124 @@ class AddOppProduct extends Component {
         this.setState({
             products
         })
+
+        switch (key) {
+            case "productLevel":
+            case "productId":
+
+                this.getProductRate()
+                break;
+        }
     }
 
     getDefaultProduct = () => {
 
         return {
+            id: 0,
             name: `Product ${this.state.products.length + 1}`,
             productId: "",
             productGroupId: "",
             productCategoryId: "",
-            qty: "",
+            qty: "0",
             amount: "",
-            rate: "",
+            rate: "0",
             specification: "",
             description: "",
             productLevel: "",
+            state: 0,
 
         }
     }
 
-    render() {
 
-        const { productGroups, oppProducts, loading, productCategories, products } = this.state
+    updateProducts = () => {
+
+        const products = this.state.products.filter((p) => {
+
+            return !p.productId
+        })
+        if (products.length) {
+            Utils.showToast("Please select Product")
+            return
+        }
+
+        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, ID } = this.props.oppContext.opportunity
+
+        let ProductDetails = this.state.products.map((p) => {
+
+            // console.log("amount", p.amount)
+            return `${p.id}$${p.productId}$${p.productName}$${p.specification || ""}$${p.state}$${p.qty || 0}$${p.productCategoryId || 0}$${p.productGroupId || 0}$${(parseFloat(p.rate || 0) * parseFloat(p.qty || 0)).toString()}$${p.productLevel || 0}$${p.rate || 0}$${p.description || ""}`
+        })
+
+        ProductDetails = ProductDetails.join("@")
+
+        if (ID) {
+            if (Utils.isEmpty(CustomerID)) {
+                Utils.showToast("Please select Customer")
+
+            }
+            else if (Utils.isEmpty(OpportunityName)) {
+
+                Utils.showToast("Please enter Opportunity Name")
+            }
+            else if (Utils.isEmpty(CloseDate)) {
+                Utils.showToast("Please select Close Date")
+
+            }
+            else if (Utils.isEmpty(TerritoryID)) {
+                Utils.showToast("Please select Territory")
+
+            }
+            else if (Utils.isEmpty(StageID)) {
+                Utils.showToast("Please select Stage")
+
+            } else {
+
+                ProgressDialog.show()
+                /*
+                
+                insertProductString = insertProductString + arrAllProductsList.get(i).getId() + "$" +
+                                                    arrAllProductsList.get(i).getProductid() + "$" + arrAllProductsList.get(i).getProductname() + "$" +
+                                                    arrAllProductsList.get(i).getDecription() + "$" + arrAllProductsList.get(i).getRowstate() + "$" +
+                                                    arrAllProductsList.get(i).getQuantity()+ "$" + arrAllProductsList.get(i).getProductCategoryID()
+                                                    + "$" + arrAllProductsList.get(i).getProductDomainID() +"$"+arrAllProductsList.get(i).getAmount()
+                                                    + "$" + arrAllProductsList.get(i).getLevelId() + "$" + arrAllProductsList.get(i).getRate()+  "$" + arrAllProductsList.get(i).getProductDescription()+ "@";
+                */
+
+                const params = {
+                    OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
+                    OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: ID || 0, ProductDetails: ProductDetails, AssignUserName: ""
+                }
+                opportunityApi.addOrUpdateOpportunity(params, (res) => {
+                    ProgressDialog.hide()
+                    goBack()
+                }, (error) => {
+
+                    Utils.showToast(error)
+                    ProgressDialog.hide()
+                })
+            }
+        } else {
+
+
+            this.props.oppContext.setOpportunity({ ...this.props.oppContext.opportunity, ProductDetails })
+            goBack()
+
+        }
+    }
+
+    deleteProduct = () => {
+
+    }
+
+    render() {
+        // let { opportunity } = this.props.oppContext;
+
+        // const { ID } = opportunity
+        const { productGroups, oppProducts, productLevels, loading, productCategories, products } = this.state
+        // console.log("OpportunityID", ID)
         return (
-            <AddOppProductUi oppProducts={oppProducts} onSearchProduct={this.searchOppDelayed} loading={loading} productGroups={productGroups} productCategories={productCategories} onTextChanged={this.onTextChanged} selectedIndex={this.state.selectedIndex}
+            <AddOppProductUi productLevels={productLevels} onSelectProductForOpp={this.getProductById} oppProducts={oppProducts} onSearchProduct={this.searchOppDelayed} loading={loading} productGroups={productGroups} productCategories={productCategories} onTextChanged={this.onTextChanged} selectedIndex={this.state.selectedIndex}
                 onSelectProduct={(index) => {
                     this.setState({ selectedIndex: index })
 
@@ -115,9 +293,12 @@ class AddOppProduct extends Component {
 
                     console.log("Click")
                     this.setState({ products: [...this.state.products, { ...this.getDefaultProduct() }] })
-                }} products={products} />
+                }} products={products}
+                onSubmit={this.updateProducts}
+                onDelete={this.deleteProduct}
+            />
         )
     }
 }
 
-export default AddOppProduct
+export default WrappedComponentOpportunity(AddOppProduct)

@@ -13,7 +13,7 @@ const AddOppProductUi = ({ products, onSubmit, onDelete, productLevels, oppProdu
     let selectedProduct = {}
 
     if (products.length)
-        selectedProduct = products[selectedIndex]
+        selectedProduct = products[selectedIndex] || {}
 
     const [productQuery, setProductQuery] = useState("")
 
@@ -38,7 +38,7 @@ const AddOppProductUi = ({ products, onSubmit, onDelete, productLevels, oppProdu
                 <ViewWithTitle innerStyle={{
                     backgroundColor: Colors.secondary50, paddingHorizontal: 0,
                     paddingVertical: 0,
-                }} title="Product Information">
+                }} mainStyle={{ flex: 1 }} title="Product Information">
 
                     <View style={{ backgroundColor: Colors.secondary50, paddingHorizontal: 16, paddingVertical: 8, flexDirection: "row" }}>
                         <Chip onPress={onAddProduct} textStyle={{ fontSize: 13, color: Colors.white }}
@@ -47,10 +47,10 @@ const AddOppProductUi = ({ products, onSubmit, onDelete, productLevels, oppProdu
                         <ScrollView horizontal>
                             {products.map((item, index) => <Chip key={index} style={{ margin: 5, backgroundColor: selectedIndex === index ? Colors.secondary500 : Colors.white }}
                                 textStyle={{ fontSize: 13, color: selectedIndex === index ? Colors.white : Colors.blueGray900 }}
-                                onPress={() => onSelectProduct && onSelectProduct(index)}>{item.name}</Chip>)}
+                                onPress={() => onSelectProduct && onSelectProduct(index)}>{`Product ${index + 1}`}</Chip>)}
                         </ScrollView>
                     </View>
-                    <View style={{ backgroundColor: Colors.white, paddingHorizontal: 16 }}>
+                    {products.length ? <View style={{ backgroundColor: Colors.white, paddingHorizontal: 16 }}>
                         <FloatingEditText onChangeText={(text) => {
                             onTextChanged("productName", text)
                             setProductQuery(text)
@@ -114,7 +114,7 @@ const AddOppProductUi = ({ products, onSubmit, onDelete, productLevels, oppProdu
                         <FloatingEditText multiline minHeight={100} value={specification} onChangeText={(text) => onTextChanged("specification", text)} label={strings.competition_status} />
                         <FloatingEditText multiline minHeight={250} value={description} onChangeText={(text) => onTextChanged("description", text)} label={strings.description} />
                         <TextButton onPress={onDelete} title={`Delete Product ${selectedIndex + 1}`} />
-                    </View>
+                    </View> : null}
                 </ViewWithTitle>
 
                 <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>

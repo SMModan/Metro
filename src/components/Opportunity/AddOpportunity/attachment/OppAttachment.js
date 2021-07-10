@@ -23,7 +23,7 @@ class OppAttachment extends Component {
             DocumentName: documentName,
             FileName: attachment.fileName,
             FileContentType: attachment.type,
-            File: decode(attachment.base64)
+            File: attachment.base64
         }, () => {
 
             const { attachments } = this.state

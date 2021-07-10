@@ -107,6 +107,10 @@ class AddOppProduct extends Component {
         }
 
     }
+
+    componentDidUpdate = (prevPops, prevState, snapshot) => {
+
+    }
     searchOppDelayed = _.debounce(this.searchOpp, 300)
     getAllDropDowns = async () => {
 
@@ -168,6 +172,7 @@ class AddOppProduct extends Component {
             products
         })
 
+        console.log("key", key)
         switch (key) {
             case "productLevel":
             case "productId":
@@ -213,7 +218,7 @@ class AddOppProduct extends Component {
         let ProductDetails = this.state.products.map((p) => {
 
             // console.log("amount", p.amount)
-            return `${p.id}$${p.productId}$${p.productName}$${p.specification || ""}$${p.state}$${p.qty || 0}$${p.productCategoryId || 0}$${p.productGroupId || 0}$${(parseFloat(p.rate || 0) * parseFloat(p.qty || 0)).toString()}$${p.productLevel || 0}$${p.rate || 0}$${p.description || ""}`
+            return `${p.id}$${p.productId}$${p.productName}$${p.specification || ""}$${p.state}$${parseFloat(p.qty || 0).toFixed(2)}$${p.productCategoryId || 0}$${p.productGroupId || 0}$${(parseFloat(p.rate || 0) * parseFloat(p.qty || 0)).toFixed(2)}$${p.productLevel || 0}$${parseFloat(p.rate || 0).toFixed(2)}$${p.description || ""}`
         })
 
         ProductDetails = ProductDetails.join("@")
@@ -275,6 +280,22 @@ class AddOppProduct extends Component {
 
     deleteProduct = () => {
 
+
+        const { products, selectedIndex } = this.state
+
+        console.log("selectedIndex", selectedIndex, products[selectedIndex]["state"])
+        if (products[selectedIndex]["state"] == 0) {
+            products.splice(selectedIndex, 1)
+
+        } else
+            products[selectedIndex]["state"] = 3
+
+
+        this.setState({ selectedIndex: products.filter(p => p.state != 3).length - 1 })
+
+        this.setState({
+            products,
+        })
     }
 
     render() {
@@ -291,9 +312,10 @@ class AddOppProduct extends Component {
                 }}
                 onAddProduct={() => {
 
+                    const products = [...this.state.products, { ...this.getDefaultProduct() }]
                     console.log("Click")
-                    this.setState({ products: [...this.state.products, { ...this.getDefaultProduct() }] })
-                }} products={products}
+                    this.setState({ products, selectedIndex: products.length - 1 })
+                }} products={products.filter(p => p.state != 3)}
                 onSubmit={this.updateProducts}
                 onDelete={this.deleteProduct}
             />

@@ -16,14 +16,14 @@ class CustomHeader extends Component {
     }
 
     render() {
-        let { title, image, titleColor, showSearch, onChangeSearch, onCloseSearch, searchQuery } = this.props;
+        let { title, image, titleColor, showSearch, onClickSearch, onChangeSearch, onCloseSearch, searchQuery } = this.props;
 
         return (
             showSearch ? <Searchbar
                 placeholder="Search"
                 iconColor={Colors.black}
                 icon={Images.ic_BackWhite}
-
+                onSubmitEditing={onClickSearch}
                 onIconPress={onCloseSearch}
                 clearIcon="camera"
 

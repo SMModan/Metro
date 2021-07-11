@@ -17,6 +17,9 @@ export const GET_OPPORTUNITY_ATTACHMENT = "GetOpportunityAttachmentsByOpportunit
 export const GET_PRODUCT_GROUPS = "GetProductGroup"
 export const GET_PRODUCT_CATEGORIES = "GetProductCategory"
 export const GET_PRODUCTS_FOR_OPP = "GetProductsForOpportunity"
+export const GET_PRODUCT_BY_ID = "GetProductByID"
+export const GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID = "GetPriceBookLevelByCurrencyIDAndUserID"
+export const GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID = "GetProductRateByCurrencyIDAndLevelID"
 
 
 // TaskList Api end points

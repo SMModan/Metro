@@ -3,9 +3,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Colors, FontName } from '../../utils'
 import ResponsivePixels from '../../utils/ResponsivePixels'
 
-const ViewWithTitle = ({ title, children, innerStyle }) => {
+const ViewWithTitle = ({ title, children, mainStyle, innerStyle }) => {
     return (
-        <View style={styles.main}>
+        <View style={[styles.main, mainStyle]}>
             <Text style={styles.titleStyle}>{title}</Text>
             <View style={[{
                 backgroundColor: Colors.white, paddingHorizontal: ResponsivePixels.size16,

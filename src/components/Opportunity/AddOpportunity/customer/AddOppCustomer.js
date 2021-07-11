@@ -7,7 +7,7 @@ import { AlertDialog, ProgressDialog } from '../../../common'
 import opportunityApi from '../../apis/OpportunityApis'
 import AddOppCustomerUi from './AddOppCustomerUi'
 import { goBack, push } from '../../../../navigation/Navigator'
-
+import WrappedComponentOpportunity from "../WrappedComponentOpportunity"
 class AddOppCustomer extends Component {
 
     state = {
@@ -33,9 +33,23 @@ class AddOppCustomer extends Component {
 
         opportunityApi.getOpportunityByID(this.state.opportunityId, (res) => {
 
-            const { Table } = res
+            const { Table, Table2 } = res
             const { OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, } = Table
 
+            console.log("this.context", Table)
+            let products = []
+            // let ProductDetails = []
+            if (Table2) {
+                if (Array.isArray(Table2)) {
+                    products = Table2
+                } else {
+                    products = [Table2]
+                }
+
+
+            }
+            if (this.props.oppContext)
+                this.props.oppContext.setOpportunity({ ...Table, products })
             this.setState({ OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription: OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, })
             this.getAllDropDowns()
 
@@ -76,12 +90,16 @@ class AddOppCustomer extends Component {
         this.setState({
             [key]: value
         })
+
+        if (this.props.oppContext)
+            this.props.oppContext.setOpportunity({ ...this.props.oppContext.opportunity, [key]: value })
     }
 
     saveOpportunity = () => {
 
         const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, opportunityId } = this.state
 
+        const { ProductDetails } = this.props.oppContext.opportunity
         if (Utils.isEmpty(CustomerID)) {
             Utils.showToast("Please select Customer")
         }
@@ -103,30 +121,33 @@ class AddOppCustomer extends Component {
 
             ProgressDialog.show()
             const params = {
-                OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
-                OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: opportunityId, ProductDetails: "", AssignUserName: ""
+                OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
+                OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: opportunityId, ProductDetails: ProductDetails || "", AssignUserName: ""
             }
             opportunityApi.addOrUpdateOpportunity(params, (res) => {
                 ProgressDialog.hide()
 
-                AlertDialog.show({
-                    title: "Attachment",
-                    message: "Do you want to add attachment",
-                    positiveButton: {
-                        onPress: () => {
-                            AlertDialog.hide()
-                            push("OppAttachment", { id: res.ID })
+                if (res.ID) {
+                    AlertDialog.show({
+                        title: "Attachment",
+                        message: "Do you want to add attachment",
+                        positiveButton: {
+                            onPress: () => {
+                                AlertDialog.hide()
+                                push("OppAttachment", { id: res.ID, editMode: false })
+                            },
+                            title: "Yes"
                         },
-                        title: "Yes"
-                    },
-                    negativeButton: {
-                        onPress: () => {
-                            AlertDialog.hide()
-                        },
-                        title: "No"
-                    }
-                })
-                goBack()
+                        negativeButton: {
+                            onPress: () => {
+                                AlertDialog.hide()
+                            },
+                            title: "No"
+                        }
+                    })
+                }
+                else
+                    goBack()
             }, (error) => {
 
                 Utils.showToast(error)
@@ -160,4 +181,5 @@ class AddOppCustomer extends Component {
     }
 }
 
-export default AddOppCustomer
+
+export default WrappedComponentOpportunity(AddOppCustomer)

@@ -46,6 +46,13 @@ const data = [
 ];
 
 class Home extends Component {
+
+
+  componentDidMount = () => {
+
+    console.log("this.props.session.user", this.props.session.user)
+  }
+
   renderHomeList = ({ index }) => {
     return (
       <View style={styles.listMain}>

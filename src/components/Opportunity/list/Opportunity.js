@@ -59,10 +59,10 @@ class Opportunity extends Component {
   }
 
 
-  searchOpp = async (text) => {
+  searchOpp = async () => {
 
 
-    this.getAllOpportunities(text)
+    this.getAllOpportunities()
 
 
   }
@@ -121,10 +121,13 @@ class Opportunity extends Component {
           title: 'Opportunity',
           hideUnderLine: true,
           light: true,
+          onClickSearch: () => {
+            this.searchOpp()
+
+          },
           onChangeSearch: (text) => {
 
             this.setState({ searchQuery: text })
-            this.searchOppDelayed(text)
           },
           onCloseSearch: () => {
             this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true, }, () => {

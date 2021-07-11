@@ -138,7 +138,7 @@ class Home extends Component {
           hideUnderLine: true,
           light: true,
           right: [{
-            image: Images.ic_Refresh, onPress: () => syncAllData()
+            image: Images.ic_Refresh, onPress: () => syncAllData(false)
             ,
           }],
         }}>

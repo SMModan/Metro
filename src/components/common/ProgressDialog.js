@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+import { Text } from 'react-native';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import Dialog from 'react-native-popup-dialog';
-import { Colors } from '../../utils';
+import { Colors, FontName, FontSize } from '../../utils';
+import ResponsivePixels from '../../utils/ResponsivePixels';
 
 export default class ProgressDialog extends Component {
 
     state = {
 
-        visible: false
+        visible: false,
+        message: ""
     }
 
     static dialogInstance
@@ -31,7 +34,7 @@ export default class ProgressDialog extends Component {
         this.setState({
             visible: true,
             //   title: config.title,
-            //   message: config.message,
+            message: config.message,
             //   positiveButton: config.positiveButton,
             //   negativeButton: config.negativeButton,
             //   cancelable: config.cancelable,
@@ -56,8 +59,6 @@ export default class ProgressDialog extends Component {
             <Dialog
                 dialogStyle={styles.styleDialogContent}
                 footer={null}
-                width={80}
-                height={80}
                 visible={this.state.visible}>
 
                 <View style={styles.activityIndicatorWrapper}>
@@ -65,6 +66,8 @@ export default class ProgressDialog extends Component {
                         style={{ alignSelf: 'center' }}
                         size='large' color={Colors.white} />
                 </View>
+                {this.state.message ? <Text style={styles.messageStyle}>{this.state.message}</Text> : null}
+
             </Dialog>
         )
     }
@@ -75,19 +78,26 @@ export default class ProgressDialog extends Component {
 
 const styles = StyleSheet.create({
     styleDialogContent: {
-        padding: 10,
-        backgroundColor: Colors.primary,
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        backgroundColor: "transparent",
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
     },
     activityIndicatorWrapper: {
         padding: 10,
+        backgroundColor: Colors.primary,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    messageStyle: {
+        marginTop: ResponsivePixels.size16,
+        color: Colors.white,
+        fontSize: FontSize.fontSize14,
+        fontFamily: FontName.regular
     }
 });
 

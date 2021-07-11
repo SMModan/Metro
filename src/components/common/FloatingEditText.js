@@ -29,7 +29,8 @@ export default class FloatingEditText extends Component {
             rightIcon, leftIcon, onClickCountry, onPress, country, hasCountry, onPressLeftIcon, onPressRightIcon, multiline, minHeight
         } = this.props
         let { isFocused, text } = this.state;
-
+        console.log(label,value)
+        // console.log("lable--->< ----->",lable)
         isFocused = isFocused || text.length > 0 || value && value.length > 0
         const labelStyle = {
             position: 'absolute',

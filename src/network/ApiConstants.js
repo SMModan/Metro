@@ -38,6 +38,8 @@ export const GET_ALL_NOTIFICATION = "GetUserNotificationDetailsByUserID"
 
 // Get All customer Api end points
 export const GET_ALL_CUSTOMER = "GetAllCustomers"
+export const GET_COUNTRIES = "GetCountries"
+export const GET_STATE = "GetStatesByCountryID"
 
 // Get All Appointment Api end points
 export const GET_ALL_APPOINTMENT = "GetAllAppointmentActivity"

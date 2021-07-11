@@ -15,6 +15,7 @@ import Contacts from '../components/Contacts/List/Contacts';
 import Customer from '../components/Customer/List/Customer';
 import AddAppointments from '../components/Appointments/AddAppointments';
 import AddContacts from '../components/Contacts/AddContacts';
+import AddCustomer from '../components/Customer/AddCustomer';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
 import SyncData from '../components/Login/ChildComponent/SyncData';
@@ -63,6 +64,7 @@ export default () => {
           <Stack.Screen component={Customer} name="Customer" />
           <Stack.Screen component={Contacts} name="Contacts" />
           <Stack.Screen component={AddContacts} name="AddContacts" />
+          <Stack.Screen component={AddCustomer} name="AddCustomer" />
           <Stack.Screen component={SyncData} name="SyncData" />
           <Stack.Screen component={TaskList} name="Tasks" />
         </Stack.Navigator>

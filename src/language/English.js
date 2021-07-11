@@ -35,5 +35,7 @@ export default {
   spectification: "Spectification",
   submit: "Submit",
   phone_number: "Phone Number",
-  email: "Email"
+  email: "Email",
+  countries:"Countries",
+  state:"State"
 };

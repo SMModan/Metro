@@ -138,7 +138,7 @@ class Contacts extends Component {
 
     const params = {
       PageIndex: this.state.page,
-      PageSize: 10,
+      PageSize: 20,
       Filter: searchQuery || ""
     };
     this.setState({
@@ -231,7 +231,7 @@ class Contacts extends Component {
               image: Images.ic_BackWhite,
               onPress: () => this.props.navigation.goBack(),
             },
-            title: '',
+            title: 'Contacts',
             hideUnderLine: true,
           light: true,
           onClickSearch: () => {
@@ -287,19 +287,19 @@ class Contacts extends Component {
                   this.getAllContacts()
                 })
               }}
-              onEndReached={() => {
-                console.log("End")
+              // onEndReached={() => {
+              //   console.log("End")
   
-                if (!loadMore && !isLast) {
-                  this.setState({
-                    page: this.state.page + 1,
-                    loadMore: true
-                  }, () => {
-                    this.getAllContacts()
-                  })
+              //   if (!loadMore && !isLast) {
+              //     this.setState({
+              //       page: this.state.page + 1,
+              //       loadMore: true
+              //     }, () => {
+              //       this.getAllContacts()
+              //     })
   
-                }
-              }}
+              //   }
+              // }}
             />
 
             {/* {this.renderFooter()} */}

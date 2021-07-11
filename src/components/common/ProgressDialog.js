@@ -34,7 +34,7 @@ export default class ProgressDialog extends Component {
         this.setState({
             visible: true,
             //   title: config.title,
-            message: config.message,
+            message: config?.message,
             //   positiveButton: config.positiveButton,
             //   negativeButton: config.negativeButton,
             //   cancelable: config.cancelable,

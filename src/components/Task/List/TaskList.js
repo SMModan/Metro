@@ -123,7 +123,7 @@ class TaskList extends Component {
             </View>
             <TouchableOpacity
               onPress={() => {
-                this.setState({isStatusDialoguOpen: true});
+                this.setState({isStatusDialoguOpen: false});
               }}>
               <View
                 style={{

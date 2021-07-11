@@ -18,6 +18,7 @@ import {
 import {Icon} from 'native-base';
 import CustomerApi from './Api/CustomerApi';
 import { Card, Title, FAB } from 'react-native-paper';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 //  JCAAGF00U916CCN
@@ -147,7 +148,7 @@ class AddCustomer extends Component {
     console.log('<><><>countryId<><><>', countryId);
     CustomerApi.getAllStateList(
       {
-        CountryID: 99,
+        CountryID: countryId,
         StateName: '',
       },
       res => {
@@ -277,6 +278,7 @@ class AddCustomer extends Component {
       ZipCode,
       Street,
       isAddNewCustomer,
+      qty
     } = this.state;
     return (
       <MainContainer
@@ -290,13 +292,13 @@ class AddCustomer extends Component {
           light: true,
         }}>
         {isAddNewCustomer ? (
-          <View style={{padding: 10}}>
+              <ScrollContainer>
+          <View style={{ backgroundColor: Colors.white, paddingHorizontal: 16 }}>
           <FloatingEditText
               label={'Location'}
-              value={Location}
-              onChangeText={text => this.onFloatingEditTextChange('Location', text)}
-              style={addStyles.floatEditText}
+              onChangeText={text => this.onFloatingEditTextChange("Location", text)}
             />
+           
             <FloatingEditText
               label={'Street'}
               style={addStyles.floatEditText}
@@ -342,6 +344,7 @@ class AddCustomer extends Component {
                     <Button onPress={()=>{this.saveOtherInformation()}} title={strings.submit} style={{ flex: 1, }} />
                 </View>
           </View>
+          </ScrollContainer>
         ) : (
           <ChildViews
             isAddNew={true}

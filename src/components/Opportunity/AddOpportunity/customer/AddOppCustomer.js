@@ -119,7 +119,7 @@ class AddOppCustomer extends Component {
 
         } else {
 
-            ProgressDialog.show()
+            ProgressDialog.show("please wait")
             const params = {
                 OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
                 OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: opportunityId, ProductDetails: ProductDetails || "", AssignUserName: ""

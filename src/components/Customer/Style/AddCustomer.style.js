@@ -12,10 +12,9 @@ export default StyleSheet.create({
     backgroundColor: Colors.Orange500,
     color: Colors.white
   },
-  floatEditText: {
-    paddingVertical: 15,
+  floatEditText1: {
     fontFamily: FontName.regular, fontSize: 14, color:
-      Colors.blueGray900,
+      Colors.Black,
   },
   addMoreButton: {
     width: ResponsivePixels.size90,
@@ -25,7 +24,6 @@ export default StyleSheet.create({
     marginTop: ResponsivePixels.size10
   },
   customEditText: {
-    height: ResponsivePixels.size60,
     fontFamily: FontName.regular, fontSize: 14,
   }
 });

@@ -102,7 +102,8 @@ const AddOppProductUi = ({ products, onSubmit, onDelete, productLevels, oppProdu
                         }} title={strings.level} selectedChip={{ id: productLevel }} chips={productLevels} />
 
                         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-                            <FloatingEditText value={qty} inputType={"numeric"} onChangeText={(text) => onTextChanged("qty", text)} style={{ flex: 1, }} label={strings.quantity} />
+                            <FloatingEditText value={qty} inputType={"numeric"} onChangeText={(text) => onTextChanged("qty", text)} 
+                            style={{ flex: 1, }} label={strings.quantity} />
                             <FloatingEditText value={rate} inputType={"numeric"} onChangeText={(text) => onTextChanged("rate", text)} style={{ flex: 1, marginStart: 8 }} label={strings.rate} />
                             <FloatingEditText editable={false} value={(parseFloat(rate || 0) * parseFloat(qty || 0)).toString()} inputType={"numeric"} onChangeText={(text) => {
 

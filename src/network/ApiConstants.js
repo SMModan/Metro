@@ -1,5 +1,6 @@
 // export const BASE_URL = 'http://dev.skywardcrm.com/Services/CRMMobileapp.asmx/';
 export const BASE_URL = 'https://www.skywardcrm.com/Services/CRMMobileApp.asmx/';
+export const IMAGE_BASE_URL = 'https://www.skywardcrm.com';
 
 //LOGIN APIS
 export const GET_COMPANY_BY_USERNAME = "GetCompanyNameByUserName"

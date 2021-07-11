@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Colors, FontName } from '../../utils'
 import ResponsivePixels from '../../utils/ResponsivePixels'
 
-const ViewWithTitle = ({ title, children, mainStyle, innerStyle }) => {
+const ViewWithTitle = ({ title, children, mainStyle, titleStyle, innerStyle }) => {
     return (
         <View style={[styles.main, mainStyle]}>
-            <Text style={styles.titleStyle}>{title}</Text>
+            <Text style={[styles.titleStyle, titleStyle]}>{title}</Text>
             <View style={[{
                 backgroundColor: Colors.white, paddingHorizontal: ResponsivePixels.size16,
                 paddingVertical: ResponsivePixels.size16,

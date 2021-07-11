@@ -13,6 +13,7 @@ import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 import {  AirbnbRating } from 'react-native-ratings';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import HelpDeskApi from '../Api/HelpDeskApi';
+import _ from "lodash"
 
 class HelpDesk extends Component {
   state = {
@@ -25,6 +26,8 @@ class HelpDesk extends Component {
     isLast: false,
     listData: [],
     contactDialogVisible:false,
+    showSearch: false,
+    searchQuery: false,
 
   };
 
@@ -33,10 +36,12 @@ class HelpDesk extends Component {
   }
 
   getAllList = () => {
+    const { searchQuery } = this.state
+
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
-      Filter: "",
+      Filter: searchQuery || "",
       HelpDeskStatusID:1
     }
     this.setState({
@@ -98,8 +103,24 @@ class HelpDesk extends Component {
     );
   };
 
+  
+  
+  searchOpp = async () => {
+
+    this.setState({
+      listData:[],
+      page: 0
+    },()=>{
+      this.getAllList()
+    })
+  }
+
+  searchOppDelayed = _.debounce(this.searchOpp, 1000)
+
+
+
   render() {
-    const { listData, refreshing, loading, loadMore, isLast ,contactDialogVisible} = this.state
+    const { listData, refreshing, loading, loadMore, isLast ,contactDialogVisible,showSearch} = this.state
 
     return (
       <MainContainer
@@ -111,7 +132,19 @@ class HelpDesk extends Component {
           title: 'Help Desk',
           hideUnderLine: true,
           light: true,
-          right: [{ image: Images.ic_Search, onPress: () => this.props.navigation.push('Settings'), }],
+          onClickSearch: () => {
+            this.searchOpp()
+          },
+          onChangeSearch: (text) => {
+            this.setState({ searchQuery: text })
+          },
+          onCloseSearch: () => {
+            this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true, }, () => {
+              this.getAllList()
+            })
+          },
+          showSearch,
+          right: [{ image: Images.ic_Search, onPress: () => this.setState({ showSearch: true }), }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>
@@ -122,6 +155,8 @@ class HelpDesk extends Component {
             </ScrollView>
           </View>
           <View style={styles.MainList}>
+          {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
+
             <FlatList
               horizontal={false}
               scrollEnabled={true}
@@ -130,7 +165,6 @@ class HelpDesk extends Component {
               renderItem={item => this.renderCell(item)}
               keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
-
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {

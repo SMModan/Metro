@@ -13,6 +13,7 @@ import SectionListContacts from 'react-native-sectionlist-contacts'
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import contactApi from '../../Contacts/Apis/ContactApi';
 import CustomerApi from '../Api/CustomerApi';
+import _ from "lodash"
 
 
 class Customer extends Component {
@@ -26,6 +27,8 @@ class Customer extends Component {
     isLast: false,
     apiResponseData: [],
     listData: [],
+    showSearch: false,
+    searchQuery: false,
   };
 
   _renderItem = (item, index, section) => {
@@ -97,23 +100,7 @@ class Customer extends Component {
             })
           }
         }}>
-          <View style={{justifyContent:'center',
-            textAlign: 'center',
-            alignItems:'center',}}>
-        <Title
-          style={{
-            fontSize: 16,
-            width:ResponsivePixels.size120,
-            justifyContent:'center',
-            textAlign: 'center',
-            alignItems:'center',
-            padding: ResponsivePixels.size5,
-            backgroundColor: Colors.gray2,
-            color:Colors.white,
-          }}>
-          Load More
-        </Title>
-        </View>
+       
       </Clickable>
     );
   };
@@ -124,10 +111,12 @@ class Customer extends Component {
   };
 
   getAllCustomer = () => {
+    const { searchQuery } = this.state
+
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
-      Filter: '',
+      Filter: searchQuery || ""
     };
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore,
@@ -179,8 +168,21 @@ class Customer extends Component {
     );
   };
 
+  
+  searchOpp = async () => {
+
+    this.setState({
+      listData:[],
+      page: 0
+    },()=>{
+      this.getAllCustomer()
+    })
+  }
+
+  searchOppDelayed = _.debounce(this.searchOpp, 1000)
+
   render() {
-    const {listData, refreshing, loading, loadMore, isLast} = this.state;
+    const {listData, refreshing, loading, loadMore, isLast,showSearch} = this.state;
 
     return (
       <>
@@ -190,11 +192,27 @@ class Customer extends Component {
             image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
-          title: '',
+          title: 'Customers',
           hideUnderLine: true,
           light: true,
+          onClickSearch: () => {
+            this.searchOpp()
+          },
+          onChangeSearch: (text) => {
+            this.setState({ searchQuery: text })
+          },
+          onCloseSearch: () => {
+            this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true,listData:[], }, () => {
+              this.getAllCustomer()
+            })
+          },
+          showSearch,
+          right: [{ image: Images.ic_Search, onPress: () => this.setState({ showSearch: true }), }],
+        
         }}>
         <View style={styles.MainHeaderView}>
+        {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
+
           <SectionListContacts
             ref={s => this.sectionList = s}
             keyExtractor={(item, index) => 'key' + index}
@@ -254,7 +272,6 @@ class Customer extends Component {
           }}
         />
       </MainContainer>
-      <Searchbar placeholder={'Search Customer'} style={{ position: 'absolute', top:10,height:40,width:'80%', marginLeft: 50, marginRight: 20, backgroundColor: 'rgba(0, 0, 0, 0.2)',  shadowColor: 'transparent' }} inputStyle={{ color:'white'}}  placeholderTextColor={'#8F9BB3'} iconColor={'#8F9BB3'}/>
       </>
     );
   }

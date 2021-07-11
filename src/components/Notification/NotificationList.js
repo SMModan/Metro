@@ -7,6 +7,7 @@ import {MainContainer} from '../common';
 import styles from './styles/NotificationStyle';
 import NotificationApi from './Api/NotificationApi';
 import ResponsivePixels from '../../utils/ResponsivePixels';
+import { ActivityIndicator } from 'react-native';
 
 class NotificationList extends Component {
   state = {
@@ -99,6 +100,7 @@ class NotificationList extends Component {
           light: true,
         }}>
         <View style={styles.MainList}>
+          {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
           <FlatList
             data={listData || []}
             renderItem={item => this.renderCell(item)}
@@ -109,6 +111,7 @@ class NotificationList extends Component {
               this.setState(
                 {
                   refreshing: true,
+                  listData: [],
                 },
                 () => {
                   this.getAllNotification();
@@ -120,6 +123,9 @@ class NotificationList extends Component {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => 'key' + index}
+            footerComponent={() => {
+              return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
+            }}
           />
         </View>
       </MainContainer>

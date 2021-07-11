@@ -9,6 +9,7 @@ import { strings } from '../../../language/Language';
 import { Images, Colors, FontName } from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 import AppointmentApi from '../Api/AppointmentApi';
+import _ from "lodash"
 
 
 class Appointments extends Component {
@@ -22,7 +23,10 @@ class Appointments extends Component {
     loading: true,
     loadMore: false,
     isLast: false,
-    listData: []
+    listData: [],
+    showSearch: false,
+    searchQuery: false,
+
   };
 
   componentDidMount = () => {
@@ -30,10 +34,12 @@ class Appointments extends Component {
   }
 
   getAllAppointment = () => {
+    const { searchQuery } = this.state
+
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
-      Filter: ""
+      Filter: searchQuery || ""
     }
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
@@ -42,7 +48,7 @@ class Appointments extends Component {
       const { Table } = res
       let isLast = true
       if (Table) {
-        let totalPage = Table[0].TotalCount / 10
+        let totalPage = Table[0]?.TotalCount / 10
         isLast = this.state.page == totalPage
         this.setState({
           listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
@@ -81,8 +87,22 @@ class Appointments extends Component {
     );
   };
 
+  
+  searchOpp = async () => {
+
+    this.setState({
+      listData:[],
+      page: 0
+    },()=>{
+      this.getAllAppointment()
+    })
+  }
+
+  searchOppDelayed = _.debounce(this.searchOpp, 1000)
+
+
   render() {
-    const { listData, refreshing, loading, loadMore, isLast } = this.state
+    const { listData, refreshing, loading, loadMore, isLast ,showSearch} = this.state
 
     return (
       <MainContainer
@@ -94,10 +114,24 @@ class Appointments extends Component {
           title: 'Appointments',
           hideUnderLine: true,
           light: true,
-          right: [{ image: Images.ic_Search, onPress: () => this.props.navigation.push('Settings'), }],
+          onClickSearch: () => {
+            this.searchOpp()
+          },
+          onChangeSearch: (text) => {
+            this.setState({ searchQuery: text })
+          },
+          onCloseSearch: () => {
+            this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true, }, () => {
+              this.getAllAppointment()
+            })
+          },
+          showSearch,
+          right: [{ image: Images.ic_Search, onPress: () => this.setState({ showSearch: true }), }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>
+          {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
+
             <FlatList
               horizontal={false}
               scrollEnabled={true}

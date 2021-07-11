@@ -22,6 +22,8 @@ import styles from '../styles/TaskListStyle';
 
 import TaskApi from '../apis/TaskApi';
 import {strings} from '../../../language/Language';
+import _ from "lodash"
+
 
 class TaskList extends Component {
   // state = {
@@ -66,7 +68,10 @@ class TaskList extends Component {
     isStatusDialoguOpen: false,
     statusList: ['inProgress,completed,open'],
     selectedStuasIndex: 0,
+    showSearch: false,
+    searchQuery: false,
   };
+
 
   handleRemarkPage = () => {};
 
@@ -190,10 +195,12 @@ class TaskList extends Component {
   };
 
   getAllTaskList = () => {
+    const { searchQuery } = this.state
+
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
-      Filter: '',
+      Filter: searchQuery || "",
       TaskStatusID: 0,
     };
     this.setState({
@@ -226,6 +233,19 @@ class TaskList extends Component {
     );
   };
 
+  
+  searchOpp = async () => {
+
+    this.setState({
+      listData:[],
+      page: 0
+    },()=>{
+      this.getAllTaskList()
+    })
+  }
+
+  searchOppDelayed = _.debounce(this.searchOpp, 1000)
+
   render() {
     const {
       listData,
@@ -236,6 +256,7 @@ class TaskList extends Component {
       isStatusDialoguOpen,
       statusList,
       selectedStuasIndex,
+      showSearch
     } = this.state;
     return (
       <MainContainer
@@ -247,12 +268,19 @@ class TaskList extends Component {
           title: 'Tasks',
           hideUnderLine: true,
           light: true,
-          right: [
-            {
-              image: Images.ic_Search,
-              onPress: () => this.props.navigation.push('Settings'),
-            },
-          ],
+          onClickSearch: () => {
+            this.searchOpp()
+          },
+          onChangeSearch: (text) => {
+            this.setState({ searchQuery: text })
+          },
+          onCloseSearch: () => {
+            this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true, }, () => {
+              this.getAllTaskList()
+            })
+          },
+          showSearch,
+          right: [{ image: Images.ic_Search, onPress: () => this.setState({ showSearch: true }), }],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>
@@ -296,6 +324,9 @@ class TaskList extends Component {
             </ScrollView>
           </View>
           <View style={styles.MainList}>
+
+          {/* {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />} */}
+
             <MyFlatList
               data={listData}
               renderItem={item => this.renderCell(item)}

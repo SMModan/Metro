@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, FlatList, ScrollView, DatePicker} from 'react-native';
-import {MainContainer, MyFlatList, ViewWithTitle} from '../common';
+import {CustomPicker, FloatingEditText, MainContainer, MyFlatList, ViewWithTitle} from '../common';
 import {connect} from 'react-redux';
 import styles from '../HomeDetails/styles/HelpDesk.style';
 import addStyles from '../Customer/Style/AddCustomer.style';
@@ -17,14 +17,14 @@ import {
 } from './BaseComponents';
 import {Icon} from 'native-base';
 import CustomerApi from './Api/CustomerApi';
+import { Card, Title, FAB } from 'react-native-paper';
+
 
 //  JCAAGF00U916CCN
 
 export const ChildViews = props => {
   const {
-    isVisible,
-    onDialogueOpen,
-    onDialogueDismiss,
+    handleAddNewCustomerOpen,
     countryList,
     countryId,
     stateId,
@@ -34,7 +34,10 @@ export const ChildViews = props => {
     renderCell,
     otherInformation,
     onFloatingEditTextChange,
-    Location,City,ZipCode,Street
+    Location,
+    City,
+    ZipCode,
+    Street,
   } = props;
   return (
     <ScrollContainer>
@@ -49,17 +52,16 @@ export const ChildViews = props => {
             title="Add"
             style={addStyles.addMoreButton}
             onPress={() => {
-              onDialogueOpen();
+             handleAddNewCustomerOpen();
             }}
           />
         </ViewWithTitle>
-      
 
-<MyFlatList
-              data={otherInformation||[]}
-              renderItem={item => renderCell(item)}
-              style={{ flex: 1, margin: 10 }}
-            />
+        <MyFlatList
+          data={otherInformation || []}
+          renderItem={item => renderCell(item)}
+          style={{flex: 1, margin: 10, marginTop:20}}
+        />
         <Button
           title={strings.save}
           style={{
@@ -76,62 +78,70 @@ class AddCustomer extends Component {
     super(props);
 
     this.state = {
-      isVisible: true,
+      
       countryList: [],
-      otherInformation:[]
+      otherInformation: [],
+      isAddNewCustomer: false,
     };
   }
-  onDialogueDismiss = () => {
-    this.setState({isVisible: false});
-  };
-  onDialogueOpen = () => {
-    this.setState({
-      isVisible: true,
-    });
-  };
-  onTextChanged = (key, value,countryName) => {
+
+  onTextChanged = (key, value, countryName) => {
     this.setState(
       {
         [key]: value,
         stateList: [],
-        countryName
+        countryName,
       },
       () => {
         this.getAllState(value);
       },
     );
   };
-  onStateTextChanged = (key, value,stateName) => {
+  onStateTextChanged = (key, value, stateName) => {
     this.setState({
       [key]: value,
-      stateName
+      stateName,
     });
   };
 
-  onFloatingEditTextChange=(key, value)=>{
+  onFloatingEditTextChange = (key, value) => {
     this.setState({
       [key]: value,
     });
-  }
+  };
   componentDidMount() {
     this.getAllCountries();
   }
 
+  saveOtherInformation = () => {
+    alert('testing...');
+    const {Location, Street, CountryID, StateID, CityName, Pincode} =
+      this.state;
+    let _otherInformation = this.state.otherInformation;
+    let objOtherInfo = {
+      ID: 0,
+      CustomerID: 0,
+      Location,
+      Street,
+      CountryID,
+      StateID,
+      StateName: this.state.stateName,
+      CityName,
+      Pincode,
+      AddressRowState: 2,
+    };
+    _otherInformation.push(objOtherInfo);
 
-  saveOtherInformation=()=>{
-    alert("testing...")
-    const {Location,Street,CountryID,StateID,CityName,Pincode} = this.state
-    let _otherInformation= this.state.otherInformation
-  let objOtherInfo =  {"ID":0,"CustomerID":0,Location,Street,CountryID,StateID,StateName:this.state.stateName,CityName,Pincode,"AddressRowState":2}
-  _otherInformation.push(objOtherInfo)
-
-  this.setState({
-    otherInformation:_otherInformation,
-    isVisible: false
-  },()=>{
-    console.log("otherInformation",this.state.otherInformation)
-  })
-  }
+    this.setState(
+      {
+        otherInformation: _otherInformation,
+        isAddNewCustomer: false,
+      },
+      () => {
+        console.log('otherInformation', this.state.otherInformation);
+      },
+    );
+  };
 
   getAllState = countryId => {
     console.log('<><><>countryId<><><>', countryId);
@@ -209,14 +219,13 @@ class AddCustomer extends Component {
     );
   };
 
-  renderCell = ({ index }) => {
+  renderCell = ({index}) => {
     // console.log(index);
-
     const item = this.state.otherInformation[index];
 
     return (
-      <Card  style={{ margin: 5 }} key={index}>
-        <View style={{ margin: 15 }}>
+      <Card style={{margin: 5}} key={index}>
+        <View style={{margin: 15}}>
           {/* <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, width: '70%', }}>{item.CloseDate}</Text>
             <View style={{ width: 80, backgroundColor: Colors.BlueColor50, borderRadius: 5 }}>
@@ -224,20 +233,51 @@ class AddCustomer extends Component {
             </View>
           </View> */}
 
-  {/* let objOtherInfo =  {"ID":0,"CustomerID":0,Location,Street,CountryID,StateID,StateName,CityName,Pincode,"AddressRowState":2} */}
-
-          <Title style={{ fontSize: 16, marginTop: 8 }}>{item.Location}</Title>
-          <Text style={{ fontSize: 12, color: Colors.darkGray, }}>{`${item.Street}, ${item.CityName}, ${item.Pincode} `}</Text>
+          {/* let objOtherInfo =  {"ID":0,"CustomerID":0,Location,Street,CountryID,StateID,StateName,CityName,Pincode,"AddressRowState":2} */}
+          {/* <image src={require("ic_close")}/> */}
+          <Title style={{fontSize: 16, marginTop: 8}}>{item.Location}</Title>
+          <Text
+            style={{
+              fontSize: 12,
+              color: Colors.darkGray,
+            }}>{`${item.Street}, ${item.CityName}, ${item.Pincode} `}</Text>
           {/* <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 16 }}>{"item.header"}</Text> */}
-          <Text style={{ fontSize: 15, color: Colors.darkGray, marginTop: 4 }}>{`${this.state.stateName} , ${this.state.countryName}`}</Text>
+          <Text
+            style={{
+              fontSize: 15,
+              color: Colors.darkGray,
+              marginTop: 4,
+            }}>{`${this.state.stateName} , ${this.state.countryName}`}</Text>
         </View>
       </Card>
     );
   };
 
+  handleAddNewCustomerOpen = () => {
+    this.setState({
+      isAddNewCustomer: true,
+    });
+  };
+  handleAddNewCustomerClose = () => {
+    this.setState({
+      isAddNewCustomer: false,
+    });
+  };
   render() {
-    const {isVisible, countryList, stateList, countryId, stateId,otherInformation
-    ,countryName,stateName,Location,City,ZipCode,Street} = this.state;
+    const {
+      countryList,
+      stateList,
+      countryId,
+      stateId,
+      otherInformation,
+      countryName,
+      stateName,
+      Location,
+      City,
+      ZipCode,
+      Street,
+      isAddNewCustomer,
+    } = this.state;
     return (
       <MainContainer
         header={{
@@ -249,49 +289,88 @@ class AddCustomer extends Component {
           hideUnderLine: true,
           light: true,
         }}>
+        {isAddNewCustomer ? (
+          <View style={{padding: 10}}>
+          <FloatingEditText
+              label={'Location'}
+              value={Location}
+              onChangeText={text => this.onFloatingEditTextChange('Location', text)}
+              style={addStyles.floatEditText}
+            />
+            <FloatingEditText
+              label={'Street'}
+              style={addStyles.floatEditText}
+              value={Street}
+              onChangeText={text => this.onFloatingEditTextChange('Street', text)}
+            />
+            <CustomPicker
+              selectedItem={{id: countryId}}
+              floaingStyle={addStyles.customEditText}
+              onSelect={item => this.onTextChanged('countryId', item.id, item.name)}
+              list={countryList}
+              label={strings.countries + '*'}
+              editable={false}
+              rightIcon={Images.ic_down}
+            />
 
-<AddmoreInfoDialogue
-          isVisible={isVisible}
-          stateList={stateList}
-          countryList={countryList}
-          countryId={countryId}
-          onTextChanged={(key, value,countryName) => this.onTextChanged(key, value,countryName)}
-          onStateTextChanged={(key, value,stateName) => this.onStateTextChanged(key, value,stateName)}
-          onFloatingEditTextChange={(key, value) => this.onFloatingEditTextChange(key, value)}
-          stateId={stateId}
-          Location={Location}
-          City={City}
-          ZipCode={ZipCode}
-          Street={Street}
-        />
+            <CustomPicker
+              selectedItem={{id: stateId}}
+              floaingStyle={addStyles.customEditText}
+              onSelect={item =>
+                this.onStateTextChanged('stateId', item.id, item.name)
+              }
+              list={stateList}
+              label={strings.state}
+              editable={false}
+              rightIcon={Images.ic_down}
+            />
 
-        <ChildViews
-          isAddNew={true}
-          {...this.props}
-          countryList={countryList}
-          stateList={stateList}
-          isVisible={isVisible}
-          onTextChanged={(key, value) => this.onTextChanged(key, value)}
-          onStateTextChanged={(key, value) =>
-            this.onStateTextChanged(key, value)
-          }
-          onFloatingEditTextChange={(key, value) =>
-            this.onFloatingEditTextChange(key, value)
-          }
-          otherInformation={otherInformation}
-          onDialogueDismiss={() => {
-            this.onDialogueDismiss();
-          }}
-          renderCell={(index)=>this.renderCell(index)}
-          onDialogueOpen={() => this.onDialogueOpen()}
-          countryId={countryId}
-          stateId={stateId}
-          saveOtherInformation={()=>{this.saveOtherInformation()}}
-          Location={Location}
-          City={City}
-          ZipCode={ZipCode}
-          Street={Street}
-        />
+            <FloatingEditText
+              label={'City'}
+              style={addStyles.floatEditText}
+              value={City}
+              onChangeText={text => this.onFloatingEditTextChange('City', text)}
+            />
+            <FloatingEditText
+              label={'ZipCode'}
+              style={addStyles.floatEditText}
+              value={ZipCode}
+              onChangeText={text => this.onFloatingEditTextChange('ZipCode', text)}
+            />
+             <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>
+                    <Button onPress={()=>{this.handleAddNewCustomerOpen()}} title="Cancel" bordered style={{ width: 100, marginEnd: 8 }} />
+                    <Button onPress={()=>{this.saveOtherInformation()}} title={strings.submit} style={{ flex: 1, }} />
+                </View>
+          </View>
+        ) : (
+          <ChildViews
+            isAddNew={true}
+            {...this.props}
+            countryList={countryList}
+            stateList={stateList}
+            handleAddNewCustomerOpen={() => {
+              this.handleAddNewCustomerOpen();
+            }}
+            onTextChanged={(key, value) => this.onTextChanged(key, value)}
+            onStateTextChanged={(key, value) =>
+              this.onStateTextChanged(key, value)
+            }
+            onFloatingEditTextChange={(key, value) =>
+              this.onFloatingEditTextChange(key, value)
+            }
+            otherInformation={otherInformation}
+            renderCell={index => this.renderCell(index)}
+            countryId={countryId}
+            stateId={stateId}
+            saveOtherInformation={() => {
+              this.saveOtherInformation();
+            }}
+            Location={Location}
+            City={City}
+            ZipCode={ZipCode}
+            Street={Street}
+          />
+        )}
       </MainContainer>
     );
   }

@@ -11,6 +11,7 @@ import {Button} from 'native-base';
 import contactApi from '../Apis/ContactApi';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
+import _ from "lodash"
 
 class Contacts extends Component {
   state = {
@@ -23,6 +24,8 @@ class Contacts extends Component {
     isLast: false,
     apiResponseData: [],
     listData: [],
+    showSearch: false,
+    searchQuery: false,
   };
 
   _renderItem = (item, index, section) => {
@@ -131,10 +134,12 @@ class Contacts extends Component {
   };
 
   getAllContacts = () => {
+    const { searchQuery } = this.state
+
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
-      Filter: '',
+      Filter: searchQuery || ""
     };
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore,
@@ -201,8 +206,22 @@ class Contacts extends Component {
   //   );
   // }
 
+  
+  searchOpp = async () => {
+
+    this.setState({
+      listData:[],
+      page: 0
+    },()=>{
+      this.getAllContacts()
+    })
+  }
+
+  searchOppDelayed = _.debounce(this.searchOpp, 1000)
+
+
   render() {
-    const {listData, refreshing, loading, loadMore, isLast} = this.state;
+    const {listData, refreshing, loading, loadMore, isLast,showSearch} = this.state;
 
     return (
       <>
@@ -214,9 +233,26 @@ class Contacts extends Component {
             },
             title: '',
             hideUnderLine: true,
-            light: true,
-          }}>
+          light: true,
+          onClickSearch: () => {
+            this.searchOpp()
+          },
+          onChangeSearch: (text) => {
+            this.setState({ searchQuery: text })
+          },
+          onCloseSearch: () => {
+            this.setState({ showSearch: false, searchQuery: "", page: 0, refreshing: true,listData:[], }, () => {
+              this.getAllContacts()
+            })
+          },
+          showSearch,
+          right: [{ image: Images.ic_Search, onPress: () => this.setState({ showSearch: true }), }],
+        
+        }}>
           <View style={styles.MainHeaderView}>
+
+        {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
+
             <SectionListContacts
               ref={s => (this.sectionList = s)}
               keyExtractor={(item, index) => 'key' + index}
@@ -226,7 +262,7 @@ class Contacts extends Component {
               SectionListClickCallback={(item, index) => {}}
               otherAlphabet="#"
               renderHeader={this._renderHeader}
-              ListFooterComponent={this._renderFooter}
+              // ListFooterComponent={this._renderFooter}
               renderItem={this._renderItem}
               letterViewStyle={{
                 marginRight: -5,
@@ -277,23 +313,7 @@ class Contacts extends Component {
             }}
           />
         </MainContainer>
-        <Searchbar
-          placeholder={'Search Contact & Company'}
-          style={{
-            position: 'absolute',
-            top: 10,
-            height: 40,
-            width: '80%',
-            marginLeft: 50,
-            marginRight: 20,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            shadowColor: 'transparent',
-          }}
-          inputStyle={{color: 'white'}}
-          placeholderTextColor={'#8F9BB3'}
-          iconColor={'#8F9BB3'}
-          onSubmitEditing={()=>console.log('Search softkey pressed!')}
-        />
+       
       </>
     );
   }

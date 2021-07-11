@@ -21,6 +21,7 @@ import {
 } from 'react-native-paper';
 import {strings} from '../../language/Language';
 import {KeyboardAvoidingView} from 'react-native';
+import ResponsivePixels from '../../utils/ResponsivePixels';
 
 export const CustomerInformation = () => {
   return (
@@ -51,8 +52,6 @@ export const ContactInformation = () => {
 };
 
 export const AddmoreInfoDialogue = ({
-  isVisible,
-  onDialogueDismiss,
   countryList,
   countryId,
   stateId,
@@ -63,7 +62,9 @@ export const AddmoreInfoDialogue = ({
   City,
   ZipCode,
   Street,
-  onFloatingEditTextChange
+  onFloatingEditTextChange,
+  handleAddNewCustomerClose,
+  handleAddNewCustomerOpen
 }) => {
   // console.log('Location --->< ----->?', countryId);
   // console.log('ZipCode --->< ----->?', ZipCode);
@@ -118,6 +119,10 @@ export const AddmoreInfoDialogue = ({
               value={ZipCode}
               onChangeText={text => onFloatingEditTextChange('ZipCode', text)}
             />
+             <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>
+                    <Button onPress={()=>{handleAddNewCustomerOpen()}} title="Cancel" bordered style={{ width: 100, marginEnd: 8 }} />
+                    <Button  title={strings.submit} style={{ flex: 1, }} />
+                </View>
           </>
   );
 };

@@ -45,7 +45,7 @@ class AddOppProduct extends Component {
 
             const products = opportunity.products.map((p, index) => {
 
-                const { ProductID, ID, ProductDescription, ProductName, ProductGroupID, ProductCategoryID, Quantity, Rate, Amount, Specification } = p
+                const { ProductID, ID, LevelID, ProductDescription, ProductName, ProductGroupID, ProductCategoryID, Quantity, Rate, Amount, Specification } = p
                 return {
 
                     name: `Product ${index + 1}`,
@@ -59,7 +59,7 @@ class AddOppProduct extends Component {
                     rate: Rate.toString(),
                     specification: Specification,
                     description: ProductDescription,
-                    productLevel: "",
+                    productLevel: LevelID,
                     state: 4,
                 }
             })
@@ -213,7 +213,9 @@ class AddOppProduct extends Component {
             return
         }
 
-        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, ID } = this.props.oppContext.opportunity
+        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, ID } = this.props.oppContext.opportunity
+
+        console.log("props.oppContext.opportunity", this.props.oppContext.opportunity)
 
         let ProductDetails = this.state.products.map((p) => {
 
@@ -257,7 +259,7 @@ class AddOppProduct extends Component {
                 */
 
                 const params = {
-                    OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
+                    OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID, Amount, OpportunityDescription: OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
                     OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: ID || 0, ProductDetails: ProductDetails, AssignUserName: ""
                 }
                 opportunityApi.addOrUpdateOpportunity(params, (res) => {

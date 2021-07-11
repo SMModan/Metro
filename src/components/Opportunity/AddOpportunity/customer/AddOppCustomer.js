@@ -134,7 +134,7 @@ class AddOppCustomer extends Component {
                         positiveButton: {
                             onPress: () => {
                                 AlertDialog.hide()
-                                push("OppAttachment", { id: res.ID, editMode: false })
+                                this.props.navigation.replace("OppAttachment", { id: res.ID, editMode: false })
                             },
                             title: "Yes"
                         },
@@ -159,16 +159,16 @@ class AddOppCustomer extends Component {
     render() {
         const { contactDialogVisible, loading, selectedContactIndex, contactList, territories, stages, oppCategories, oppCurrencies, oppSalesStages, customers, OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, opportunityId } = this.state
         return (
-            <AddOppCustomerUi opportunity={{ ID: opportunityId, OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, }} loading={loading} 
-            onTextChanged={this.onTextChanged} customers={customers} territories={territories} stages={stages} oppCategories={oppCategories} oppCurrencies={oppCurrencies} oppSalesStages={oppSalesStages} selectedContactIndex={selectedContactIndex} onContactSelect={(index) => {
+            <AddOppCustomerUi opportunity={{ ID: opportunityId, OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, }} loading={loading}
+                onTextChanged={this.onTextChanged} customers={customers} territories={territories} stages={stages} oppCategories={oppCategories} oppCurrencies={oppCurrencies} oppSalesStages={oppSalesStages} selectedContactIndex={selectedContactIndex} onContactSelect={(index) => {
 
-                this.setState({ selectedContactIndex: index })
-            }} contactList={contactList} onSelectContact={() => {
-                this.setState({ contactDialogVisible: true })
-            }} onDismiss={() => {
-                this.setState({ contactDialogVisible: false })
+                    this.setState({ selectedContactIndex: index })
+                }} contactList={contactList} onSelectContact={() => {
+                    this.setState({ contactDialogVisible: true })
+                }} onDismiss={() => {
+                    this.setState({ contactDialogVisible: false })
 
-            }}
+                }}
                 onSelectCustomer={async (item) => {
 
                     const contacts = await opportunityApi.getContactByCustomerId(item.id)

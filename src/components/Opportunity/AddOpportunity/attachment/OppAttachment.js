@@ -19,8 +19,8 @@ class OppAttachment extends Component {
     componentDidMount = () => {
         console.log("OppId", this.oppId)
 
-        if (this.editMode)
-            this.getAttachment()
+        //  if (this.editMode)
+        this.getAttachment()
     }
     insertAttachment = () => {
 
@@ -32,17 +32,10 @@ class OppAttachment extends Component {
             FileName: attachment.fileName,
             FileContentType: attachment.type,
             File: attachment.base64
-        }, () => {
+        }, (res) => {
 
-            const { attachments } = this.state
+            this.getAttachment()
 
-            attachments.push({
-                name: documentName,
-                file: attachment
-            })
-            this.setState({
-                attachments: [...attachments], documentName: "", attachment: {}
-            })
             ProgressDialog.hide()
         }, () => {
             ProgressDialog.hide()

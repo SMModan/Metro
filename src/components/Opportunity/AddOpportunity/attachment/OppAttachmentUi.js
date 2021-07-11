@@ -2,7 +2,7 @@ import { ActionSheet, Item } from 'native-base'
 import React, { useState } from 'react'
 import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native'
 import { strings } from '../../../../language/Language'
-import { push } from '../../../../navigation/Navigator'
+import { goBack, push } from '../../../../navigation/Navigator'
 import { Colors, Images, Utils } from '../../../../utils'
 import ResponsivePixels from '../../../../utils/ResponsivePixels'
 import { Button, MainContainer, ChipViewContainer, Clickable, FloatingEditText, ScrollContainer, ViewWithTitle, MyFlatList, ProgressView, ImageButton } from '../../../common'
@@ -30,7 +30,7 @@ const OppAttachmentUi = ({ onBrowse, documentName, onEdit, attachments, selected
     }
 
     return (
-        <MainContainer header={!editMode ? { title: "Attachment" } : undefined}>
+        <MainContainer header={!editMode ? { title: "Attachment", left: { image: Images.ic_BackWhite, onPress: goBack } } : undefined}>
             <ScrollContainer>
                 <View style={styles.mainView}>
                     {loading ? <ProgressView /> : <View style={styles.mainView}>

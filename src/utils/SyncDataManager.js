@@ -98,7 +98,7 @@ const offlineData = [
     // },
 ]
 
-const syncData = () => {
+const syncData = (fromLogin = true) => {
 
     console.log("--------------------------------------------")
     console.log("index", index)
@@ -145,7 +145,9 @@ const syncData = () => {
                 ProgressDialog.hide()
                 index = 0
                 store.dispatch(setSessionField("isSync", true))
-                reset("Home")
+                if (fromLogin)
+                    reset("Home")
+
             }
 
             console.log("--------------------------------------------")
@@ -158,7 +160,8 @@ const syncData = () => {
                 index = 0
                 ProgressDialog.hide()
                 store.dispatch(setSessionField("isSync", true))
-                reset("Home")
+                if (fromLogin)
+                    reset("Home")
             }
             console.log("--------------------------------------------")
 
@@ -173,8 +176,8 @@ const syncData = () => {
 
 }
 
-export const syncAllData = async () => {
-    ProgressDialog.show()
+export const syncAllData = async (fromLogin = true) => {
+    ProgressDialog.show({ message: "Syncing Data...." })
     await deleteDropDowns()
-    syncData()
+    syncData(fromLogin)
 }

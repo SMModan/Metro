@@ -41,7 +41,7 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                         console.log("Click")
                     }} leftIcon={Images.ic_add_blue} label="Customer Name*" />
                     <FloatingEditText value={OpportunityName} onChangeText={(text) => onTextChanged("OpportunityName", text)} label={strings.opp_name + "*"} />
-                    <CustomDatePicker selectedDate={moment(CloseDate).toDate()} onDateChanged={(date) => {
+                    <CustomDatePicker selectedDate={CloseDate ? moment(CloseDate).toDate() : undefined} onDateChanged={(date) => {
 
                         onTextChanged("CloseDate", date)
 

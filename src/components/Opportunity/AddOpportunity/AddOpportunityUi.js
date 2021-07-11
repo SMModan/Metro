@@ -75,8 +75,9 @@ const AddOpportunityUi = ({ opportunityId }) => {
 
                 {opportunityId ? <Tab.Screen
                     name="Attachment"
-                    initialParams={{ editMode: true }}
+                    initialParams={{ id: opportunityId, editMode: true }}
                     component={OppAttachment}
+
                     options={{ tabBarLabel: 'Attachment', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_attachment} /> }}
                 />
 

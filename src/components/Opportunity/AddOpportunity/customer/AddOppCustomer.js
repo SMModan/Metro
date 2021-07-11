@@ -139,7 +139,7 @@ class AddOppCustomer extends Component {
                         positiveButton: {
                             onPress: () => {
                                 AlertDialog.hide()
-                                push("OppAttachment", { id: res.ID })
+                                push("OppAttachment", { id: res.ID, editMode: false })
                             },
                             title: "Yes"
                         },

@@ -5,9 +5,11 @@ import PhotoPicker from '../../../common/PhotoPicker'
 import opportunityApi from '../../apis/OpportunityApis'
 import OppAttachmentUi from './OppAttachmentUi'
 import { decode } from "base64-arraybuffer"
+import WrappedComponentOpportunity from '../WrappedComponentOpportunity'
 class OppAttachment extends Component {
 
-    oppId = this.props.route?.params?.editMode || 6597
+    editMode = this.props.route?.params?.editMode || true
+    oppId = this.props.route?.params?.id
     state = {
         attachments: [],
         documentName: "",
@@ -94,4 +96,4 @@ class OppAttachment extends Component {
     }
 }
 
-export default OppAttachment
+export default WrappedComponentOpportunity(OppAttachment)

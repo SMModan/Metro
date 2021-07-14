@@ -1,6 +1,6 @@
 import axios from "axios"
 import { store } from "../../../App"
-import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_ATTACHMENT, GET_OPPORTUNITY_BY_ID, GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_BY_ID, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID, IMAGE_BASE_URL, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
+import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_ATTACHMENT, GET_OPPORTUNITY_BY_ID, GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_BY_ID, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID, GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY, GET_USERS_BY_TERRITORY_ID_FOR_ASSIGN_OPPORTUNITY, IMAGE_BASE_URL, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
 import apiCall, { METHOD } from "../../../network/ApiService"
 
 const opportunityApi = {
@@ -298,6 +298,80 @@ const opportunityApi = {
                         results = [{
                             id: Table.ID,
                             name: Table.ProductCategoryName
+                        }]
+                    }
+                }
+
+                // results = results.filter((t) => t.name.length > 0)
+
+                // console.log("results", results)
+
+                resolve(results)
+            }, (error) => {
+                resolve([])
+            })
+
+        })
+
+    },
+    getTerritoryForAssignOpportunity(OpportunityId) {
+
+
+
+        return new Promise((resolve, reject) => {
+
+            apiCall(GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY, { OpportunityId }, (res) => {
+
+                const { Table } = res
+                let results = []
+                if (Table) {
+                    if (Array.isArray(Table)) {
+
+                        results = Table.map((t) => ({
+                            id: t.TerritoryID,
+                            name: t.TerritoryName
+                        }))
+                    } else {
+                        results = [{
+                            id: Table.TerritoryID,
+                            name: Table.TerritoryName
+                        }]
+                    }
+                }
+
+                // results = results.filter((t) => t.name.length > 0)
+
+                // console.log("results", results)
+
+                resolve(results)
+            }, (error) => {
+                resolve([])
+            })
+
+        })
+
+    },
+    getUsersByTerritoryIDForAssignOpportunity(OpportunityId, TerritoryID) {
+
+
+
+        return new Promise((resolve, reject) => {
+
+            apiCall(GET_USERS_BY_TERRITORY_ID_FOR_ASSIGN_OPPORTUNITY, { OpportunityId, TerritoryID }, (res) => {
+
+                const { Table } = res
+                let results = []
+                if (Table) {
+                    if (Array.isArray(Table)) {
+
+                        results = Table.map((t) => ({
+                            id: t.UserID,
+                            name: t.FullName
+                        }))
+                    } else {
+                        results = [{
+                            id: Table.UserID,
+                            name: Table.FullName
                         }]
                     }
                 }

@@ -33,9 +33,10 @@ export default class CustomPicker extends Component {
     componentDidUpdate = (prevProps, prevState, snapShot) => {
 
 
-        console.log("this.state.selectedItem.id", this.props.label, this.state.selectedItem.id)
+        // console.log("this.state.selectedItem.id", this.props.label, this.state.selectedItem.id)
 
         if (this.state.selectedItem?.id) {
+            // console.log("this.props.selectedItem", this.props.label, this.props.selectedItem)
 
             if (!this.props.selectedItem.id) {
                 this.setState({ selectedItem: { name: "", id: "" } })
@@ -48,7 +49,7 @@ export default class CustomPicker extends Component {
 
             // this.updateSelectedItem()
             if (this.props.selectedItem.id) {
-                console.log("this.props.selectedItem?.id", this.props.label, this.props.selectedItem?.id)
+                // console.log("this.props.selectedItem?.id", this.props.label, this.props.selectedItem?.id)
 
                 this.updateSelectedItem()
 
@@ -58,36 +59,38 @@ export default class CustomPicker extends Component {
     render() {
         const iconStyle = this.props.iconStyle ? this.props.iconStyle : {}
         return (
-            
+
             <View style={{ ...this.props.containerStyle }}>
                 <FloatingEditText
-                style={{ ...this.props.floaingStyle }}
-                multiline={false} onPress={() => {
-                    // Utils.showToast("Test")
-                    // console.log("Print")
-                    // console.log("this.props.list", this.props.list)
-                    SelectionView.show({
-                        title: this.props.label,
-                        onSelect: (item) => {
+                    style={{ ...this.props.floaingStyle }}
+                    multiline={false} onPress={() => {
+                        // Utils.showToast("Test")
+                        // console.log("Print")
+                        // console.log("this.props.list", this.props.list)
+                        SelectionView.show({
+                            title: this.props.label,
+                            onSelect: (item) => {
 
-                            if (this.props.onSelect)
-                                this.props.onSelect(item)
+                                console.log("this.props.onSelect", this.props.onSelect, item)
 
-                            this.setState({ selectedItem: item })
-                        },
-                        data: this.props.list || []
-                    })
-                }} 
-                    value={this.state.selectedItem.name} 
-                     label={this.props.label}
-                     editable={false}
+                                if (this.props.onSelect)
+                                    this.props.onSelect(item)
+
+                                this.setState({ selectedItem: item })
+                            },
+                            data: this.props.list || []
+                        })
+                    }}
+                    value={this.state.selectedItem.name}
+                    label={this.props.label}
+                    editable={false}
                     rightIcon={this.props.rightIcon}
                     leftIcon={this.props.leftIcon}
                     onPressLeftIcon={this.props.onPressLeftIcon}
                     onPressRightIcon={this.props.onPressRightIcon}
                 />
             </View>
-       
+
         );
     }
 }

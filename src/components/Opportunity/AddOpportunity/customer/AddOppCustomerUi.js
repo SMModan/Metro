@@ -1,14 +1,15 @@
 import moment from 'moment'
 import React from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
-import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-native-paper'
+import { Button as DialogButton, Chip, Dialog, Portal, RadioButton } from 'react-native-paper'
 import { strings } from '../../../../language/Language'
 import { push } from '../../../../navigation/Navigator'
 import { Colors, FontName, Images } from '../../../../utils'
 import ResponsivePixels from '../../../../utils/ResponsivePixels'
 import Utils from '../../../../utils/Utils'
-import { Button, ChipViewContainer, ProgressView, Clickable, CustomDatePicker, FloatingEditText, ScrollContainer, SegmentView, ViewWithTitle } from '../../../common'
+import { Button, ChipViewContainer, ProgressView, Clickable, CustomDatePicker, FloatingEditText, ScrollContainer, SegmentView, ViewWithTitle, ImageButton } from '../../../common'
 import CustomPicker from '../../../common/CustomPicker'
+import SelectionView from '../../../common/SelectionView'
 
 const AddOppCustomerUi = ({ contactDialogVisible,
     selectedContactIndex,
@@ -16,15 +17,19 @@ const AddOppCustomerUi = ({ contactDialogVisible,
     contactList,
     onSelectContact,
     onSelectCustomer,
+    onSelectUser,
     onTextChanged,
-    territories, stages, oppCategories, oppCurrencies, oppSalesStages, customers,
+    territories, stages, assignTerritories, oppCategories, oppCurrencies, oppSalesStages, customers,
     onSave,
     loading,
+    users,
+    selectedUsers,
+    onRemoveUser,
     opportunity,
     onDismiss }) => {
 
-    const { OpportunityName, ID, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID } = opportunity
-    // console.log("StageID", StageID)
+    const { OpportunityName, ID, TerritoryID, AssignTerritoryID, AssignUserName, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID } = opportunity
+    //  console.log("selectedUser", selectedUser)
     return (
         <ScrollContainer>
             {loading ? <ProgressView /> : <View style={styles.mainView}>
@@ -60,6 +65,42 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                     <ChipViewContainer selectedChip={{ id: CurrencyID }} onSelect={(item) => onTextChanged("CurrencyID", item.id)} title="Currency" chips={oppCurrencies} />
                 </ViewWithTitle>
 
+
+                {ID ? <ViewWithTitle title={"Assign User Information"}>
+                    <CustomPicker selectedItem={{ id: AssignTerritoryID }} onSelect={(item) => {
+                        console.log("AssignTerritoryID", item)
+                        onTextChanged("AssignTerritoryID", item.id)
+
+                    }} list={assignTerritories} label={"Assign Territory"} rightIcon={Images.ic_down} />
+                    <View style={{ flexDirection: "row", marginVertical: 16, alignItems: "center" }}>
+                        <ImageButton source={Images.ic_add_blue} onPress={() => {
+
+                            if (AssignTerritoryID) {
+                                SelectionView.show({
+                                    title: "Assign User",
+                                    onSelect: onSelectUser,
+                                    data: users || []
+                                })
+                            } else {
+
+                                Utils.showDangerToast("Please select Assign Territory first.")
+                            }
+                        }} />
+                        {!selectedUsers?.length ? <Text style={[styles.phoneNumber, { marginStart: 8 }]}>{"Assign User"}</Text> :
+                            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                                {selectedUsers.map((item, index) => <Chip key={index} style={{ margin: 5, backgroundColor: Colors.blueGray200 }}
+                                    textStyle={{ fontSize: 13, color: Colors.black }}
+                                    onClose={() => {
+                                        onRemoveUser(index)
+                                    }}
+                                    icon="account">{item.name}</Chip>)}
+                            </View>}
+                        {/* <View style={{ flexDirection: "row", flexWrap: "wrap" }}>                    {selectedUsers?.map((item, index) => <Chip key={index} style={{ margin: 5, backgroundColor: Colors.white }}
+                            textStyle={{ fontSize: 13, color: Colors.blueGray900 }}
+                            icon="close">{item.name}</Chip>)}
+                        </View> */}
+                    </View>
+                </ViewWithTitle> : null}
 
                 <ViewWithTitle title={strings.other_info}>
                     <ChipViewContainer selectedChip={{ id: OpportunityCategoryID }} onSelect={(item) => onTextChanged("OpportunityCategoryID", item.id)} title={strings.opp_category} chips={oppCategories} />
@@ -127,4 +168,5 @@ const styles = StyleSheet.create({
         fontFamily: FontName.regular,
 
     }
+
 })

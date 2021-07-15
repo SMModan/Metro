@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { getDropDowns } from '../../../../data/DatabaseHelper'
-import Utils from '../../../../utils/Utils'
+import { goBack } from '../../../../navigation/Navigator'
 import { DROPDWON_GET_OPPORTUNITY_CATEGORY, DROPDWON_GET_OPPORTUNITY_CURRENCY, DROPDWON_GET_OPPORTUNITY_SALES_STAGE, DROPDWON_GET_OPPORTUNITY_STAGE, DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY } from '../../../../utils/AppConstants'
+import Utils from '../../../../utils/Utils'
 import { AlertDialog, ProgressDialog } from '../../../common'
 import opportunityApi from '../../apis/OpportunityApis'
-import AddOppCustomerUi from './AddOppCustomerUi'
-import { goBack, push } from '../../../../navigation/Navigator'
 import WrappedComponentOpportunity from "../WrappedComponentOpportunity"
+import AddOppCustomerUi from './AddOppCustomerUi'
 class AddOppCustomer extends Component {
 
     state = {
@@ -80,11 +78,11 @@ class AddOppCustomer extends Component {
         // ProgressDialog.show()
         try {
             const customers = await opportunityApi.getCustomers()
-            const territories = await getDropDowns(DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY)
-            const stages = await getDropDowns(DROPDWON_GET_OPPORTUNITY_STAGE)
-            const oppCategories = await getDropDowns(DROPDWON_GET_OPPORTUNITY_CATEGORY)
-            const oppCurrencies = await getDropDowns(DROPDWON_GET_OPPORTUNITY_CURRENCY)
-            const oppSalesStages = await getDropDowns(DROPDWON_GET_OPPORTUNITY_SALES_STAGE)
+            const territories = this.props.session[DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY]
+            const stages = this.props.session[DROPDWON_GET_OPPORTUNITY_STAGE]
+            const oppCategories = this.props.session[DROPDWON_GET_OPPORTUNITY_CATEGORY]
+            const oppCurrencies = this.props.session[DROPDWON_GET_OPPORTUNITY_CURRENCY]
+            const oppSalesStages = this.props.session[DROPDWON_GET_OPPORTUNITY_SALES_STAGE]
             console.log("territories", oppCurrencies)
             this.setState({
                 loading: false,

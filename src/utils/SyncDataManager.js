@@ -114,14 +114,15 @@ const syncData = (fromLogin = true) => {
 
             console.log("Table && typeof (Table) == Array", Table && typeof (Table))
             console.log("Table1 && typeof (Table1) == Array", Table1 && typeof (Table1))
+            const dropDown = []
             if (Table && Array.isArray(Table)) {
                 await Promise.all(Table.map(async (t) => {
                     const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID } = t
 
                     // if (ID && Name) {
                     console.log("Going to insert1")
-
-                    await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
+                    dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName })
+                    // await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
                     // }
                 }))
             } else if (Table1 && Array.isArray(Table1)) {
@@ -130,13 +131,14 @@ const syncData = (fromLogin = true) => {
 
                     // if (ID && Name) {
                     console.log("Going to insert1")
+                    dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName })
 
-                    await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
+                    // await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
                     // }
                 }))
             }
 
-
+            store.dispatch(setSessionField(endPoint, dropDown))
             offlineData[index].status = 2
             index++
             if (index <= offlineData.length - 1)

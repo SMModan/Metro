@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, Text } from 'react-native'
-import { CheckBox } from 'native-base';
-import { Colors } from '../../utils';
+import { Checkbox as CheckBox } from 'react-native-paper';
+import { Colors, FontSize } from '../../utils';
 
 export default class Checkbox extends Component {
     render() {
         return (
-            <TouchableOpacity style={{ flexDirection: 'row', margin:5 , ...this.props.style }} onPress={this.props.onPress}>
-                <CheckBox color={this.props.color || Colors.grey}  onPress={this.props.onPress} checked={this.props.checked} style={{ borderRadius:5 }}/>
-                <Text style={{ flex: 1, fontSize: 12, fontFamily: FontName.regular, color: this.props.labelColor || Colors.black, marginLeft: 20 }}>{this.props.label}</Text>
+            <TouchableOpacity disabled={this.props.disabled} style={{ flexDirection: 'row', alignItems: "center", margin: 5, ...this.props.style }} onPress={this.props.onPress}>
+                <CheckBox
+                    disabled={this.props.disabled}
+                    color={this.props.color}
+                    status={this.props.checked ? 'checked' : 'unchecked'}
+                    onPress={this.props.onPress}
+                />
+                <Text style={{ fontSize: FontSize.fontSize15, fontFamily: FontName.regular, color: this.props.labelColor || Colors.blueGray900, }}>{this.props.label}</Text>
             </TouchableOpacity>
         )
     }

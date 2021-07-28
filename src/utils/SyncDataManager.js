@@ -76,26 +76,26 @@ const offlineData = [
     //     status: 0,
     //     endPoint: "GetTaskName"
     // },
-    // {
-    //     name: "GetReminderAlert",
-    //     status: 0,
-    //     endPoint: "GetReminderAlert"
-    // },
-    // {
-    //     name: "GetPriority",
-    //     status: 0,
-    //     endPoint: "GetPriority"
-    // },
-    // {
-    //     name: "GetUserForAssignActivity",
-    //     status: 0,
-    //     endPoint: "GetUserForAssignActivity"
-    // },
-    // {
-    //     name: "GetRelatedTo",
-    //     status: 0,
-    //     endPoint: "GetRelatedTo"
-    // },
+    {
+        name: "GetReminderAlert",
+        status: 0,
+        endPoint: "GetReminderAlert"
+    },
+    {
+        name: "GetPriority",
+        status: 0,
+        endPoint: "GetPriority"
+    },
+    {
+        name: "GetUserForAssignActivity",
+        status: 0,
+        endPoint: "GetUserForAssignActivity"
+    },
+    {
+        name: "GetRelatedTo",
+        status: 0,
+        endPoint: "GetRelatedTo"
+    },
 ]
 
 const syncData = (fromLogin = true) => {
@@ -117,21 +117,21 @@ const syncData = (fromLogin = true) => {
             const dropDown = []
             if (Table && Array.isArray(Table)) {
                 await Promise.all(Table.map(async (t) => {
-                    const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID } = t
+                    const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID, UserName } = t
 
                     // if (ID && Name) {
                     console.log("Going to insert1")
-                    dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName })
+                    dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName || UserName })
                     // await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
                     // }
                 }))
             } else if (Table1 && Array.isArray(Table1)) {
                 await Promise.all(Table1.map(async (t) => {
-                    const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID, } = t
+                    const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID, UserName } = t
 
                     // if (ID && Name) {
                     console.log("Going to insert1")
-                    dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName })
+                    dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName || UserName })
 
                     // await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
                     // }

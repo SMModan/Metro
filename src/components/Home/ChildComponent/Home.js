@@ -12,6 +12,7 @@ import styles from '../styles/Home.style';
 import { strings } from '../../../language/Language';
 import { Images, Colors } from '../../../utils';
 import { syncAllData } from '../../../utils/SyncDataManager';
+import { reset } from '../../../navigation/Navigator';
 
 
 const data = [
@@ -132,7 +133,7 @@ class Home extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => this.props.navigation.goBack(),
+            onPress: () => reset("SignIn"),
           },
           title: '',
           hideUnderLine: true,

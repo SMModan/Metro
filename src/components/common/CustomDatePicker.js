@@ -28,6 +28,7 @@ export default class CustomDatePicker extends Component {
                     isVisible={this.state.isDatePickerVisible}
                     mode={this.props.mode || "date"}
                     date={this.state.selectedDate}
+                    minimumDate={this.props.minimumDate}
                     onConfirm={(date) => {
                         console.log("date", date)
 

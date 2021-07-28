@@ -34,11 +34,12 @@ export default class CustomPicker extends Component {
 
 
         // console.log("this.state.selectedItem.id", this.props.label, this.state.selectedItem.id)
+        console.log("this.props.selectedItem", this.props.label, this.props.selectedItem)
 
         if (this.state.selectedItem?.id) {
             // console.log("this.props.selectedItem", this.props.label, this.props.selectedItem)
 
-            if (!this.props.selectedItem.id) {
+            if (!this.props.selectedItem?.id) {
                 this.setState({ selectedItem: { name: "", id: "" } })
 
             } else if (this.props.selectedItem?.id != this.state.selectedItem.id) {
@@ -48,7 +49,7 @@ export default class CustomPicker extends Component {
         } else {
 
             // this.updateSelectedItem()
-            if (this.props.selectedItem.id) {
+            if (this.props.selectedItem?.id) {
                 // console.log("this.props.selectedItem?.id", this.props.label, this.props.selectedItem?.id)
 
                 this.updateSelectedItem()
@@ -81,7 +82,7 @@ export default class CustomPicker extends Component {
                             data: this.props.list || []
                         })
                     }}
-                    value={this.state.selectedItem.name}
+                    value={this.state.selectedItem?.name}
                     label={this.props.label}
                     editable={false}
                     rightIcon={this.props.rightIcon}

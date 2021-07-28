@@ -68,6 +68,8 @@ export default class CustomPicker extends Component {
                         // Utils.showToast("Test")
                         // console.log("Print")
                         // console.log("this.props.list", this.props.list)
+                        if (this.props.disabled == true)
+                            return
                         SelectionView.show({
                             title: this.props.label,
                             onSelect: (item) => {

@@ -156,6 +156,7 @@ class SignIn extends Component {
                 label={strings.txtPassword}
               />
               <CustomPicker
+                disabled={this.state.companyName <= 1}
                 leftIcon={Images.ic_Company}
                 style={styles.textPassword}
                 selectedItem={this.state.selectedCompany}

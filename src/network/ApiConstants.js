@@ -46,8 +46,12 @@ export const GET_COUNTRIES = "GetCountries"
 export const GET_STATE = "GetStatesByCountryID"
 
 // Get All Appointment Api end points
-export const GET_ALL_APPOINTMENT = "GetAllAppointmentActivity"
 
+export const GET_ALL_APPOINTMENT = "GetAllAppointmentActivity"
+export const GET_RELATED_TO_BY_ENTITY_ID = "GetRelatedToByEntityID"
+export const INSERT_OR_UPDATE_APPOINTMENT_ACTIVITY = "InsertOrUpdateAppointmentActivity"
+export const GET_APPOINTMENT_STARTDATE_ENDDATE_BY_USER_TIMEZONE = "GetAppointmentStartDateEndDateByUserTimeZone"
+export const GET_APPOINTMENT_ACTIVITY_BY_ID = "GetAppointmentActivityByID"
 
 // Get All HelpDesk List Api end points
 export const GET_ALL_HELPDESK_LIST = "GetHelpDesksVersion1"

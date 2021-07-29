@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ScrollView, ActivityIndicator } from 'react-native';
 import {
-  MainContainer,
+  MainContainer, MyFlatList,
 } from '../../common';
 import { connect } from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
@@ -55,7 +55,7 @@ class Appointments extends Component {
           loading: false, refreshing: false, loadMore: false, isLast
         })
       }
-      }, () => {
+    }, () => {
       this.setState({
         loading: !this.state.refreshing && !this.state.loadMore
       })
@@ -68,12 +68,11 @@ class Appointments extends Component {
     console.log('item', item);
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
-    let myDate = `${date.getDay()}-${
-      date.getMonth() + 1
-    }-${date.getFullYear()} ${date.getHours()} : ${date.getMinutes()}`;
+    let myDate = `${date.getDay()}-${date.getMonth() + 1
+      }-${date.getFullYear()} ${date.getHours()} : ${date.getMinutes()}`;
     return (
       <Card style={{ margin: 5 }} key={item.index} onPress={() => {
-        this.props.navigation.push('AddAppointments')
+        this.props.navigation.push('AddAppointments', { item })
       }}>
         <View style={{ margin: 15 }}>
           <Text style={{ fontSize: 12 }}>{item.date}</Text>
@@ -87,13 +86,13 @@ class Appointments extends Component {
     );
   };
 
-  
+
   searchOpp = async () => {
 
     this.setState({
-      listData:[],
+      listData: [],
       page: 0
-    },()=>{
+    }, () => {
       this.getAllAppointment()
     })
   }
@@ -102,7 +101,7 @@ class Appointments extends Component {
 
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast ,showSearch} = this.state
+    const { listData, refreshing, loading, loadMore, isLast, showSearch } = this.state
 
     return (
       <MainContainer
@@ -130,15 +129,13 @@ class Appointments extends Component {
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>
-          {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
 
-            <FlatList
+            <MyFlatList
               horizontal={false}
               scrollEnabled={true}
               data={listData || []}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
-              keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
 
               loading={loading}

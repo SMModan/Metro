@@ -12,6 +12,7 @@ import { syncAllData } from '../../../utils/SyncDataManager';
 import Utils from '../../../utils/Utils';
 import {
   Button,
+  CustomPicker,
   FloatingEditText,
   MainContainer,
   ProgressDialog,
@@ -26,7 +27,8 @@ class SignIn extends Component {
   state = {
     userName: '',
     password: '',
-    companyName: '',
+    companyName: [],
+    selectedCompany: {},
     companyId: '',
   };
 
@@ -46,11 +48,24 @@ class SignIn extends Component {
           const { Table1 } = res;
 
           if (Table1) {
-            const { CompanyName, DBName } = Table1;
+            let results = []
+            if (Array.isArray(Table1)) {
+
+              results = Table1.map((t) => ({
+                id: t.DBName,
+                name: t.CompanyName
+              }))
+            } else {
+              results = [{
+                id: Table1.DBName,
+                name: Table1.CompanyName
+              }]
+            }
+
             this.setState({
-              companyName: CompanyName,
-              companyId: DBName,
-            });
+              companyName: results,
+              selectedCompany: results[0]
+            })
           }
         }
       },
@@ -65,7 +80,7 @@ class SignIn extends Component {
   login = () => {
     const params = {
       UserName: this.state.userName,
-      CompanyName: this.state.companyName,
+      CompanyName: this.state.selectedCompany.name,
       Password: this.state.password,
     };
     ProgressDialog.show();
@@ -140,12 +155,13 @@ class SignIn extends Component {
                 onChangeText={text => this.setState({ password: text })}
                 label={strings.txtPassword}
               />
-              <FloatingEditText
-                editable={false}
+              <CustomPicker
+                disabled={this.state.companyName <= 1}
                 leftIcon={Images.ic_Company}
                 style={styles.textPassword}
-                value={this.state.companyName}
-                onChangeText={text => this.setState({ companyName: text })}
+                selectedItem={this.state.selectedCompany}
+                list={this.state.companyName}
+                onSelect={item => this.setState({ selectedCompany: item })}
                 label={strings.textSelectCompany}
               />
               {/* <View style={styles.forgotPasswordView}>
@@ -157,7 +173,7 @@ class SignIn extends Component {
               </View> */}
               <View style={styles.bottomShadowView}>
                 <Button
-                  disabled={!this.state.companyId || !this.state.password}
+                  disabled={!this.state.selectedCompany.name || !this.state.password}
                   onPress={this.login}
                   title={strings.btnLogin}
                 />

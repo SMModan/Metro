@@ -33,9 +33,7 @@ export default () => {
 
   useEffect(() => {
     // openSQLiteDB();
-
     const session = store.getState().session;
-
     console.log('session.is_logged_in', session.is_logged_in);
     setInitialRoute(session.is_logged_in ? 'Home' : 'SignIn');
     SplashScreen.hide();

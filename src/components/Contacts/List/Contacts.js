@@ -14,6 +14,8 @@ import ResponsivePixels from '../../../utils/ResponsivePixels';
 import _ from "lodash"
 
 class Contacts extends Component {
+
+  
   state = {
     selectedIndex: 0,
     page: 0,
@@ -34,8 +36,8 @@ class Contacts extends Component {
         style={{margin: 7, marginLeft: 15, marginRight: 25}}
         key={index}
         onPress={() => {
-          push('ViewContact');
-        }}>
+          this.props.navigation.push('AddContacts', {contactID: item.id})
+          }}>
         <View style={{margin: 15, flexDirection: 'row', alignItems: 'center'}}>
           <View
             style={{
@@ -140,7 +142,7 @@ class Contacts extends Component {
       PageIndex: this.state.page,
       PageSize: 20,
       Filter: searchQuery || ""
-    };
+    };  
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore,
     });
@@ -159,6 +161,7 @@ class Contacts extends Component {
             let table = {
               name: _table.ContactPersonName||'',
               company: _table.CustomerName||'',
+              id:_table.ID
             };
             data.push(table);
           }

@@ -37,5 +37,8 @@ export default {
   phone_number: "Phone Number",
   email: "Email",
   countries:"Countries",
-  state:"State"
+  state:"State",
+  customerName:"CustomerName",
+
+
 };

@@ -32,6 +32,8 @@ export const GET_ALL_TASKLIST = "GetAllTaskActivityVersion1"
 
 // Contact Api end points
 export const GET_ALL_CONTACT = "GetAllContacts"
+export const INSERT_OR_UPDATE_CONTACT = "InsertOrUpdateContact"
+export const GET_CONTACT_BY_ID = "GetContactByID"
 
 
 // Notificaiton Api end points

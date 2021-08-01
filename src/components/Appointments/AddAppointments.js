@@ -16,7 +16,7 @@ import {
 } from './BaseComponents';
 import AppointmentApi from './Api/AppointmentApi';
 import moment from 'moment';
-import { goBack } from '../../navigation/Navigator';
+import { goBack, push } from '../../navigation/Navigator';
 
 
 export const AppoinmentContext = React.createContext({})
@@ -125,7 +125,6 @@ class AddAppointments extends Component {
 
 
       const params = {
-
         Location,
         IsFullDayEvent,
         Subject,
@@ -142,16 +141,13 @@ class AddAppointments extends Component {
         ReminderAlertID,
         EntityFieldID,
         EntityFieldName,
-
       }
       ProgressDialog.show()
       AppointmentApi.InsertOrUpdateAppointment(params, (res) => {
         ProgressDialog.hide()
-
-        goBack()
+        push("Appointments")
       }, (error) => {
         ProgressDialog.hide()
-
         Utils.showDangerToast(error)
       })
     }
@@ -162,7 +158,7 @@ class AddAppointments extends Component {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => this.props.navigation.goBack(),
+            onPress: () => push("Appointments"),
           },
           title: 'Add Appointment',
           hideUnderLine: true,

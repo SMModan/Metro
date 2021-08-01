@@ -78,9 +78,11 @@ class AddContacts extends Component {
 
 
   getAllCustomer = () => {
+    ProgressDialog.show("please wait")
     contactApi.getCustomers(
       {MaxCustomerID: 1},
       res => {
+        ProgressDialog.hide()
         const {Table} = res;
         let customerList = [];
         console.log('Table', Table);
@@ -100,13 +102,16 @@ class AddContacts extends Component {
               customerList,
             },
             () => {
-              this.getContactByID()
+              if(this.state.contactId!=0){
+                this.getContactByID()
+              }
 
             },
           );
         }
       },
       error => {
+        ProgressDialog.hide()
         Utils.showToast(error);
       },
     );

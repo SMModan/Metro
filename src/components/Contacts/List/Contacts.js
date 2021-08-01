@@ -31,13 +31,15 @@ class Contacts extends Component {
   };
 
   _renderItem = (item, index, section) => {
+    console.log("item.name")
+    
     return (
       <Card
         style={{margin: 7, marginLeft: 15, marginRight: 25}}
         key={index}
         onPress={() => {
           this.props.navigation.push('AddContacts', {contactID: item.id})
-          }}>
+        }}>
         <View style={{margin: 15, flexDirection: 'row', alignItems: 'center'}}>
           <View
             style={{
@@ -73,6 +75,14 @@ class Contacts extends Component {
       </Card>
     );
   };
+
+   validateName=(name)=> {
+    var isValidName = true;
+    if(/[!@#$%^&*(),.?":{}|<>]/g.test(name) || !/^[A-Z]/.test(name) || /\d+/g.test(name)) {
+      isValidName = false;
+    }
+    return isValidName;
+  }
 
   _renderHeader = params => {
     return (
@@ -158,9 +168,18 @@ class Contacts extends Component {
 
           for (let index = 0; index < Table.length; index++) {
             const _table = Table[index];
+              // let firstChar = _table?.ContactPersonName[0]
+              // let name = _table?.ContactPersonName || ''
+
+            // if( firstChar <='9' && firstChar >='0') {
+            //   console.log("name",name);
+            //   firstChar = `#`
+            //   name= `shahil${name}`
+            // }
+
             let table = {
-              name: _table.ContactPersonName||'',
-              company: _table.CustomerName||'',
+              name: _table.CustomerName||'',
+              company: _table.EmailID||'',
               id:_table.ID
             };
             data.push(table);
@@ -290,19 +309,19 @@ class Contacts extends Component {
                   this.getAllContacts()
                 })
               }}
-              // onEndReached={() => {
-              //   console.log("End")
+              onEndReached={() => {
+                console.log("End")
   
-              //   if (!loadMore && !isLast) {
-              //     this.setState({
-              //       page: this.state.page + 1,
-              //       loadMore: true
-              //     }, () => {
-              //       this.getAllContacts()
-              //     })
+                if (!loadMore && !isLast) {
+                  this.setState({
+                    page: this.state.page + 1,
+                    loadMore: true
+                  }, () => {
+                    this.getAllContacts()
+                  })
   
-              //   }
-              // }}
+                }
+              }}
             />
 
             {/* {this.renderFooter()} */}

@@ -24,6 +24,7 @@ import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/O
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import Opportunity from '../components/Opportunity/list/Opportunity';
 import TaskList from '../components/Task/List/TaskList';
+import AddTask from '../components/Task/AddTask';
 
 const Stack = createStackNavigator();
 
@@ -65,6 +66,7 @@ export default () => {
           <Stack.Screen component={AddCustomer} name="AddCustomer" />
           <Stack.Screen component={SyncData} name="SyncData" />
           <Stack.Screen component={TaskList} name="Tasks" />
+          <Stack.Screen component={AddTask} name="AddTask" />
         </Stack.Navigator>
       </NavigationContainer>
 

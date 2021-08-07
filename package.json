@@ -91,7 +91,6 @@
     "@babel/runtime": "^7.14.0",
     "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^27.0.2",
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^7.27.0",
     "jest": "^27.0.3",
     "metro-react-native-babel-preset": "^0.66.0",

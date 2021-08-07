@@ -15,7 +15,7 @@ import {
   AddressInformation,
   AddmoreInfoDialogue,
 } from './BaseComponents';
-import {Icon} from 'native-base';
+import {Icon,Image} from 'native-base';
 import CustomerApi from './Api/CustomerApi';
 import { Card, Title, FAB } from 'react-native-paper';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
@@ -115,7 +115,6 @@ class AddCustomer extends Component {
   }
 
   saveOtherInformation = () => {
-    alert('testing...');
     const {Location, Street, CountryID, StateID, CityName, Pincode} =
       this.state;
     let _otherInformation = this.state.otherInformation;
@@ -249,6 +248,10 @@ class AddCustomer extends Component {
               color: Colors.darkGray,
               marginTop: 4,
             }}>{`${this.state.stateName} , ${this.state.countryName}`}</Text>
+
+
+        <Image source={Images.ic_close} style={{width:25,height:25,resizeMode:'contain',}} />
+
         </View>
       </Card>
     );

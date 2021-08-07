@@ -24,6 +24,7 @@ import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/O
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import Opportunity from '../components/Opportunity/list/Opportunity';
 import TaskList from '../components/Task/List/TaskList';
+import AddTask from '../components/Task/AddTask';
 
 const Stack = createStackNavigator();
 
@@ -33,9 +34,7 @@ export default () => {
 
   useEffect(() => {
     // openSQLiteDB();
-
     const session = store.getState().session;
-
     console.log('session.is_logged_in', session.is_logged_in);
     setInitialRoute(session.is_logged_in ? 'Home' : 'SignIn');
     SplashScreen.hide();
@@ -67,6 +66,7 @@ export default () => {
           <Stack.Screen component={AddCustomer} name="AddCustomer" />
           <Stack.Screen component={SyncData} name="SyncData" />
           <Stack.Screen component={TaskList} name="Tasks" />
+          <Stack.Screen component={AddTask} name="AddTask" />
         </Stack.Navigator>
       </NavigationContainer>
 

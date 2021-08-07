@@ -111,6 +111,21 @@ const offlineData = [
         status: 0,
         endPoint: "GetRelatedTo"
     },
+    {
+        name: "GetHelpdeskSeverity",
+        status: 0,
+        endPoint: "GetHelpdeskSeverity"
+    },
+    {
+        name: "GetHelpdeskTypeOfCall",
+        status: 0,
+        endPoint: "GetHelpdeskTypeOfCall"
+    },
+    {
+        name: "GetHelpdeskStatus",
+        status: 0,
+        endPoint: "GetHelpdeskStatus"
+    },
 ]
 
 const syncData = (fromLogin = true) => {

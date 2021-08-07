@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView,Image, ActivityIndicator} from 'react-native';
+import { View, Text, FlatList, ScrollView, Image, ActivityIndicator } from 'react-native';
 import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-native-paper'
 
 import {
-  MainContainer,
+  MainContainer, MyFlatList,
 } from '../../common';
 import { connect } from 'react-redux';
 import styles from '../styles/HelpDesk.style';
 import { strings } from '../../../language/Language';
 import { Images, Colors } from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
-import {  AirbnbRating } from 'react-native-ratings';
+import { AirbnbRating } from 'react-native-ratings';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import HelpDeskApi from '../Api/HelpDeskApi';
 import _ from "lodash"
@@ -25,9 +25,10 @@ class HelpDesk extends Component {
     loadMore: false,
     isLast: false,
     listData: [],
-    contactDialogVisible:false,
+    contactDialogVisible: false,
     showSearch: false,
     searchQuery: false,
+    statusId: 0
 
   };
 
@@ -42,7 +43,7 @@ class HelpDesk extends Component {
       PageIndex: this.state.page,
       PageSize: 10,
       Filter: searchQuery || "",
-      HelpDeskStatusID:1
+      HelpDeskStatusID: this.state.statusId
     }
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
@@ -70,16 +71,14 @@ class HelpDesk extends Component {
 
   renderCell = ({ index }) => {
     const item = this.state.listData[index];
-    console.log("item",item)
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
 
-    let myDate = `${date.getDay()}-${
-      date.getMonth() + 1
-    }-${date.getFullYear()}`;
+    let myDate = `${date.getDay()}-${date.getMonth() + 1
+      }-${date.getFullYear()}`;
     return (
       <Card style={{ margin: 5 }} key={item.index} onPress={() => {
-        this.props.navigation.push('UpdateHelpDesk')
+        this.props.navigation.push('AddHelpDesk', { item })
       }}>
         <View style={{ margin: 15 }}>
           <View style={{ flexDirection: 'row' }}>
@@ -92,25 +91,25 @@ class HelpDesk extends Component {
           <Title style={{ fontSize: 16, marginTop: 8 }}>{item.ContactPersonName}</Title>
           <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.AssignedToName}</Text>
           {
-            item.Status === 'Open' ?
-              <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }} 
-              onPress={()=>{ this.setState({contactDialogVisible:true})}}
-              uppercase={false}> View ratings & digital signature </Button> : null
+            item.StatusId === 2 ?
+              <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }}
+                onPress={() => { this.setState({ contactDialogVisible: true }) }}
+                uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
-       
+
       </Card>
     );
   };
 
-  
-  
+
+
   searchOpp = async () => {
 
     this.setState({
-      listData:[],
+      listData: [],
       page: 0
-    },()=>{
+    }, () => {
       this.getAllList()
     })
   }
@@ -120,7 +119,7 @@ class HelpDesk extends Component {
 
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast ,contactDialogVisible,showSearch} = this.state
+    const { listData, refreshing, loading, loadMore, isLast, contactDialogVisible, showSearch } = this.state
 
     return (
       <MainContainer
@@ -151,16 +150,19 @@ class HelpDesk extends Component {
             <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Status</Text>
             <View style={{ height: 25, width: 1, backgroundColor: Colors.secondary200, margin: 5 }} />
             <ScrollView horizontal={true}>
-              {["All", "Open", "On hold", "Completed"].map((item, index) => <Chip key={index} style={{ margin: 5, backgroundColor: this.state.selectedIndex === index ? Colors.Orange500 : Colors.secondary200 }} textStyle={{ fontSize: 13, color: this.state.selectedIndex === index ? Colors.white : Colors.black }} onPress={() => { this.setState({ selectedIndex: index }) }}>{item}</Chip>)}
+              {[{ name: "All", id: 0, }, { name: "Open", id: 1 }, { name: "On hold", id: 3 }, { name: "Completed", id: 2 }].map((item, index) => <Chip key={index} style={{ margin: 5, backgroundColor: this.state.selectedIndex === index ? Colors.Orange500 : Colors.secondary200 }} textStyle={{ fontSize: 13, color: this.state.selectedIndex === index ? Colors.white : Colors.black }} onPress={() => {
+                this.setState({ selectedIndex: index, statusId: item.id, refreshing: true }, () => {
+                  this.getAllList()
+                })
+              }}>{item.name}</Chip>)}
             </ScrollView>
           </View>
           <View style={styles.MainList}>
-          {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
 
-            <FlatList
+            <MyFlatList
               horizontal={false}
               scrollEnabled={true}
-              data={listData||[]}
+              data={listData || []}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
               keyExtractor={(item, index) => 'key' + index}
@@ -194,27 +196,27 @@ class HelpDesk extends Component {
             />
 
 
-<Portal>
-                <Dialog visible={contactDialogVisible} onDismiss={()=>{this.setState({contactDialogVisible:false})}}>
-                    <Dialog.Title> Ratting & Digital signature </Dialog.Title>
-                    <Dialog.ScrollArea>
-                      <Image source={Images.ic_signature} style={{width:'100%',height:'30%',resizeMode:'stretch',alignItems:'flex-start',marginTop:25}} />
-                    <AirbnbRating
-                      count={5}
-                      defaultRating={11}
-                      size={30}
-                      style={{height:'30%'}}
-                    />
+            <Portal>
+              <Dialog visible={contactDialogVisible} onDismiss={() => { this.setState({ contactDialogVisible: false }) }}>
+                <Dialog.Title> Ratting & Digital signature </Dialog.Title>
+                <Dialog.ScrollArea>
+                  <Image source={Images.ic_signature} style={{ width: '100%', height: '30%', resizeMode: 'stretch', alignItems: 'flex-start', marginTop: 25 }} />
+                  <AirbnbRating
+                    count={5}
+                    defaultRating={11}
+                    size={30}
+                    style={{ height: '30%' }}
+                  />
 
-<View style={{ width: '100%', backgroundColor: Colors.BlueColor50, borderRadius: 5 ,marginTop:20}}>
-              <Text style={{ textAlign: 'center', fontSize: ResponsivePixels.size16, color: Colors.BlueColor500, margin: 3 }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </Text>
-            </View>
-                     
-                    </Dialog.ScrollArea>
-                    <Dialog.Actions>
-                        <DialogButton color={Colors.blueGray600} style={{}} onPress={()=>{this.setState({contactDialogVisible:false})}}>Close</DialogButton>
-                    </Dialog.Actions>
-                </Dialog>
+                  <View style={{ width: '100%', backgroundColor: Colors.BlueColor50, borderRadius: 5, marginTop: 20 }}>
+                    <Text style={{ textAlign: 'center', fontSize: ResponsivePixels.size16, color: Colors.BlueColor500, margin: 3 }}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </Text>
+                  </View>
+
+                </Dialog.ScrollArea>
+                <Dialog.Actions>
+                  <DialogButton color={Colors.blueGray600} style={{}} onPress={() => { this.setState({ contactDialogVisible: false }) }}>Close</DialogButton>
+                </Dialog.Actions>
+              </Dialog>
             </Portal>
           </View>
         </View>

@@ -17,12 +17,12 @@ const SegmentView = ({ segments, onSelect, title, selectedSegment }) => {
             const itemIndex = segments.findIndex((item) => {
                 return item.id == selectedSegment.id
             })
-            console.log("itemIndex", segments)
+            console.log("itemIndex", selectedSegment, itemIndex)
 
-            if (itemIndex >= 0)
-                setSelectedIndex(itemIndex)
+            // if (itemIndex >= 0)
+            setSelectedIndex(itemIndex)
         }
-    }, [])
+    }, [selectedSegment?.id])
 
     return (
         <View>

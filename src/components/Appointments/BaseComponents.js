@@ -65,7 +65,6 @@ export const AppointmentInfo = () => {
     return (
         <ViewWithTitle title="Appointment Information">
             <ChipViewContainer selectedChip={{ id: EntityID }} onSelect={(item) => {
-                console.log("item", item)
                 onTextChanged("EntityID", item.id)
                 onTextChanged("EntityName", item.name)
             }} title="Related to" chips={[{ id: 0, name: "General" }, ...session.GetRelatedTo]} />
@@ -109,7 +108,6 @@ export const AppointmentInfo = () => {
             </View>
             {/* <FloatingEditText label={'Invites to'} editable={false} rightIcon={Images.ic_down} /> */}
             <ChipViewContainer selectedChip={{ id: ReminderAlertID }} onSelect={(item) => {
-                console.log("item", item)
                 onTextChanged("ReminderAlertID", item.id)
             }} title="Alert" chips={session.GetReminderAlert} />
             {/* <FloatingEditText inputType="numeric" label={'Charges'} /> */}

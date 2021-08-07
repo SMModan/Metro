@@ -12,7 +12,7 @@ const ChipViewContainer = ({ chips, onSelect, title, selectedChip }) => {
     useEffect(() => {
 
         if (selectedChip) {
-            const itemIndex = chips.findIndex((item) => {
+            const itemIndex = finalChips.findIndex((item) => {
                 return item.id == selectedChip.id
             })
 

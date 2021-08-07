@@ -32,28 +32,29 @@ export default class CustomPicker extends Component {
     }
     componentDidUpdate = (prevProps, prevState, snapShot) => {
 
-
-        // console.log("this.state.selectedItem.id", this.props.label, this.state.selectedItem.id)
-        console.log("this.props.selectedItem", this.props.label, this.props.selectedItem)
-
-        if (this.state.selectedItem?.id) {
+        if (this.props.list.length) {
+            // console.log("this.state.selectedItem.id", this.props.label, this.state.selectedItem.id)
             // console.log("this.props.selectedItem", this.props.label, this.props.selectedItem)
 
-            if (!this.props.selectedItem?.id) {
-                this.setState({ selectedItem: { name: "", id: "" } })
+            if (this.state.selectedItem?.id) {
+                // console.log("this.props.selectedItem", this.props.label, this.props.selectedItem)
 
-            } else if (this.props.selectedItem?.id != this.state.selectedItem.id) {
-                this.updateSelectedItem()
+                if (!this.props.selectedItem?.id) {
+                    this.setState({ selectedItem: { name: "", id: "" } })
 
-            }
-        } else {
+                } else if (this.props.selectedItem?.id != this.state.selectedItem.id) {
+                    this.updateSelectedItem()
 
-            // this.updateSelectedItem()
-            if (this.props.selectedItem?.id) {
-                // console.log("this.props.selectedItem?.id", this.props.label, this.props.selectedItem?.id)
+                }
+            } else {
 
-                this.updateSelectedItem()
+                // this.updateSelectedItem()
+                if (this.props.selectedItem?.id) {
+                    // console.log("this.props.selectedItem?.id", this.props.label, this.props.selectedItem?.id)
 
+                    this.updateSelectedItem()
+
+                }
             }
         }
     }

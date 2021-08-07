@@ -56,6 +56,21 @@ const offlineData = [
         status: 0,
         endPoint: "GetOpportunityBillingType"
     },
+     {
+            name: "GetTaskName",
+            status: 0,
+            endPoint: "GetTaskName"
+        },
+     {
+            name: "GetPriority",
+            status: 0,
+            endPoint: "GetPriority"
+        },
+     {
+            name: "GetReminderAlert",
+            status: 0,
+            endPoint: "GetReminderAlert"
+        },
     // {
     //     name: "GetProductsForOpportunity",
     //     status: 0,

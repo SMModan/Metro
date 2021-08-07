@@ -64,7 +64,12 @@ class SyncData extends Component {
                 name: "OpportunityBillingType",
                 status: 0,
                 endPoint: "GetOpportunityBillingType"
-            },
+            },{
+                    name: "GetTaskName",
+                    status: 0,
+                    endPoint: "GetTaskName"
+                },
+
             // {
             //     name: "GetProductsForOpportunity",
             //     status: 0,

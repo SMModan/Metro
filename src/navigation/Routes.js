@@ -24,7 +24,7 @@ import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/O
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import Opportunity from '../components/Opportunity/list/Opportunity';
 import TaskList from '../components/Task/List/TaskList';
-import AddTask from '../components/Task/AddTask';
+import AddTask from '../components/Task/AddTaskUi';
 
 const Stack = createStackNavigator();
 
@@ -69,8 +69,6 @@ export default () => {
           <Stack.Screen component={AddTask} name="AddTask" />
         </Stack.Navigator>
       </NavigationContainer>
-
-
     )
   );
 };

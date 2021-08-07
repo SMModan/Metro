@@ -28,7 +28,9 @@ const AddOppCustomerUi = ({ contactDialogVisible,
     opportunity,
     onDismiss }) => {
 
-    const { OpportunityName, ID, TerritoryID, AssignTerritoryID, AssignUserName, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID } = opportunity
+    const { OpportunityName, ID, TerritoryID, AssignTerritoryID, AssignUserName, CustomerID,
+         StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID,
+          CompetitionStatus, OpportunitySalesStageID } = opportunity
     //  console.log("selectedUser", selectedUser)
     return (
         <ScrollContainer>
@@ -70,7 +72,6 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                     <CustomPicker selectedItem={{ id: AssignTerritoryID }} onSelect={(item) => {
                         console.log("AssignTerritoryID", item)
                         onTextChanged("AssignTerritoryID", item.id)
-
                     }} list={assignTerritories} label={"Assign Territory"} rightIcon={Images.ic_down} />
                     <View style={{ flexDirection: "row", marginVertical: 16, alignItems: "center" }}>
                         <ImageButton source={Images.ic_add_blue} onPress={() => {

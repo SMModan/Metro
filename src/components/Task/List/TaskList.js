@@ -77,7 +77,6 @@ class TaskList extends Component {
 
   renderCell = ({index}) => {
     const item = this.state.listData[index];
-    console.log('item', item);
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
 

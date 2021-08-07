@@ -14,8 +14,6 @@ export const TaskInformation = () => {
             <ChipViewContainer title="Related to" chips={[{ name: "General" }, { name: "Customer" }, { name: "Opportunity" }, { name: "Contact" }, { name: "AMC" },]} />
             <FloatingEditText label={'Related Name'} />
             <FloatingEditText label={'Assign to'} editable={false} rightIcon={Images.ic_down} />
-
-
         </ViewWithTitle>
     )
 }

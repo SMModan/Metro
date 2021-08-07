@@ -63,7 +63,7 @@ export default class SelectionView extends Component {
 
     onSearch = (text) => {
 
-        const list = this.state.tempList.filter((l) => l.name.includes(text))
+        const list = this.state.tempList.filter((l) => l.name?.toLowerCase().includes(text.toLowerCase()))
 
         this.setState({ list: [...list] })
     }

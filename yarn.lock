@@ -7584,6 +7584,13 @@ react-native-segmented-control-tab@^3.4.1:
   resolved "https://registry.yarnpkg.com/react-native-segmented-control-tab/-/react-native-segmented-control-tab-3.4.1.tgz#b6e54b8975ce8092315c9b0a1ab58b834d8ccf8e"
   integrity sha512-BNPdlE9Unr0Xabewn8W+FhBMLjssXy9Ey7S7AY0hXlrKrEKFdC9z0yT+eEWd5dLam4T6T4IuGL8b7ZF4uGyWNw==
 
+react-native-signature-capture@^0.4.12:
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/react-native-signature-capture/-/react-native-signature-capture-0.4.12.tgz#9e24cdd2a45fd9eeeb70f78ab5f1083052388aba"
+  integrity sha512-DtRqYABtrXxcKhMYJaRFcptAgugDjsn/09KCbcNtZHVtEFyUvdSriOx2i6OgtTRHlQbN/+YBWnezeikcXu7UnQ==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-snackbar-material@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-snackbar-material/-/react-native-snackbar-material-1.0.0.tgz#d64a69b0716cb986a371da5ef2745933b348d4c0"

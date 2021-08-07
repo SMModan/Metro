@@ -10,6 +10,14 @@ export default class CustomDatePicker extends Component {
         isDatePickerVisible: false,
         selectedDate: this.props.selectedDate
     }
+
+    componentDidUpdate = (prevProps, prevState, snapShot) => {
+
+        if (this.state.selectedDate != this.props.selectedDate) {
+            console.log("Changed")
+            this.setState({ selectedDate: this.props.selectedDate })
+        }
+    }
     render() {
         const iconStyle = this.props.iconStyle ? this.props.iconStyle : {}
         return (
@@ -29,6 +37,7 @@ export default class CustomDatePicker extends Component {
                     mode={this.props.mode || "date"}
                     date={this.state.selectedDate}
                     minimumDate={this.props.minimumDate}
+                    maximumDate={this.props.maximumDate}
                     onConfirm={(date) => {
                         console.log("date", date)
 

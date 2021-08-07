@@ -1,16 +1,22 @@
 import React from 'react'
+import { ImageBackground } from 'react-native'
 import { StyleSheet, Text, View, Image } from 'react-native'
 import { Colors, FontName, Images } from '../../utils'
 import ResponsivePixels from '../../utils/ResponsivePixels'
+import Clickable from './Clickable'
 
-const UploadView = ({ children, innerStyle }) => {
+const UploadView = ({ image, onPress, children, innerStyle }) => {
     return (
-        <View style={styles.mainView}>
-            <View style={styles.uploadView}>
-                <Image source={Images.ic_upload} />
-                <Text style={styles.uploadText}>Upload here</Text>
-            </View>
-        </View>
+        <Clickable onPress={onPress}>
+            <ImageBackground imageStyle={{
+                borderRadius: ResponsivePixels.size16,
+            }} source={image} style={styles.uploadView}>
+                {!image ? <>
+                    <Image source={Images.ic_upload} />
+                    <Text style={styles.uploadText}>Upload here</Text>
+                </> : null}
+            </ImageBackground>
+        </Clickable>
     )
 }
 

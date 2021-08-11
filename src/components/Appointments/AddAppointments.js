@@ -77,10 +77,7 @@ class AddAppointments extends Component {
   onSelectUser = (item) => {
     // const selectedUser = this.state.selectedUser
     const { AssignUserName } = this.state
-
     AssignUserName.push(item)
-
-
     this.setState({ AssignUserName: [...AssignUserName] })
 
   }

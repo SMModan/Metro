@@ -28,7 +28,10 @@ export const GET_USERS_BY_TERRITORY_ID_FOR_ASSIGN_OPPORTUNITY = "GetUsersByTerri
 // TaskList Api end points
 
 export const GET_ALL_TASKLIST = "GetAllTaskActivityVersion1"
-
+export const ADD_TASK = "InsertOrUpdateTaskActivityVersion4"
+export const INSERT_TASK_ATTACHMENT = "InsertTaskAttachment"
+export const UPDATE_TASK_ATTACHMENT = "UpdateTaskAttachment"
+export const DELETE_TASK_ATTACHMENT = "DeleteTaskAttachment"
 
 // Contact Api end points
 export const GET_ALL_CONTACT = "GetAllContacts"
@@ -69,3 +72,6 @@ export const INSERT_HELP_DESK = "InsertHelpdeskVersion6DigitalSignature"
 export const GET_HELP_DESK_BY_ID = "GetHelpDeskByID"
 export const GET_IS_ADMIN_AND_IS_MODULE_ADMIN_BY_ENTITY_ID = "GetIsAdminAndIsModuleAdminByEntityID"
 export const INSERT_HELP_DESK_SOLUTION_VERSION3 = "InsertHelpdeskSolutionVersion3"
+
+export const GET_QUOTATION_LIST = "GetAllQuotations"
+

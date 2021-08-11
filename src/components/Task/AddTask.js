@@ -1,79 +1,22 @@
-import React, {Component} from 'react';
-import {View, Text, FlatList, ScrollView, DatePicker} from 'react-native';
-
+import _ from "lodash";
+import moment from 'moment';
+import React, { Component } from 'react';
+import { Text, View } from 'react-native';
+import { Chip } from 'react-native-paper';
+import { strings } from '../../language/Language';
+import { goBack, push } from '../../navigation/Navigator';
+import { Images, Utils } from '../../utils';
 import {
-  ImageButton,
-  ChipViewContainer,
-  SegmentView,
-  UploadView,
-  FloatingEditText,
-  ViewWithTitle,
-  ProgressDialog,
-  CustomDatePicker,
-} from '../common';
-import {CustomPicker, MainContainer} from '../common';
-import {connect} from 'react-redux';
-import styles from '../HomeDetails/styles/HelpDesk.style';
-import {strings} from '../../language/Language';
-import {Images} from '../../utils';
-import ResponsivePixels from '../../utils/ResponsivePixels';
-import {Button, ScrollContainer} from '../common';
-import {
-  TaskInformation,
-  AssignTo,
-  Reminder,
-  OwnerRemarks,
-} from './BaseComponents';
-import {
-  DROPDWON_GET_PRIORITY,
-  DROPDWON_GET_RELATED_TO,
-  DROPDWON_GET_TASK_NAME,
+  DROPDWON_GET_PRIORITY, DROPDWON_GET_TASK_NAME
 } from '../../utils/AppConstants';
-import WrappedComponentTask from './WrappedComponentTask';
+import ResponsivePixels from '../../utils/ResponsivePixels';
 import AppointmentApi from '../Appointments/Api/AppointmentApi';
+import { Button, ChipViewContainer, CustomDatePicker, CustomPicker, FloatingEditText, ImageButton, MainContainer, ProgressDialog, ScrollContainer, ViewWithTitle } from '../common';
 import SelectionView from '../common/SelectionView';
-import {Chip} from 'react-native-paper';
-import _ from "lodash"
-import { goBack } from '../../navigation/Navigator';
+import TaskApi from './apis/TaskApi';
+import WrappedComponentTask from './WrappedComponentTask';
 
 
-//  JCAAGF00U916CCN
-
-export const ChildViews = props => {
-  const {taskNameList} = props;
-  return (
-    <ScrollContainer>
-      <View style={styles.mainView}>
-        <TaskInformation taskNameList />
-
-        <AssignTo />
-        <Reminder />
-        <OwnerRemarks />
-
-        <View
-          style={{
-            flexDirection: 'row',
-            margin: ResponsivePixels.size16,
-            alignItems: 'center',
-            justifyContent: 'space-evenly',
-          }}>
-          <Button
-            title={strings.save}
-            bordered
-            style={{width: 100, marginEnd: 8}}
-          />
-          <Button
-            title={strings.saveContinue}
-            style={{flex: 1}}
-            onPress={() => {
-              props.navigation.push('AddTaskAttachment');
-            }}
-          />
-        </View>
-      </View>
-    </ScrollContainer>
-  );
-};
 class AddTask extends Component {
   constructor(props) {
     super(props);
@@ -93,7 +36,8 @@ class AddTask extends Component {
       EntityFieldName: '',
       StartHr:'',
       StartMin:'',
-      ownerRemarks:""
+      ownerRemarks:"",
+      CommandName:""
     };
   }
 
@@ -181,6 +125,73 @@ class AddTask extends Component {
     this.setState({AssignUserName: [...AssignUserName]});
   };
 
+
+  handleSubmit=()=>{
+    // InsertOrUpdateTaskActivityVersion4{Token=7FEFC4F7-65A0-436D-A2CA-C7AE96FD15B3; MachineCode=ce4620df04b20dca; ConnectionString=Data Source=NEXUS;Initial Catalog=SKYWARD_SkywardTechnoSolutionsPvtLtd_20160702051609037;User Id=apex;Password=passw0rd!;; ActivityID=0; TaskNameID=2; TaskName=Phone; TaskStatusID=1; EntityID=13; EntityName=Customer; EntityFieldID=2710; EntityFieldName=(A.Y.A.Y GHARKUL PVT LTD.) TECHNO SHARES; OwnerRemarks=remarks; AssigneeRemarks=; AssignUserName=,talatizalak@gmail.com; PriorityID=3; PriorityName=High; DueDate=01-08-2021; DueTime=16:15; ReminderAlertID=8; GeneralActivityName=; CompletionDateTime=; SetNextReminderDate=; SetNextReminderTime=; CommandName=SaveAndComplete; }
+
+    const {taskId,taskName,EntityID,EntityName,EntityFieldID,EntityFieldName,ownerRemarks,
+      AssignUserName,PriorityID,PriorityName,StartDate,StartHr,StartMin,alertId,CommandName} = this.state
+
+    const params = {
+      ActivityID:0,
+      TaskNameID:taskId||"",
+      TaskName:taskName||"",
+      TaskStatusID:1,
+      EntityID:EntityID||'',
+      EntityName:EntityName||'',
+      EntityFieldID:EntityFieldID||"",
+      EntityFieldName:EntityFieldName||"",
+      ownerRemarks:ownerRemarks||"",
+      AssigneeRemarks:"",
+      AssignUserName:AssignUserName.map((item) => item.name).join(","),
+      PriorityID:PriorityID||"",
+      PriorityName:PriorityName||"",
+      DueDate:moment(StartDate).format("DD-MM-YYYY"),
+      DueTime:`${StartHr}:${StartMin}`,
+      ReminderAlertID:alertId,
+      GeneralActivityName:"",
+      CompletionDateTime:"",
+      SetNextReminderDate:"",
+      SetNextReminderTime:"",
+      CommandName:CommandName||"Save"
+    }
+    ProgressDialog.show()
+    console.log("params======",params)
+    TaskApi.addTask(params, (res) => {
+      ProgressDialog.hide()
+      if (res.ID) {
+        push("TaskAttachment", { id: res.ID, editMode: false })
+
+          // AlertDialog.show({
+          //     title: "Attachment",
+          //     message: "Do you want to add attachment",
+          //     positiveButton: {
+          //         onPress: () => {
+          //             AlertDialog.hide()
+          //             console.log("============================== res ==================================== ",res.ID)
+          //          //  navigate("TaskAttachment", { id: res.ID, editMode: false })
+          //          this.props.navigation.replace("TaskAttachment", { id: res.ID, editMode: false })
+
+          //         },
+          //         title: "Yes"
+          //     },
+          //     negativeButton: {
+          //         onPress: () => {
+          //             AlertDialog.hide()
+          //         },
+          //         title: "No"
+          //     }
+          // })
+      }
+      else
+          goBack()
+  }, (error) => {
+
+      Utils.showToast(error)
+      ProgressDialog.hide()
+  })
+
+  }
   render() {
     const {
       taskNameList,
@@ -191,7 +202,7 @@ class AddTask extends Component {
       RelatedList,
       EntityFieldID,
       priorityList,
-      priorityId,
+      PriorityID,
       assignTo,
       AssignUserName,
       StartDate,
@@ -215,12 +226,13 @@ class AddTask extends Component {
           light: true,
         }}>
         <ScrollContainer>
-
+        
           <ViewWithTitle title="Task Information">
             <CustomPicker
               selectedItem={{id: taskId}}
               onSelect={item => {
                 this.onTextChanged('taskId', item.id);
+                this.onTextChanged('taskName', item.name);
               }}
               list={taskNameList}
               label={'Task Name'}
@@ -250,14 +262,16 @@ class AddTask extends Component {
                 list={RelatedList}
                 selectedItem={{id: EntityFieldID}}
                 label={'Related Name'}
-                onSelect={item => this.onTextChanged('EntityFieldID', item.id)}
+                onSelect={item => {this.onTextChanged('EntityFieldID', item.id)
+                this.onTextChanged('EntityFieldName', item.name)}}
               />
             ) : null}
 
             <CustomPicker
-              selectedItem={{id: priorityId}}
+              selectedItem={{id: PriorityID}}
               onSelect={item => {
-                this.onTextChanged('priorityId', item.id);
+                this.onTextChanged('PriorityID', item.id);
+                this.onTextChanged('PriorityName', item.name);
               }}
               list={priorityList}
               label={'Priority'}
@@ -352,7 +366,23 @@ class AddTask extends Component {
               />
             </ViewWithTitle>
 
-            <Button  title={strings.submit} style={{ margin: ResponsivePixels.size16 }} />
+            <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>
+                    <Button title={strings.save} bordered style={{ width: 100, marginEnd: 8 }} 
+                    onPress={()=>{
+                        this.setState({
+                          CommandName:"Save"
+                        },()=>{
+                          this.handleSubmit()
+                        })
+                    }}/>
+                    <Button title={strings.saveComplete} style={{ flex: 1, }}   onPress={()=>{
+                        this.setState({
+                          CommandName:"SaveAndComplete"
+                        },()=>{
+                          this.handleSubmit()
+                        })
+                    }}/>
+                </View>
         </ScrollContainer>
       </MainContainer>
     );

@@ -116,6 +116,9 @@ class Home extends Component {
               case 6:
                 this.props.navigation.push('HelpDesk')
                 break;
+              case 7:
+                this.props.navigation.push('Quotation')
+                break;
               default:
                 break;
             }

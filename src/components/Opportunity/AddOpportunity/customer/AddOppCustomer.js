@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { goBack } from '../../../../navigation/Navigator'
-import { DROPDWON_GET_OPPORTUNITY_CATEGORY, DROPDWON_GET_OPPORTUNITY_CURRENCY, DROPDWON_GET_OPPORTUNITY_SALES_STAGE, DROPDWON_GET_OPPORTUNITY_STAGE, DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY } from '../../../../utils/AppConstants'
+import { DROPDWON_GET_OPPORTUNITY_CATEGORY, DROPDWON_GET_OPPORTUNITY_CURRENCY, DROPDWON_GET_OPPORTUNITY_SALES_STAGE,
+     DROPDWON_GET_OPPORTUNITY_STAGE, DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY } from '../../../../utils/AppConstants'
 import Utils from '../../../../utils/Utils'
 import { AlertDialog, ProgressDialog } from '../../../common'
 import opportunityApi from '../../apis/OpportunityApis'
@@ -184,7 +185,6 @@ class AddOppCustomer extends Component {
                 else
                     goBack()
             }, (error) => {
-
                 Utils.showToast(error)
                 ProgressDialog.hide()
             })

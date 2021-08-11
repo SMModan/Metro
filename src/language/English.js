@@ -26,6 +26,7 @@ export default {
   description: "Description",
   save: "Save",
   saveContinue: "Save And Continue",
+  saveComplete: "Save And Complete",
 
   prod_category: "Product Category",
   prod_group: "Product Group",

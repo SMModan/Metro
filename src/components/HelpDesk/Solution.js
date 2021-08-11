@@ -4,16 +4,17 @@ import { connect } from 'react-redux';
 import { Chip } from 'react-native-paper';
 import { Colors, FontName, Images, Utils } from '../../utils';
 import { strings } from '../../language/Language';
-import { Checkbox, Button, FloatingEditText, ViewWithTitle, DatePicker, CustomDatePicker, MainContainer, ScrollContainer, ImageButton } from '../common';
+import { Checkbox, Button, FloatingEditText, ViewWithTitle, DatePicker, CustomDatePicker, MainContainer, ScrollContainer, ImageButton, ProgressDialog } from '../common';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import moment from 'moment';
 import HelpDeskApi from './Api/HelpDeskApi';
+import { goBack } from '../../navigation/Navigator';
 
 class Solution extends Component {
 
   state = {
     selectedIndex: 0,
-    solutions: []
+    solutions: this.props.solutuons || []
   }
 
 
@@ -30,7 +31,8 @@ class Solution extends Component {
       SolutionHr: "",
       SolutionMin: "",
       SolutionUserID: this.props.session.user.ID,
-      ExternalSolution: false
+      ExternalSolution: false,
+      id: 0
     })
     this.setState({ solutions: [...solution] })
   }
@@ -47,7 +49,7 @@ class Solution extends Component {
     this.setState({ solution: [...solutions] })
   }
 
-  insertSolution = () => {
+  insertSolution = async () => {
     const solutions = this.state.solutions
     for (let index = 0; index < solutions.length; index++) {
       const element = solutions[index];
@@ -69,22 +71,35 @@ class Solution extends Component {
       }
     }
 
-    Promise.all(solutions.map(async (item) => {
+    ProgressDialog.show()
+    await Promise.all(solutions.map(async (item) => {
 
       const params = {
         Actiontaken: item.Actiontaken,
         Timetaken: `${item.TimetakenHr}.${item.TimetakenMin}`,
+        RowStatus: item.RowStatus,
+        SolutionUserID: item.SolutionUserID,
+        ExternalSolution: item.ExternalSolution,
         SolutionDate: `${Utils.formatDate(item.SolutionDate, "DD-MM-YYYY")} ${item.SolutionHr}:${item.SolutionMin}`,
-
+        HelpdeskID: this.props.item.ID,
+        id: item.id
       }
 
       await HelpDeskApi.insertSolution(params)
     }))
+    ProgressDialog.hide()
+    if (this.props.onSolutionSaved)
+      this.props.onSolutionSaved(this.state.solutions)
+
+    goBack()
+    Utils.showToast("Soulution added")
   }
 
   render() {
     const { solutions } = this.state
     const solution = solutions.length ? solutions[this.state.selectedIndex] : undefined
+    console.log("Actiontaken", solution)
+
     return (
       <ScrollContainer>
         <View style={{ flex: 1, backgroundColor: Colors.white, }}>
@@ -113,7 +128,7 @@ class Solution extends Component {
                 <CustomDatePicker selectedDate={solution.SolutionDate} maximumDate={new Date()} onDateChanged={(date) => {
                   this.updateSolution("SolutionDate", date)
                   this.updateSolution("SolutionHr", moment(date).get("hour").toString())
-                  this.updateSolution("SolutionMin", moment(date).get("min").toString())
+                  this.updateSolution("SolutionMin", moment(date).get("minute").toString())
                   // onTextChanged("StartDate", date)
                 }} label={"Solution Date"} containerStyle={{ flex: 1, marginTop: 3.5, marginEnd: 8 }} />
                 <View>

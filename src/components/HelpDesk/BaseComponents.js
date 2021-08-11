@@ -12,7 +12,7 @@ import { StyleSheet } from 'react-native';
 export const CustomerInfo = () => {
 
     const { CustomerID, customers, contacts, addresses, CustomerAddressID, ContactID, onTextChanged } = useContext(HelpDeskContext)
-    console.log("ContactID", ContactID)
+    // console.log("ContactID", ContactID)
     return (
         <ViewWithTitle title="Customer Information">
             <CustomPicker list={customers} selectedItem={{ id: CustomerID }} onSelect={(item) => { onTextChanged("CustomerID", item.id) }} label={'Customer Name'} />

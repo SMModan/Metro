@@ -69,6 +69,7 @@ export const GET_PRODUCT_SERIAL_NO_BY_PRODUCT_ID_AND_AMCID = "GetProductSerialNo
 export const GET_ASSIGN_TO_USERS = "GetAssignToUsers"
 export const UPLOAD_FILE_FOR_HELPDESK = "UploadFileForHelpDesk"
 export const INSERT_HELP_DESK = "InsertHelpdeskVersion6DigitalSignature"
+export const UPDATE_HELP_DESK = "UpdateHelpdeskVersion7DigitalSignature"
 export const GET_HELP_DESK_BY_ID = "GetHelpDeskByID"
 export const GET_IS_ADMIN_AND_IS_MODULE_ADMIN_BY_ENTITY_ID = "GetIsAdminAndIsModuleAdminByEntityID"
 export const INSERT_HELP_DESK_SOLUTION_VERSION3 = "InsertHelpdeskSolutionVersion3"

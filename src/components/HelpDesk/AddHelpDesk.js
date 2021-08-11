@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { View, Image } from 'react-native';
 import {
+  FloatingEditText,
   MainContainer,
 } from '../common';
 import { connect } from 'react-redux';
 import styles from '../HomeDetails/styles/HelpDesk.style';
 import { strings } from '../../language/Language';
-import { Images, Utils } from '../../utils';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import { Button, ScrollContainer, ProgressDialog } from '../common'
 import {
@@ -21,14 +22,17 @@ import {
 import { DROPDWON_GET_OPPORTUNITY_CURRENCY } from '../../utils/AppConstants';
 import HelpDeskApi from './Api/HelpDeskApi';
 import { goBack } from '../../navigation/Navigator';
+import { Button as DialogButton, Dialog, Portal, RadioButton, TextInput } from 'react-native-paper'
 
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { HelpDeskContext } from './HelpDeskContext';
 import Solution from './Solution';
+import SignatureCapture from 'react-native-signature-capture';
+import { AirbnbRating } from 'react-native-ratings';
 
 const Tab = createMaterialTopTabNavigator();
-export const ChildViews = ({ isAddNew, onSave }) => {
+export const ChildViews = ({ isAddNew, onSave, title }) => {
   return (
     <ScrollContainer>
       <View style={styles.mainView}>
@@ -40,7 +44,7 @@ export const ChildViews = ({ isAddNew, onSave }) => {
         <AssignTo />
         <AddAttachment />
 
-        <Button title={strings.save} onPress={onSave} style={{ margin: ResponsivePixels.size16 }} />
+        <Button title={title || strings.save} onPress={onSave} style={{ margin: ResponsivePixels.size16 }} />
       </View>
     </ScrollContainer>
   )
@@ -48,6 +52,7 @@ export const ChildViews = ({ isAddNew, onSave }) => {
 class AddHelpDesk extends Component {
 
   item = this.props.route.params?.item
+  sign = React.createRef()
   state = {
     selectedIndex: 0,
     CustomerID: 0,
@@ -91,7 +96,11 @@ class AddHelpDesk extends Component {
     file: {},
     isAdmin: true,
     user: this.props.session.user,
-    solutions: []
+    solutions: [],
+    showRatingDialog: false,
+    showSignatureDialog: false,
+    rating: 0,
+    signature: ""
   }
 
   componentDidMount = () => {
@@ -199,22 +208,16 @@ class AddHelpDesk extends Component {
     const { CustomerID, ContactID, file, ProductCategoryID, ProductID, ProductRemarks, ProblemDescription,
       SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, StatusID, TotalServiceTaken, FileName, FilePath, ContentType, CustomerAdditionalEmail, ProductSerialNoDetailID, TypeOfCallID, SerialNo, AssignUserDetails, CurrencyID, PlanVisitDate, } = this.state
 
-    if (Utils.isEmpty(CustomerID)) {
-      Utils.showToast("Please select customer")
-    }
-    else if (Utils.isEmpty(ContactID)) {
-      Utils.showToast("Please select Contact")
-    }
-    else if (Utils.isEmpty(ContactID)) {
-      Utils.showToast("Please select End Date")
-    }
-    else {
+    if (this.verifyHelpDesk()) {
+
+
 
       let assignUser = AssignUserDetails.map((p) => {
 
         // console.log("amount", p.amount)
         return `${p.recordId}$${p.id}$${p.name}$${p.Priority}$${p.OnHoldReason}$${p.CompletionDateTime ? Utils.formatDate(p.CompletionDateTime, "DD-MM-YYYY") : ""}$${p.state}`
       })
+
       assignUser = assignUser.join("#")
       let uploadedFile = {}
       console.log("file", file.uri)
@@ -241,7 +244,6 @@ class AddHelpDesk extends Component {
         CurrencyID, PlanVisitDate: Utils.formatDate(PlanVisitDate, "DD-MM-YYYY"),
       }
 
-
       console.log("params", params)
       HelpDeskApi.insertHelpDesk(params, () => {
         ProgressDialog.hide()
@@ -251,12 +253,15 @@ class AddHelpDesk extends Component {
         ProgressDialog.hide()
         Utils.showDangerToast(error)
       })
+
+
+
     }
   }
 
 
   onTextChanged = async (key, value, forEdit) => {
-    // console.log("key", key, value)
+    console.log("key", key, value)
 
     this.setState({
       [key]: value
@@ -295,6 +300,134 @@ class AddHelpDesk extends Component {
 
   }
 
+  verifyHelpDesk = () => {
+    const { CustomerID, ContactID, ProductCategoryID, ProblemDescription, solutions } = this.state
+
+    if (Utils.isEmpty(CustomerID)) {
+      Utils.showToast("Please select customer")
+      return false
+    }
+    else if (Utils.isEmpty(ContactID)) {
+      Utils.showToast("Please select Contact")
+      return false
+    }
+    else if (Utils.isEmpty(ProductCategoryID)) {
+      Utils.showToast("Please select product category")
+      return false
+    }
+    else if (Utils.isEmpty(ProblemDescription)) {
+      Utils.showToast("Please enter Problem description")
+      return false
+    } else if (this.item && !solutions.length) {
+      Utils.showToast("Please add atleast one solution")
+      return false
+    }
+
+    return true
+
+  }
+  updateHelpDesk = async () => {
+
+    const { CustomerID, ContactID, file, ProductCategoryID, ProductID, ProductRemarks, ProblemDescription,
+      SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, StatusID, TotalServiceTaken, FileName, FilePath, ContentType, CustomerAdditionalEmail, ProductSerialNoDetailID, TypeOfCallID, SerialNo, AssignUserDetails, CurrencyID, PlanVisitDate, rating, ratingRemarks, completedIndex, signature } = this.state
+
+
+    ProgressDialog.show()
+    let uploadedFile = {}
+    let signatureFile = {}
+    if (file.uri) {
+      try {
+
+        uploadedFile = await HelpDeskApi.uploadHelpDeskAttachment({
+          f: file.base64,
+          fileName: file.fileName,
+          contentType: file.type
+        })
+      } catch (error) {
+        console.log("Error", error)
+      }
+    }
+
+    if (signature.encoded) {
+      try {
+
+        signatureFile = await HelpDeskApi.uploadHelpDeskSignature({
+          f: signature.encoded,
+          fileName: `signature${new Date().getTime()}.jpg`,
+          contentType: "image/jpg"
+        })
+      } catch (error) {
+        console.log("Error", error)
+      }
+    }
+
+    let assignUser = AssignUserDetails.map((p, index) => {
+
+      // console.log("amount", p.amount)
+      let finalSignature = {}
+      if (index == completedIndex)
+        finalSignature = signatureFile
+      return {
+        ID: p.recordId,
+        UserID: p.id,
+        UserName: p.name,
+        UserStatusID: p.Priority,
+        OnHoldReason: p.OnHoldReason,
+        CompletionDateTime0: p.CompletionDateTime ? Utils.formatDate(p.CompletionDateTime, "DD-MM-YYYY") : "",
+        RowStateID: p.state,
+        DigiSignFileName: finalSignature?.FileName || p.DigiSignFileName || "",
+        DigiSignFilePath: finalSignature?.FilePath || p.DigiSignFilePath || "",
+        DigiSignContentType: finalSignature?.FileContentType || p.DigiSignContentType || "",
+        DigiSignRemarks: finalSignature?.FileName ? ratingRemarks : p.DigiSignRemarks || "",
+        DigiSignRating: finalSignature?.FileName ? rating : p.DigiSignRating || 0
+
+      }
+    })
+
+    const params = {
+      helpdeskID: this.item.ID,
+      CustomerID, ContactID: ContactID.id, ProductCategoryID, ProductID: ProductID || 0, ProductRemarks, ProblemDescription,
+      SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID, TypeOfCallID,
+      SerialNo, StatusID, OnHoldReason: "",
+      AssignUserDetails: JSON.stringify(assignUser) || "", HelpDeskProductDetailID: 0,
+      CurrencyID, PlanVisitDate: Utils.formatDate(PlanVisitDate, "DD-MM-YYYY"),
+    }
+
+    console.log("params", params)
+    HelpDeskApi.updateHelpDesk(params, () => {
+      ProgressDialog.hide()
+
+      goBack()
+    }, (error) => {
+      ProgressDialog.hide()
+      Utils.showDangerToast(error)
+    })
+
+  }
+  saveSign = () => {
+    this.sign?.current?.saveImage();
+  }
+
+  resetSign = () => {
+    // console.log("this.sign", this.sign)
+    this.sign?.current?.resetImage();
+  }
+
+  _onSaveEvent = (result) => {
+    //result.encoded - for the base64 encoded png
+    //result.pathName - for the file path name
+    console.log(result);
+    this.setState({ signature: result, showSignatureDialog: false }, () => {
+
+      this.updateHelpDesk()
+    })
+  }
+  _onDragEvent = () => {
+    // This callback will be called when the user enters signature
+    // console.log("dragged");
+  }
+
+
 
   render() {
     return (
@@ -304,7 +437,7 @@ class AddHelpDesk extends Component {
             image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
-          title: 'Add Issue',
+          title: this.item ? "Update Issue" : 'Add Issue',
           hideUnderLine: true,
           light: true,
         }}>
@@ -327,20 +460,87 @@ class AddHelpDesk extends Component {
             <Tab.Screen
               name="Issue"
 
-              component={ChildViews}
+
               options={{ title: 'Issue', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_issue} /> }}
-            />
+            >{() => <ChildViews title={"Update"} onSave={() => {
+
+              if (this.verifyHelpDesk()) {
+
+                const completd = this.state.isAdmin ? this.state.AssignUserDetails.findIndex((item) => item.Priority == 2 && item.state == 4 && (!item.DigiSignRating || !item.DigiSignDigiSignFileName)) : this.state.AssignUserDetails.findIndex((item) => item.id == this.props.session.user.ID && item.state == 2 && item.Priority == 4 && (!item.DigiSignRating || !item.DigiSignDigiSignFileName))
+
+                console.log("completed", completd)
+                if (completd >= 0) {
+                  this.setState({
+                    completedIndex: completd,
+                    showRatingDialog: true
+                  })
+                } else {
+                  this.updateHelpDesk()
+                }
+              }
+              //  this.setState({ showSignatureDialog: true })
+            }} />}</Tab.Screen>
             <Tab.Screen
               name="Solution"
-              component={Solution}
               options={{ tabBarLabel: 'Solution', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_solution} /> }}
-            />
+            >{() => <Solution solutuons={this.state.solutions} item={this.item} onSolutionSaved={this.onSolutionSaved} />}</Tab.Screen>
           </Tab.Navigator> : <ChildViews onSave={this.insertHelpDesk} isAddNew={true} selectedIndex={this.state.selectedIndex} userChanged={(index) => {
             this.setState({
               selectedIndex: index
             })
           }} />}
 
+
+          <Portal>
+            <Dialog visible={this.state.showRatingDialog} onDismiss={() => { this.setState({ showRatingDialog: false }) }}>
+              <Dialog.Title>Rating</Dialog.Title>
+              <Dialog.Content>
+                <View>
+                  <AirbnbRating
+                    count={5}
+                    onFinishRating={(rating) => this.setState({ rating })}
+                    showRating={false}
+                    selectedColor={Colors.Orange300}
+                    defaultRating={this.state.rating}
+                    size={30}
+                  />
+
+                  <TextInput multiline theme={{ colors: { background: "white", primary: Colors.black } }} style={{ minHeight: 100, marginTop: 16 }} placeholder={"Enter Remarks"} onChangeText={(text) => {
+
+                    this.onTextChanged("ratingRemarks", text)
+                  }} />
+                </View>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <DialogButton color={Colors.blueGray600} style={{}} onPress={() => { this.setState({ showRatingDialog: false, showSignatureDialog: true }) }}>Next</DialogButton>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
+          <Portal>
+            <Dialog style={{ flex: 1 }} visible={this.state.showSignatureDialog} onDismiss={() => { this.setState({ showSignatureDialog: false }) }}>
+              <Dialog.Title>Digital signature</Dialog.Title>
+              <Dialog.Content style={{ flex: 1 }}>
+                <SignatureCapture
+                  style={{ flex: 1 }}
+                  ref={this.sign}
+                  onSaveEvent={this._onSaveEvent}
+                  onDragEvent={this._onDragEvent}
+                  saveImageFileInExtStorage={false}
+                  showNativeButtons={false}
+                  showTitleLabel={false}
+                  backgroundColor="#00000010"
+                  strokeColor="#000000"
+                  minStrokeWidth={4}
+                  maxStrokeWidth={4}
+                  viewMode={"portrait"} />
+              </Dialog.Content>
+
+              <Dialog.Actions>
+                <DialogButton color={Colors.blueGray600} style={{}} onPress={this.resetSign}>Reset</DialogButton>
+                <DialogButton color={Colors.blueGray600} style={{}} onPress={this.saveSign}>Update</DialogButton>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </HelpDeskContext.Provider>
       </MainContainer>
     );

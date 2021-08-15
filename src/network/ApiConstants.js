@@ -14,6 +14,7 @@ export const INSERT_OPPORTUNITY_ATTACHMENT = "InsertOpportunityAttachment"
 export const UPDATE_OPPORTUNITY_ATTACHMENT = "UpdateOpportunityAttachment"
 export const DELETE_OPPORTUNITY_ATTACHMENT = "DeleteOpportunityAttachment"
 export const GET_OPPORTUNITY_ATTACHMENT = "GetOpportunityAttachmentsByOpportunityID"
+export const INSERT_USER_DEVICE_TOKEN = "InsertUserDeviceToken"
 
 export const GET_PRODUCT_GROUPS = "GetProductGroup"
 export const GET_PRODUCT_CATEGORIES = "GetProductCategory"
@@ -32,6 +33,7 @@ export const ADD_TASK = "InsertOrUpdateTaskActivityVersion4"
 export const INSERT_TASK_ATTACHMENT = "InsertTaskAttachment"
 export const UPDATE_TASK_ATTACHMENT = "UpdateTaskAttachment"
 export const DELETE_TASK_ATTACHMENT = "DeleteTaskAttachment"
+export const GET_TASK_BY_ACTIVITY_ID = "GetTaskActivityByID"
 
 // Contact Api end points
 export const GET_ALL_CONTACT = "GetAllContacts"

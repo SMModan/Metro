@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { View, Text } from 'react-native'
 import { useSelector } from 'react-redux'
-import { TaskContext } from './AddTaskUi'
+import { TaskContext } from './TaskContext'
 
 const WrappedComponentTask = (PassedComponent) => (props) => {
 

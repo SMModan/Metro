@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Image, Keyboard, Text, View } from 'react-native';
+import { Image, Platform, Text, View } from 'react-native';
 import { connect } from 'react-redux';
+import session from 'redux-persist/lib/storage/session';
 import { store } from '../../../App';
-import { createDefaultTables } from '../../../data/DatabaseHelper';
 import { strings } from '../../../language/Language';
-import { navigate, reset } from '../../../navigation/Navigator';
+import { reset } from '../../../navigation/Navigator';
 import { setSessionField } from '../../../reducers/SessionReducer';
 import { Colors, Images } from '../../../utils';
 import { syncAllData } from '../../../utils/SyncDataManager';
@@ -16,7 +16,7 @@ import {
   FloatingEditText,
   MainContainer,
   ProgressDialog,
-  ScrollContainer,
+  ScrollContainer
 } from '../../common';
 import loginApi from '../apis/LoginApis';
 import styles from '../styles/SignIn.style';
@@ -33,7 +33,7 @@ class SignIn extends Component {
   };
 
   async componentDidMount() {
-    createDefaultTables();
+    // createDefaultTables();
   }
 
   getCompnayNameByUserName = userName => {
@@ -94,7 +94,7 @@ class SignIn extends Component {
 
           store.dispatch(setSessionField('user', Table));
           store.dispatch(setSessionField('is_logged_in', true));
-
+          loginApi.setDeviceToken({ DeviceToken: session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" }) })
           if (!this.props.session.isSync)
             syncAllData()
           else {

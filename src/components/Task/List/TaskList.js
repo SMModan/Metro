@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   FlatList,
   ScrollView,
@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import {Button, Card, Chip, FAB, Title} from 'react-native-paper';
+import { Button, Card, Chip, FAB, Title } from 'react-native-paper';
 import {
   Button as DialogButton,
   Dialog,
@@ -15,13 +15,13 @@ import {
   RadioButton,
 } from 'react-native-paper';
 
-import {connect} from 'react-redux';
-import {Colors, Images} from '../../../utils';
-import {Clickable, MainContainer, MyFlatList} from '../../common';
+import { connect } from 'react-redux';
+import { Colors, Images } from '../../../utils';
+import { Clickable, MainContainer, MyFlatList } from '../../common';
 import styles from '../styles/TaskListStyle';
 
 import TaskApi from '../apis/TaskApi';
-import {strings} from '../../../language/Language';
+import { strings } from '../../../language/Language';
 import _ from "lodash"
 
 
@@ -70,30 +70,30 @@ class TaskList extends Component {
     selectedStuasIndex: 0,
     showSearch: false,
     searchQuery: false,
+    status: 0
   };
 
 
-  handleRemarkPage = () => {};
+  handleRemarkPage = () => { };
 
-  renderCell = ({index}) => {
+  renderCell = ({ index }) => {
     const item = this.state.listData[index];
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
 
-    let myDate = `${date.getDay()}-${
-      date.getMonth() + 1
-    }-${date.getFullYear()}`;
+    let myDate = `${date.getDay()}-${date.getMonth() + 1
+      }-${date.getFullYear()}`;
 
     return (
       <Card
-        style={{margin: 5}}
+        style={{ margin: 5 }}
         key={item.index}
         onPress={() => {
-          this.props.navigation.push('UpdateHelpDesk');
+          this.props.navigation.push('MainAddTask', { item: item });
         }}>
-        <View style={{margin: 15}}>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 13, width: '40%'}}>{myDate}</Text>
+        <View style={{ margin: 15 }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 13, width: '40%' }}>{myDate}</Text>
             <View
               style={{
                 width: 80,
@@ -101,8 +101,8 @@ class TaskList extends Component {
                   item.TaskStatus.toLowerCase() == 'open'
                     ? Colors.secondary100
                     : item.TaskStatus.toLowerCase() == 'completed'
-                    ? Colors.Green100
-                    : Colors.Orange100,
+                      ? Colors.Green100
+                      : Colors.Orange100,
                 borderRadius: 5,
               }}>
               <Text
@@ -113,8 +113,8 @@ class TaskList extends Component {
                     item.TaskStatus.toLowerCase() == 'open'
                       ? Colors.secondary900
                       : item.TaskStatus.toLowerCase() == 'completed'
-                      ? Colors.Green800
-                      : Colors.Orange900,
+                        ? Colors.Green800
+                        : Colors.Orange900,
                   margin: 3,
                 }}>
                 {item.TaskStatus}
@@ -122,7 +122,7 @@ class TaskList extends Component {
             </View>
             <TouchableOpacity
               onPress={() => {
-                this.setState({isStatusDialoguOpen: false});
+                this.setState({ isStatusDialoguOpen: false });
               }}>
               <View
                 style={{
@@ -132,8 +132,8 @@ class TaskList extends Component {
                     item.PriorityName.toLowerCase() == 'low'
                       ? Colors.secondary100
                       : item.PriorityName.toLowerCase() == 'high'
-                      ? Colors.Green100
-                      : Colors.Orange100,
+                        ? Colors.Green100
+                        : Colors.Orange100,
                   borderRadius: 5,
                 }}>
                 <Text
@@ -144,8 +144,8 @@ class TaskList extends Component {
                       item.PriorityName.toLowerCase() == 'low'
                         ? Colors.secondary900
                         : item.PriorityName.toLowerCase() == 'high'
-                        ? Colors.Green800
-                        : Colors.Orange900,
+                          ? Colors.Green800
+                          : Colors.Orange900,
                     margin: 3,
                   }}>
                   {item.PriorityName}
@@ -153,14 +153,14 @@ class TaskList extends Component {
               </View>
             </TouchableOpacity>
           </View>
-          <Title style={{fontSize: 16, fontWeight: 'bold', marginTop: 8}}>
+          <Title style={{ fontSize: 16, fontWeight: 'bold', marginTop: 8 }}>
             {item.TaskName}
           </Title>
-          <Text style={{fontSize: 12}}>{item.AssignUser}</Text>
-          <Title style={{fontSize: 12, fontWeight: 'bold', marginTop: 8}}>
+          <Text style={{ fontSize: 12 }}>{item.AssignUser}</Text>
+          <Title style={{ fontSize: 12, fontWeight: 'bold', marginTop: 8 }}>
             {item.Regarding}
           </Title>
-          <Text style={{fontSize: 12, fontStyle: ''}}>
+          <Text style={{ fontSize: 12, fontStyle: '' }}>
             {item.RegardingName}
           </Text>
           <Button
@@ -173,7 +173,7 @@ class TaskList extends Component {
             }}
             uppercase={false}
             onClick={() => {
-              this.props.navigation.push('UpdateHelpDesk');
+              // this.props.navigation.push('UpdateHelpDesk');
             }}>
             {' '}
             + Add Remarks{' '}
@@ -194,13 +194,13 @@ class TaskList extends Component {
   };
 
   getAllTaskList = () => {
-    const { searchQuery } = this.state
+    const { searchQuery, status } = this.state
 
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
       Filter: searchQuery || "",
-      TaskStatusID: 0,
+      TaskStatusID: status,
     };
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore,
@@ -208,7 +208,7 @@ class TaskList extends Component {
     TaskApi.getAllTaskList(
       params,
       res => {
-        const {Table} = res;
+        const { Table } = res;
         console.log('Table', Table);
         let isLast = true;
         if (Table) {
@@ -232,13 +232,13 @@ class TaskList extends Component {
     );
   };
 
-  
+
   searchOpp = async () => {
 
     this.setState({
-      listData:[],
+      listData: [],
       page: 0
-    },()=>{
+    }, () => {
       this.getAllTaskList()
     })
   }
@@ -283,7 +283,7 @@ class TaskList extends Component {
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>
-            <Text style={{fontWeight: 'bold', fontSize: 13}}>Status</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 13 }}>Status</Text>
             <View
               style={{
                 height: 25,
@@ -295,7 +295,7 @@ class TaskList extends Component {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
-              {['All', 'Open', 'In progress', 'Completed'].map(
+              {[{ name: "All", id: 0, }, { name: "Open", id: 1 }, { name: "In Progress", id: 3 }, { name: "Completed", id: 2 }].map(
                 (item, index) => (
                   <Chip
                     key={index}
@@ -314,9 +314,9 @@ class TaskList extends Component {
                           : Colors.black,
                     }}
                     onPress={() => {
-                      this.setState({selectedIndex: index});
+                      this.setState({ selectedIndex: index, status: item.id, refreshing: true }, () => this.getAllTaskList());
                     }}>
-                    {item}
+                    {item.name}
                   </Chip>
                 ),
               )}
@@ -324,12 +324,12 @@ class TaskList extends Component {
           </View>
           <View style={styles.MainList}>
 
-          {/* {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />} */}
+            {/* {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />} */}
 
             <MyFlatList
               data={listData}
               renderItem={item => this.renderCell(item)}
-              style={{flex: 1, margin: 10}}
+              style={{ flex: 1, margin: 10 }}
               refreshing={refreshing}
               loading={loading}
               onRefresh={() => {
@@ -348,7 +348,7 @@ class TaskList extends Component {
                   <ActivityIndicator
                     size={'large'}
                     color={Colors.blueGray900}
-                    style={{margin: 8}}
+                    style={{ margin: 8 }}
                   />
                 ) : null;
               }}
@@ -372,14 +372,14 @@ class TaskList extends Component {
               <Dialog
                 visible={isStatusDialoguOpen}
                 onDismiss={() => {
-                  this.setState({isStatusDialoguOpen: false});
+                  this.setState({ isStatusDialoguOpen: false });
                 }}>
                 <Dialog.Title>{strings.select_contact}</Dialog.Title>
                 <Dialog.ScrollArea>
                   <FlatList
-                    style={{height: '30%'}}
+                    style={{ height: '30%' }}
                     data={statusList || []}
-                    renderItem={({item, index}) => (
+                    renderItem={({ item, index }) => (
                       <Clickable
                         onPress={() => this.onStatusSlected(index)}
                         style={{
@@ -394,7 +394,7 @@ class TaskList extends Component {
                             flexDirection: 'column-reverse',
                             alignContent: 'center',
                           }}>
-                          <View style={{flex: 1}}>
+                          <View style={{ flex: 1 }}>
                             <RadioButton.Group>
                               <RadioButton.Item
                                 label="First item"
@@ -420,7 +420,7 @@ class TaskList extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            this.props.navigation.push('AddTask');
+            this.props.navigation.push('MainAddTask');
           }}
         />
       </MainContainer>

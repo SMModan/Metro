@@ -13,6 +13,8 @@ import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import SelectionView from './components/common/SelectionView'
 import { SnackProvider } from 'react-native-snackbar-material';
+// import NotifService from './utils/NotifService'
+import { setSessionField } from './reducers/SessionReducer'
 
 const store = createStore(
   reducers,
@@ -22,6 +24,25 @@ export const pStore = persistStore(store)
 
 export { store }
 export default class App extends Component {
+
+  // notif = new NotifService(
+  //   this.onRegister.bind(this),
+  //   this.onNotif.bind(this),
+  // );
+
+  onRegister(token) {
+    console.log("Fcm token", token)
+    store.dispatch(setSessionField("deviceToken", token.token))
+  }
+
+  onNotif(notif) {
+    console.log("notif---", notif)
+    if (notif.notification && notif.notification.body) {
+      const { body, title } = notif.notification
+      this.notif.localNotif(body, title)
+      // Alert.alert(title, body);
+    }
+  }
 
   componentDidMount() {
 

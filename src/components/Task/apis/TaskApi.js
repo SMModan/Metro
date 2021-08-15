@@ -4,11 +4,14 @@ import {
   INSERT_OR_UPDATE_OPPORTUNITY,
   GET_ALL_TASKLIST,
   ADD_TASK,
-  DELETE_TASK_ATTACHMENT
+  DELETE_TASK_ATTACHMENT,
+  GET_TASK_BY_ACTIVITY_ID,
+  IMAGE_BASE_URL
 } from '../../../network/ApiConstants';
 import { store } from "../../../App"
 import apiCall, { METHOD } from "../../../network/ApiService"
 import axios from "axios"
+import moment from 'moment';
 
 
 const TaskApi = {
@@ -27,7 +30,7 @@ const TaskApi = {
         }
       },
     );
-  },addTask(params, onDone, onError) {
+  }, addTask(params, onDone, onError) {
     apiCall(
       ADD_TASK,
       params,
@@ -64,9 +67,9 @@ const TaskApi = {
     return new Promise((resolve, reject) => {
       apiCall(
         GET_CUSTOMER,
-        {MaxCustomerID: 1},
+        { MaxCustomerID: 1 },
         res => {
-          const {Table} = res;
+          const { Table } = res;
           let results = [];
           if (Table) {
             if (Array.isArray(Table)) {
@@ -99,9 +102,9 @@ const TaskApi = {
     return new Promise((resolve, reject) => {
       apiCall(
         GET_CONATACTS_BY_CUSTOMER_ID,
-        {CustomerID},
+        { CustomerID },
         res => {
-          const {Table} = res;
+          const { Table } = res;
           let results = [];
           if (Table) {
             if (Array.isArray(Table)) {
@@ -188,19 +191,19 @@ const TaskApi = {
     console.log("xmls", xmls)
 
     axios.post('https://www.skywardcrm.com/Services/CRMMobileApp.asmx?wsdl',
-        xmls,
-        {
-            headers:
-                { 'Content-Type': 'text/xml' }
-        }).then(res => {
-            console.log(res);
-            onDone(res)
-        }).catch(err => {
-            console.log(err)
-            onError(err)
-        });
-},
-updateTaskAttachment(params, onDone, onError) {
+      xmls,
+      {
+        headers:
+          { 'Content-Type': 'text/xml' }
+      }).then(res => {
+        console.log(res);
+        onDone(res)
+      }).catch(err => {
+        console.log(err)
+        onError(err)
+      });
+  },
+  updateTaskAttachment(params, onDone, onError) {
 
     const { TaskActivityID, DocumentName, FileName, FilePath, ID, FileContentType, File } = params
     const { token, connectionString, machineCode } = store.getState().session
@@ -221,7 +224,7 @@ updateTaskAttachment(params, onDone, onError) {
     <File>${File}</File> 
            <IsModified>${File ? 1 : 0}</IsModified>
 
-          </UpdateOpportunityAttachment>
+          </UpdateTaskAttachment>
         </soap12:Body>
       </soap12:Envelope>`
 
@@ -229,34 +232,100 @@ updateTaskAttachment(params, onDone, onError) {
     console.log("xmls", xmls)
 
     axios.post('https://www.skywardcrm.com/Services/CRMMobileApp.asmx?wsdl',
-        xmls,
-        {
-            headers:
-                { 'Content-Type': 'text/xml' }
-        }).then(res => {
-            console.log(res);
-            onDone(res)
-        }).catch(err => {
-            console.log(err)
-            onError(err)
-        });
+      xmls,
+      {
+        headers:
+          { 'Content-Type': 'text/xml' }
+      }).then(res => {
+        console.log(res);
+        onDone(res)
+      }).catch(err => {
+        console.log(err)
+        onError(err)
+      });
 
-},
-deleteTaskAttachment(params, onDone, onError) {
+  },
+  deleteTaskAttachment(params, onDone, onError) {
 
     apiCall(DELETE_TASK_ATTACHMENT, params, (res) => {
 
 
-        if (onDone) {
-            onDone(res)
-        }
+      if (onDone) {
+        onDone(res)
+      }
     }, (error) => {
-        if (onError) {
-            onError(error)
-        }
+      if (onError) {
+        onError(error)
+      }
     })
-},
+  },
+  getTaskDetails(ID) {
+    return new Promise((resolve, reject) => {
+      apiCall(
+        GET_TASK_BY_ACTIVITY_ID,
+        { ID },
+        res => {
+          const { Table1, Table3, Table6 } = res;
+          let results = {};
+          if (Table1) {
+            let users = []
+            let attachments = []
+            if (Table3) {
 
+              if (Array.isArray(Table3)) {
+                users = Table3.map(t => ({
+                  id: t.AssignUserID,
+                  name: t.AssignUserName.split("~")[1]?.trim(),
+                }));
+              } else {
+                users = [
+                  {
+                    id: Table3.AssignUserID,
+                    name: Table3.AssignUserName.split("~")[1]?.trim(),
+                  },
+                ];
+              }
+            }
+            if (Table6) {
+
+              if (Array.isArray(Table6)) {
+                attachments = Table6.map(t => ({
+                  id: t.ID,
+                  name: t.DocumentName,
+                  path: t.FilePath,
+                  file: { source: { uri: `${IMAGE_BASE_URL}${t.FilePath?.replace("~", "")}` } }
+
+                }));
+              } else {
+                attachments = [
+                  {
+                    id: Table6.ID,
+                    name: Table6.DocumentName,
+                    path: Table6.FilePath,
+                    file: { source: { uri: `${IMAGE_BASE_URL}${Table6.FilePath?.replace("~", "")}` } }
+
+                  },
+                ];
+              }
+            }
+            const dueDate = moment(Table1.DueDate)
+            results = {
+              ...Table1, taskId: Table1.TaskNameID, StartDate: dueDate.toDate(), alertId: Table1.ReminderAlertID,
+              ownerRemarks: Table1.Remarks, AssignUserName: users, attachments
+            }
+          }
+          // results = results.filter((t) => t.name.length > 0)
+
+          // console.log("results", results)
+
+          resolve(results);
+        },
+        error => {
+          resolve([]);
+        },
+      );
+    });
+  }
 };
 
 export default TaskApi;

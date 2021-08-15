@@ -4,13 +4,14 @@ import { Utils } from '../../../utils'
 import { AlertDialog, ProgressDialog } from '../../common'
 import PhotoPicker from '../../common/PhotoPicker'
 import TaskApi from '../apis/TaskApi'
+import WrappedComponentTask from '../WrappedComponentTask'
 import TaskAttachmentUi from './TaskAttachmentUi'
 class TaskAttachment extends Component {
 
     editMode = this.props.route?.params?.editMode || true
     taskId = this.props.route?.params?.id
     state = {
-        attachments: [],
+        attachments: this.props.taskContext?.task?.attachments || [],
         documentName: "",
         visibleDialog: false,
         visibleEditDialog: false,
@@ -21,8 +22,8 @@ class TaskAttachment extends Component {
     componentDidMount = () => {
         console.log("taskId", this.taskId)
 
-        //  if (this.editMode)
-        // this.getAttachment()
+        // if (this.editMode)
+        //     this.getAttachment()
     }
     insertAttachment = () => {
 
@@ -36,9 +37,9 @@ class TaskAttachment extends Component {
             File: attachment.base64
         }, (res) => {
 
-           // this.getAttachment()
-           Utils.showToast("Document uploaded successfully.")
-           push("Tasks")
+            // this.getAttachment()
+            Utils.showToast("Document uploaded successfully.")
+            push("Tasks")
             ProgressDialog.hide()
         }, () => {
             ProgressDialog.hide()
@@ -95,7 +96,7 @@ class TaskAttachment extends Component {
     // getAttachment = () => {
 
     //     this.setState({ loading: true })
-    //     opportunityApi.getOpportunityAttachment(this.oppId, (res) => {
+    //     TaskApi.getTaskAttachments(this.taskId, (res) => {
     //         this.setState({ loading: false, attachments: res || [] })
 
     //     }, () => {
@@ -195,4 +196,4 @@ class TaskAttachment extends Component {
     }
 }
 
-export default TaskAttachment
+export default WrappedComponentTask(TaskAttachment)

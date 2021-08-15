@@ -20,14 +20,15 @@ export default class CustomPicker extends Component {
         }
     }
     updateSelectedItem = () => {
-        const item = this.props.list.find((item) => {
-            return item.id == this.props.selectedItem?.id || ""
-        })
-        if (item)
-            this.setState({ selectedItem: item })
-        else
-            this.setState({ selectedItem: { name: "", id: "" } })
-
+        if (this.props.selectedItem) {
+            const item = this.props.list.find((item) => {
+                return item.id == this.props.selectedItem?.id || ""
+            })
+            if (item)
+                this.setState({ selectedItem: item })
+            else
+                this.setState({ selectedItem: { name: "", id: "" } })
+        }
 
     }
     componentDidUpdate = (prevProps, prevState, snapShot) => {

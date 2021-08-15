@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1069448253726",
+    "firebase_url": "https://skywardcrm-42e6e.firebaseio.com",
+    "project_id": "skywardcrm-42e6e",
+    "storage_bucket": "skywardcrm-42e6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1069448253726:android:56ee52206ecb711a",
+        "android_client_info": {
+          "package_name": "skyward.crm.new_skyward_crm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1069448253726-l84rmrkni2mab5rjnujngr4vek1skj0n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1069448253726-l84rmrkni2mab5rjnujngr4vek1skj0n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -27,6 +27,7 @@ import TaskList from '../components/Task/List/TaskList';
 import AddTask from '../components/Task/AddTaskUi';
 import TaskAttachment from '../components/Task/attachment/TaskAttachment';
 import QuotationList from '../components/Quotation/QuotationList';
+import EditCustomer from '../components/Customer/EditCustomer';
 
 
 const Stack = createStackNavigator();
@@ -68,6 +69,7 @@ export default () => {
           <Stack.Screen component={Contacts} name="Contacts" />
           <Stack.Screen component={AddContacts} name="AddContacts" />
           <Stack.Screen component={AddCustomer} name="AddCustomer" />
+          <Stack.Screen component={EditCustomer} name="EditCustomer" />
           <Stack.Screen component={SyncData} name="SyncData" />
           <Stack.Screen component={TaskList} name="Tasks" />
           <Stack.Screen component={QuotationList} name="Quotation" />

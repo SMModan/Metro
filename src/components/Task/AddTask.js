@@ -75,13 +75,13 @@ class AddTask extends Component {
     );
   }
 
-  onTextChanged = (key, value) => {
-    // console.log("AssignTerritoryID", key, value)
+  // onTextChanged = (key, value) => {
+  //   // console.log("AssignTerritoryID", key, value)
 
-    this.setState({
-      [key]: value,
-    });
-  };
+  //   this.setState({
+  //     [key]: value,
+  //   });
+  // };
 
   onTextChanged = (key, value) => {
     console.log('key', key, value);

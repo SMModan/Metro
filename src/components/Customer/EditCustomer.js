@@ -6,11 +6,12 @@ import {
   ImageButton,
   MainContainer,
   MyFlatList,
+  ProgressDialog,
   ViewWithTitle,
 } from '../common';
 import {connect} from 'react-redux';
 import styles from '../HomeDetails/styles/HelpDesk.style';
-import addStyles from '../Customer/Style/AddCustomer.style';
+import addStyles from './Style/AddCustomer.style';
 
 import {strings} from '../../language/Language';
 import {Images, Utils} from '../../utils';
@@ -83,7 +84,7 @@ export const ChildViews = props => {
     </ScrollContainer>
   );
 };
-class AddCustomer extends Component {
+class EditCustomer extends Component {
   constructor(props) {
     super(props);
 
@@ -97,7 +98,10 @@ class AddCustomer extends Component {
       owenerName:'',
       phoneNumber:'',
       email:'',
-      Name:''
+      Name:'',
+      customerId:0,
+      TerritoryID:0,
+      
     };
   }
 
@@ -136,12 +140,15 @@ class AddCustomer extends Component {
       customerTypeId,
       categoryId,
       otherInformation,
+      TerritoryID,
+      customerId
     } = this.state;
     console.log('otherInformation', otherInformation);
     let param = {
-      CustomerID: otherInformation.length+1,
+      ID: customerId,
+      CustomerID: customerId,
       CustomerName: Name,
-      TerritoryID: 0,
+      TerritoryID: TerritoryID,
       CustomerTypeID: customerTypeId,
       IndustryID: 0,
       SourceID: 0,
@@ -157,10 +164,8 @@ class AddCustomer extends Component {
       param,
       res => {
         const {IsSucceed} = res;
-        
-
         if (IsSucceed) {
-          Utils.showToast("Customer Added Successfully");
+          Utils.showToast("Customer Updated Successfully");
           goBack()
         }
       },
@@ -175,19 +180,63 @@ class AddCustomer extends Component {
       [key]: value,
     });
   };
+
   componentDidMount() {
-    this.getAllCountries();
-    this.getCustomerCategory();
-    this.getCustomerType();
+    this.setState({
+      customerId:this.props.route.params.item.ID
+    },()=>{
+      this.getCustomerBaseonId()
+    })
   }
+
+
+  
+  getAllState = countryId => {
+    console.log('<><><>countryId<><><>', countryId);
+    CustomerApi.getAllStateList(
+      {
+        CountryID: countryId,
+        StateName: '',
+      },
+      res => {
+        const {Table} = res;
+        let statebycountries = [];
+        console.log('Table', Table);
+        if (Table) {
+          for (let index = 0; index < Table.length; index++) {
+            const states = Table[index];
+            let objState = {
+              id: states.ID,
+              name: states.StateName,
+            };
+            statebycountries.push(objState);
+          }
+          this.setState(
+            {
+              stateList: statebycountries,
+            },
+            () => {
+              console.log(
+                '<------------------> State list <------------------>',
+                this.state.stateList,
+              );
+            },
+          );
+        }
+      },
+      error => {
+        Utils.showToast(error);
+      },
+    );
+  };
 
   saveOtherInformation = () => {
     const {Location, Street, countryId, stateId, CityName, Pincode} =
       this.state;
     let _otherInformation = this.state.otherInformation;
     let objOtherInfo = {
-      ID: 0,
-      CustomerID: _otherInformation.length+1,
+      ID: _otherInformation.length+1,
+      CustomerID: 0,
       Location,
       Street,
       CountryID:countryId,
@@ -352,6 +401,63 @@ class AddCustomer extends Component {
         }
       },
       error => {
+        Utils.showToast(error);
+      },
+    );
+  };
+
+  getCustomerBaseonId = () => {
+    ProgressDialog.show()
+    CustomerApi.getCustomerById(
+      {CustomerID:this.state.customerId},
+      res => {
+    ProgressDialog.hide()
+
+        const {Table,Table5} = res;
+        console.log('Table =================================>>>>>>>>>>>>>>>>>>>>>>>', Table5);
+        if (Table) {
+         
+          this.setState({
+            phoneNumber:Table?.Phone,
+            email:Table?.EmailID,
+            Name:Table?.CustomerName,
+            TerritoryID:Table?.TerritoryID,
+            customerTypeId:Table?.CustomerTypeID,
+            categoryId:Table?.CustomerCategoryID,
+          })
+
+          if(Table5){
+            let _otherInformation =[]
+            for (let index = 0; index < Table5.length; index++) {
+              const otherInfo = Table5[index];
+              let objOtherInfo = {
+                ID: otherInfo?.ID,
+                CustomerID: otherInfo?.CustomerID,
+                Location:otherInfo?.Location,
+                Street:otherInfo?.Street,
+                CountryID:otherInfo?.CountryID,
+                StateID:otherInfo?.StateID,
+                StateName: otherInfo?.StateName,
+                CountryName: otherInfo?.CountryName,
+                CityName: "",
+                Pincode:"",
+                AddressRowState: 2,
+              };
+              _otherInformation.push(objOtherInfo)
+            }
+            
+            this.setState({
+              otherInformation:_otherInformation
+            })
+          }
+
+           this.getAllCountries();
+           this.getCustomerCategory();
+           this.getCustomerType();
+        }
+      },
+      error => {
+    ProgressDialog.hide()
         Utils.showToast(error);
       },
     );
@@ -551,13 +657,13 @@ class AddCustomer extends Component {
               </ViewWithTitle>
 
               <ViewWithTitle title="Contact Information">
-                <FloatingEditText
+                {/* <FloatingEditText
                   label={'Owner Name'}
                   onChangeText={text =>
                     this.onFloatingEditTextChange('owenerName', text)
                   }
                 value={owenerName}
-                />
+                /> */}
                 <FloatingEditText
                   label={'Phone Number'}
                   onChangeText={text =>
@@ -600,26 +706,25 @@ class AddCustomer extends Component {
 
                         <View style={{margin: 15}}>
                         <View
-        style={{
-          flex: 1,
-        }}
-      >
+                          style={{
+                            flex: 1,
+                          }}
+                        >
                           <Title style={{fontSize: 16, marginTop: 8}}>
-                            {item.Location}
+                            {item?.Location}
                           </Title>
                           <Text
                             style={{
                               fontSize: 12,
                               color: Colors.darkGray,
-                            }}>{`${item.Street}, ${item.CityName}, ${item.Pincode} `}</Text>
+                            }}>{`${item?.Street}, ${item?.CityName}, ${item?.Pincode} `}</Text>
                           <Text
                             style={{
                               fontSize: 15,
                               color: Colors.darkGray,
                               marginTop: 4,
-                            }}>{`${this.state.stateName} , ${this.state.countryName}`}</Text>
+                            }}>{`${item?.StateName} , ${item?.CountryName}`}</Text>
 
-                        
                           {/* <Image source={Images.ic_close} style={{width:25,height:25,resizeMode:'contain'}} /> */}
                         </View>
                         <View
@@ -640,9 +745,8 @@ class AddCustomer extends Component {
                               // console.log('NewArray ',newArray);
                               // otherInformation=  otherInformation.splice(_.indexOf(otherInformation, _.findWhere(otherInformation, { CustomerID : item.CustomerID})), 1);
 
-
                               var index = otherInformation.findIndex(function(o){
-                                return o.CustomerID === item.CustomerID;
+                                return o.ID === item.ID;
                               })
                               if (index !== -1) otherInformation.splice(index, 1);
 
@@ -659,7 +763,7 @@ class AddCustomer extends Component {
                   })}
               </View>
               <Button
-                title={strings.save}
+                title={strings.update}
                 style={{
                   margin: ResponsivePixels.size16,
                   marginTop: ResponsivePixels.size70,
@@ -678,4 +782,4 @@ const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddCustomer);
+export default connect(mapStateToProps, mapDispatchToProps)(EditCustomer);

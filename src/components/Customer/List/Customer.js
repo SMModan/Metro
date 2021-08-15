@@ -1,19 +1,17 @@
+import _ from "lodash";
 import React, { Component } from 'react';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Image, Text, View,FlatList } from 'react-native';
+import { Card, FAB, Title } from 'react-native-paper';
+import SectionListContacts from 'react-native-sectionlist-contacts';
+import { connect } from 'react-redux';
+import { goBack, push } from '../../../navigation/Navigator';
+import { Colors, FontName, Images } from '../../../utils';
 import {
   Clickable,
-  MainContainer,
+  MainContainer
 } from '../../common';
-import { connect } from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
-import { Images, Colors, FontName } from '../../../utils';
-import { Card, Title, FAB, Searchbar } from 'react-native-paper';
-import { push } from '../../../navigation/Navigator';
-import SectionListContacts from 'react-native-sectionlist-contacts'
-import ResponsivePixels from '../../../utils/ResponsivePixels';
-import contactApi from '../../Contacts/Apis/ContactApi';
 import CustomerApi from '../Api/CustomerApi';
-import _ from "lodash"
 
 
 class Customer extends Component {
@@ -31,16 +29,22 @@ class Customer extends Component {
     searchQuery: false,
   };
 
-  _renderItem = (item, index, section) => {
+  _renderItem = ({index,item}) => {
+    console.log("iitem---------------------",item)
     return (
-      <Card style={{ margin: 7, marginLeft: 15, marginRight: 25 ,padding:10}} key={index}>
+      <Card style={{ margin: 7,padding:10}} key={index}
+      onPress={() => {
+        this.props.navigation.push('EditCustomer', { item })
+      }}>
          <View style={{flexDirection:'row'}}>
          <Title style={{ fontSize: 16 ,width:'50%'}}>Customer Category</Title>
          <View style={{backgroundColor:'#F1F5FB',borderRadius:5, width:'50%',textAlign:'center',justifyContent:'center',paddingLeft:5}}>
-        <Text style={{ textAlign: 'left', fontSize: 15,color:'$687799',margin:2}}>{item.customerType}</Text>
+        <Text style={{ textAlign: 'left', fontSize: 15,color:'$687799',margin:2}}>{item.CustomerType}</Text>
         </View>
          </View>
-         <Title style={{ fontSize: 12,color:'#485780' }}>{item.name}</Title>
+         <Title style={{ fontSize: 16 }}>{item.CustomerName}</Title>
+
+
          <View style={{
             flexDirection: "row",
             alignItems: "center",
@@ -50,10 +54,9 @@ class Customer extends Component {
 
             <Text style={{
                     fontSize: 15,
-                    color: "black",
                     marginLeft:10,
                     color:'#485780'
-                }}>{item.phone}</Text>
+                }}>{item.Phone}</Text>
         </View>
 
         <View style={{
@@ -65,11 +68,12 @@ class Customer extends Component {
 
             <Text style={{
                     fontSize: 15,
-                    color: "black",
                     marginLeft:10,
                     color:'#485780'
-                }}>{item.email}</Text>
+                }}>{item.EmailID}</Text>
         </View>
+     
+     
       </Card>
     )
   }
@@ -127,37 +131,44 @@ class Customer extends Component {
         const {Table} = res;
         let isLast = true;
         if (Table) {
-          let totalPage = Table[0].Count / 10;
-          isLast = this.state.page == totalPage;
-          let data = [];
+          if (Array.isArray(Table)) {
+            let totalPage = Table[0]?.Count / 10;
+            isLast = this.state.page == totalPage;
+            let data = [];
+  
+            console.log("TableTableTableTable",Table)
+            for (let index = 0; index < Table.length; index++) {
+              const _table = Table[index];
+              data.push(_table);
+            }
+  
+            this.setState(
+              {
+                listData: [...this.state.listData, ...data],
+                apiResponseData:
+                  this.state.page > 0
+                    ? [...this.state.apiResponseData, ...Table]
+                    : Table,
+                loading: false,
+                refreshing: false,
+                loadMore: false,
+                isLast,
+              },
+              () => {
+                console.log('listData', this.state.listData);
+              },
+            );
+          }else{
+            console.log("table name name",Table.CustomerName)
+          let results = [
+              {...Table}
+            ];
 
-          for (let index = 0; index < Table.length; index++) {
-            const _table = Table[index];
-            let table = {
-              name: _table.CustomerOwnerName||'',
-              customerType: _table.CustomerType||'',
-              email:_table.EmailID||'',
-              phone:_table.Phone||''
-            };
-            data.push(table);
+            this.setState({
+              listData:results
+            })
           }
-
-          this.setState(
-            {
-              listData: [...this.state.listData, ...data],
-              apiResponseData:
-                this.state.page > 0
-                  ? [...this.state.apiResponseData, ...Table]
-                  : Table,
-              loading: false,
-              refreshing: false,
-              loadMore: false,
-              isLast,
-            },
-            () => {
-              console.log('listData', this.state.listData);
-            },
-          );
+        
         }
       },
       () => {
@@ -213,7 +224,7 @@ class Customer extends Component {
         <View style={styles.MainHeaderView}>
         {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
 
-          <SectionListContacts
+          {/* <FlatList
             ref={s => this.sectionList = s}
             keyExtractor={(item, index) => 'key' + index}
             sectionListData={this.state.listData}
@@ -260,6 +271,45 @@ class Customer extends Component {
               marginLeft:4,
               fontWeight: '400',
               color: Colors.blue
+            }}
+          /> */}
+
+
+          <FlatList
+            data={listData || []}
+            renderItem={item => this._renderItem(item)}
+            style={{flex: 1, margin: 10}}
+            refreshing={refreshing}
+            loading={loading}
+            onRefresh={() => {
+              this.setState(
+                {
+                  refreshing: true,
+                  listData: [],
+                },
+                () => {
+                  this.getAllCustomer();
+                },
+              );
+            }}
+            horizontal={false}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => 'key' + index}
+            footerComponent={() => {
+              return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
+            }}
+            onEndReached={() => {
+              console.log("End")
+              if (!loadMore && !isLast) {
+                this.setState({
+                  page: this.state.page + 1,
+                  loadMore: true
+                }, () => {
+                  this.getAllCustomer()
+                })
+              }
             }}
           />
         </View>

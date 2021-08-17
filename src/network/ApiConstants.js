@@ -24,6 +24,7 @@ export const GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID = "GetPriceBookLevelByCurrencyI
 export const GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID = "GetProductRateByCurrencyIDAndLevelID"
 export const GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY = "GetUserAssignTerritoriesByUserID"
 export const GET_USERS_BY_TERRITORY_ID_FOR_ASSIGN_OPPORTUNITY = "GetUsersByTerritoryIDForAssignOpportunity"
+export const INSERT_OR_UPDATE_CUSTOMER_VERSION1 = "InsertOrUpdateCustomerVersion1"
 
 
 // TaskList Api end points

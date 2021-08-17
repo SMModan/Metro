@@ -1,4 +1,4 @@
-package com.skyward;
+package skyward.crm.new_skyward_crm;
 import android.os.Bundle;
 import org.devio.rn.splashscreen.SplashScreen;
 import com.facebook.react.ReactActivity;

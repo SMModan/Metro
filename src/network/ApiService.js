@@ -29,6 +29,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
     console.log(BASE_URL + endpoint + '\n------------------Params-------------------')
     console.log("Token", token);
     console.log("connectionString", connectionString);
+    console.log("machineCode", machineCode);
 
 
     const isConnected = await fetch()

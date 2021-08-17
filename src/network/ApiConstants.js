@@ -50,6 +50,10 @@ export const GET_ALL_NOTIFICATION = "GetUserNotificationDetailsByUserID"
 export const GET_ALL_CUSTOMER = "GetAllCustomers"
 export const GET_COUNTRIES = "GetCountries"
 export const GET_STATE = "GetStatesByCountryID"
+export const GET_CUSTOMER_CATEGORY = "GetCustomerCategory"
+export const GET_CUSTOMER_TYPE = "GetCustomerType"
+export const GET_CUSTOMER_BY_ID = "GetCustomerByID"
+export const ADD_UPDATE_CUSTOMER = "InsertOrUpdateCustomerVersion1"
 
 // Get All Appointment Api end points
 
@@ -78,4 +82,15 @@ export const GET_IS_ADMIN_AND_IS_MODULE_ADMIN_BY_ENTITY_ID = "GetIsAdminAndIsMod
 export const INSERT_HELP_DESK_SOLUTION_VERSION3 = "InsertHelpdeskSolutionVersion3"
 
 export const GET_QUOTATION_LIST = "GetAllQuotations"
+
+
+// Get Analytics 
+
+export const GET_PRODUCTCATEGORYWISE_OPPORTUNITYDATA_DASHBOARD = "GetProductCategoryWiseOpportunityDataForDashboardChart"
+export const GET_SALESMANWISE_OPPORTUNITYDATA_DASHBOARD = "GetSalesmanWiseOpportunityDataForDashboardChart"
+export const GET_TERRITORYWISE_OPPORTUNITYDATA_DASHBOARD = "GetTerritoryWiseOpportunityDataForDashboardChart"
+export const GET_SOURCEWISE_OPPORTUNITYDATA_DASHBOARD = "GetSourceWiseOpportunityDataForDashboardChart"
+export const GET_SALESSTAGE_WISE_OPPORTUNITYDATA_DASHBOARD = "GetSalesStageWiseOpportunityDataForDashboardChart"
+export const GET_PRODUCTBRAND_WISE_OPPORTUNITYDATA_DASHBOARD = "GetProductBrandWiseOpportunityDataForDashboardChart"
+export const GET_OPPORTUNITY_STAGE_WISE_OPPORTUNITYDATA_DASHBOARD = "GetOpportunityStageWiseOpportunityDataForDashboardChart"
 

@@ -25,6 +25,7 @@ export default {
   competition_status: "Competiton status",
   description: "Description",
   save: "Save",
+  update: "Update",
   saveContinue: "Save And Continue",
   saveComplete: "Save And Complete",
 

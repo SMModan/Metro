@@ -29,8 +29,8 @@ const AddOppCustomerUi = ({ contactDialogVisible,
     onDismiss }) => {
 
     const { OpportunityName, ID, TerritoryID, AssignTerritoryID, AssignUserName, CustomerID,
-         StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID,
-          CompetitionStatus, OpportunitySalesStageID } = opportunity
+        StageID, CloseDate, CurrencyID, Amount, OpportunityDescription, OpportunityCategoryID,
+        CompetitionStatus, OpportunitySalesStageID } = opportunity
     //  console.log("selectedUser", selectedUser)
     return (
         <ScrollContainer>
@@ -44,7 +44,16 @@ const AddOppCustomerUi = ({ contactDialogVisible,
                         onTextChanged("CustomerID", item.id)
                     }} list={customers} onPress={() => {
                     }} editable={false} onPressLeftIcon={() => {
-                        push("AddOppContact")
+                        push("AddOppContact", {
+                            onSave: (res) => {
+                                if (onSelectCustomer)
+                                    onSelectCustomer(res)
+                                customers.push(res)
+                                onTextChanged("CustomerID", res.id)
+
+
+                            }
+                        })
                         console.log("Click")
                     }} leftIcon={Images.ic_add_blue} label="Customer Name*" />
                     <FloatingEditText value={OpportunityName} onChangeText={(text) => onTextChanged("OpportunityName", text)} label={strings.opp_name + "*"} />

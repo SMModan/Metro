@@ -204,16 +204,26 @@ class AddOppProduct extends Component {
 
     updateProducts = () => {
 
-        const products = this.state.products.filter((p) => {
+        // const products = this.state.products.filter((p) => {
 
-            return !p.productId
-        })
-        if (products.length) {
-            Utils.showToast("Please select Product")
-            return
+        //     return !p.productId
+        // })
+        // if (products.length) {
+        //     Utils.showToast("Please select Product")
+        //     return
+        // }
+
+        for (let index = 0; index < this.state.products.length; index++) {
+            const p = this.state.products[index];
+
+            if (!p.productId) {
+                this.setState({ selectedIndex: index })
+                Utils.showToast("Please select Product")
+                return
+            }
         }
 
-        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, ID } = this.props.oppContext.opportunity
+        const { OpportunityName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDesc, OpportunityCategoryID, selectedUser, AssignTerritoryID, CompetitionStatus, OpportunitySalesStageID, ID } = this.props.oppContext.opportunity
 
         console.log("props.oppContext.opportunity", this.props.oppContext.opportunity)
 
@@ -257,10 +267,11 @@ class AddOppProduct extends Component {
                                                     + "$" + arrAllProductsList.get(i).getProductDomainID() +"$"+arrAllProductsList.get(i).getAmount()
                                                     + "$" + arrAllProductsList.get(i).getLevelId() + "$" + arrAllProductsList.get(i).getRate()+  "$" + arrAllProductsList.get(i).getProductDescription()+ "@";
                 */
+                const selectedUserIds = selectedUser?.map((s) => s.name)
 
                 const params = {
-                    OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID, Amount, OpportunityDescription: OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID,
-                    OpportunityTypeID: 0, AssignTerritoryID: 0, OpportunityID: ID || 0, ProductDetails: ProductDetails, AssignUserName: ""
+                    OpportunityName, TerritoryID, CustomerID, StageID, CloseDate: Utils.formatDate(CloseDate, "DD-MM-YYYY"), CurrencyID: CurrencyID || 0, Amount, OpportunityDescription: OpportunityDesc, OpportunityCategoryID: OpportunityCategoryID || 0, CompetitionStatus, OpportunitySalesStageID: OpportunitySalesStageID || 0,
+                    OpportunityTypeID: 0, AssignTerritoryID: AssignTerritoryID || 0, OpportunityID: ID || 0, ProductDetails: ProductDetails, AssignUserName: selectedUserIds?.length ? selectedUserIds.join(",") : ""
                 }
                 opportunityApi.addOrUpdateOpportunity(params, (res) => {
                     ProgressDialog.hide()

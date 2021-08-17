@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { goBack } from '../../../../navigation/Navigator'
-import { DROPDWON_GET_OPPORTUNITY_CATEGORY, DROPDWON_GET_OPPORTUNITY_CURRENCY, DROPDWON_GET_OPPORTUNITY_SALES_STAGE,
-     DROPDWON_GET_OPPORTUNITY_STAGE, DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY } from '../../../../utils/AppConstants'
+import {
+    DROPDWON_GET_OPPORTUNITY_CATEGORY, DROPDWON_GET_OPPORTUNITY_CURRENCY, DROPDWON_GET_OPPORTUNITY_SALES_STAGE,
+    DROPDWON_GET_OPPORTUNITY_STAGE, DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY
+} from '../../../../utils/AppConstants'
 import Utils from '../../../../utils/Utils'
 import { AlertDialog, ProgressDialog } from '../../../common'
 import opportunityApi from '../../apis/OpportunityApis'
@@ -54,14 +56,15 @@ class AddOppCustomer extends Component {
 
                 this.setState({ AssignTerritoryID: TerritoryID })
                 if (AssignUserID) {
-                    const ids = AssignUserID.split(",")
 
-                    this.getUsersByTerritoryIDForAssignOpportunity(TerritoryID, ids)
+                    const ids = AssignUserID.toString().split(",")
+
+                    await this.getUsersByTerritoryIDForAssignOpportunity(TerritoryID, ids)
 
                 }
             }
             if (this.props.oppContext)
-                this.props.oppContext.setOpportunity({ ...Table, products })
+                this.props.oppContext.setOpportunity({ ...Table, products, selectedUser: this.state.selectedUser })
 
             const assignTerritories = await opportunityApi.getTerritoryForAssignOpportunity(this.state.opportunityId)
             this.setState({ OpportunityName, CustomerName, TerritoryID, CustomerID, StageID, CloseDate, CurrencyID, Amount, OpportunityDescription: OpportunityDesc, OpportunityCategoryID, CompetitionStatus, OpportunitySalesStageID, assignTerritories })
@@ -128,6 +131,8 @@ class AddOppCustomer extends Component {
 
         // console.log("selectedUser", users, selectedUser, selectedIds)
         this.setState({ users, selectedUser })
+
+        return selectedUser
     }
 
     saveOpportunity = () => {

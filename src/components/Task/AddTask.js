@@ -11,7 +11,7 @@ import {
 } from '../../utils/AppConstants';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import AppointmentApi from '../Appointments/Api/AppointmentApi';
-import { Button, ChipViewContainer, CustomDatePicker, CustomPicker, FloatingEditText, ImageButton, MainContainer, ProgressDialog, ScrollContainer, ViewWithTitle } from '../common';
+import { Button, ChipViewContainer, CustomDatePicker, CustomPicker, FloatingEditText, ImageButton, MainContainer, ProgressDialog, ProgressView, ScrollContainer, ViewWithTitle } from '../common';
 import SelectionView from '../common/SelectionView';
 import TaskApi from './apis/TaskApi';
 import WrappedComponentTask from './WrappedComponentTask';
@@ -42,13 +42,13 @@ class AddTask extends Component {
       ActivityID: 0,
       SetNextTimeHr: "",
       SetNextTimeMin: "",
+      loading: true
     };
   }
 
   componentDidMount = () => {
     console.log("this.props.taskContext.item", this.props.taskContext.item)
 
-    this.getDropDowns()
     this.getTaskDetails()
   }
 
@@ -128,7 +128,8 @@ class AddTask extends Component {
         assignTo,
         hours,
         alertList,
-        mins
+        mins,
+        loading: false
       },
       () => {
         console.log('taskNametaskName', taskNameList);
@@ -148,9 +149,11 @@ class AddTask extends Component {
       this.props.taskContext.setTask(details)
 
       if (details.EntityID) {
-        this.onTextChanged("EntityID", details.EntityID)
+        this.getRelatedToByEntityID(details.EntityID, true);
+
       }
     }
+    this.getDropDowns()
 
   }
 
@@ -162,21 +165,21 @@ class AddTask extends Component {
 
     const params = {
       ActivityID: ActivityID,
-      TaskNameID: taskId || "",
+      TaskNameID: taskId || 0,
       TaskName: TaskName || "",
       TaskStatusID: 1,
-      EntityID: EntityID || '',
+      EntityID: EntityID || 0,
       EntityName: EntityName || '',
-      EntityFieldID: EntityFieldID || "",
+      EntityFieldID: EntityFieldID || 0,
       EntityFieldName: EntityFieldName || "",
       OwnerRemarks: ownerRemarks || "",
       AssigneeRemarks: AssigneeRemarks || "",
       AssignUserName: AssignUserName.map((item) => item.name).join(","),
-      PriorityID: PriorityID || "",
+      PriorityID: PriorityID || 0,
       PriorityName: PriorityName || "",
       DueDate: moment(StartDate).format("DD-MM-YYYY"),
       DueTime: `${StartHr}:${StartMin}`,
-      ReminderAlertID: alertId,
+      ReminderAlertID: alertId || 0,
       GeneralActivityName: "",
       CompletionDateTime: "",
       SetNextReminderDate: SetNextReminderDate ? moment(SetNextReminderDate).format("DD-MM-YYYY") : "",
@@ -247,13 +250,14 @@ class AddTask extends Component {
       SetNextReminderDate,
       SetNextTimeHr,
       SetNextTimeMin,
+      loading
     } = this.state;
     const isOwner = ActivityOwnerID == this.props.session.user.ID
 
     console.log("this.props.taskContext.item.TaskStatus", this.props.taskContext.item.TaskStatus)
     return (
 
-      <ScrollContainer>
+      loading ? <ProgressView /> : <ScrollContainer>
 
         <ViewWithTitle title="Task Information">
           <CustomPicker

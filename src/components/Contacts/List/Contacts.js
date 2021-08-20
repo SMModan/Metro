@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, Image, Linking, ActivityIndicator} from 'react-native';
-import {Clickable, MainContainer} from '../../common';
+import {Clickable, MainContainer, ProgressDialog} from '../../common';
 import {connect} from 'react-redux';
 import styles from './Contact.style';
 import {Images, Colors, FontName} from '../../../utils';
@@ -31,8 +31,9 @@ class Contacts extends Component {
   };
 
   _renderItem = (item, index, section) => {
-    console.log("item.name")
-    
+      const name = item?.name
+      const firstDigit =  name?.charAt(0) 
+
     return (
       <Card
         style={{margin: 7, marginLeft: 15, marginRight: 25}}
@@ -52,13 +53,13 @@ class Contacts extends Component {
             }}>
             <Text
               style={{textAlign: 'center', fontSize: 20, fontWeight: '600'}}>
-              {item?.name[0]}
+              {firstDigit && firstDigit}
             </Text>
           </View>
           <View style={{flex: 1}}>
             <Title style={{fontSize: 16}}>{item?.name}</Title>
             <Text style={{fontSize: 12, color: Colors.grayColor, marginTop: 3}}>
-              {item?.company}
+              {item?.email}
             </Text>
           </View>
           <Clickable
@@ -105,9 +106,7 @@ class Contacts extends Component {
 
   _renderFooter = params => {
     const {  loadMore, isLast } = this.state
-
     return (
-
       <Clickable
         onPress={() => {
           if (!loadMore && !isLast) {
@@ -155,55 +154,79 @@ class Contacts extends Component {
     };  
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore,
+
     });
+    ProgressDialog.show()
     contactApi.getAllContactList(
       params,
       res => {
+        ProgressDialog.hide()
         const {Table} = res;
+        console.log("table  ======>",Table)
         let isLast = true;
         if (Table) {
-          let totalPage = Table[0].Count / 10;
-          isLast = this.state.page == totalPage;
-          let data = [];
-
-          for (let index = 0; index < Table.length; index++) {
+          if (Array.isArray(Table)) {
+            let totalPage = Table[0].Count / 10;
+            isLast = this.state.page == totalPage;
+            let data = [];
+  
+            for (let index = 0; index < Table.length; index++) {
             const _table = Table[index];
-              // let firstChar = _table?.ContactPersonName[0]
-              // let name = _table?.ContactPersonName || ''
+          
+            let   ContactPersonName = _table.ContactPersonName
+           
+          
+              let table = {
+                name: ContactPersonName.toString()||'',
+                email: _table.EmailID||'',
+                id:_table.ID
+              };
+              data.push(table);
+            }
+  
+            this.setState(
+              {
+                listData: [...this.state.listData, ...data],
+                apiResponseData:
+                  this.state.page > 0
+                    ? [...this.state.apiResponseData, ...Table]
+                    : Table,
+                loading: false,
+                refreshing: false,
+                loadMore: false,
+                isLast,
+              },
+            );
+            
+          }else{
+            let results = [
+              {...Table}
+            ];
 
-            // if( firstChar <='9' && firstChar >='0') {
-            //   console.log("name",name);
-            //   firstChar = `#`
-            //   name= `shahil${name}`
-            // }
+            let data = [];
 
-            let table = {
-              name: _table.CustomerName||'',
-              company: _table.EmailID||'',
-              id:_table.ID
-            };
-            data.push(table);
+            for (let index = 0; index < results.length; index++) {
+              const _table = results[index];
+            
+              let   ContactPersonName = _table.ContactPersonName
+             
+            
+                let table = {
+                  name: ContactPersonName.toString()||'',
+                  email: _table.EmailID||'',
+                  id:_table.ID
+                };
+                data.push(table);
+              }
+            this.setState({
+              listData:data
+            })
           }
-
-          this.setState(
-            {
-              listData: [...this.state.listData, ...data],
-              apiResponseData:
-                this.state.page > 0
-                  ? [...this.state.apiResponseData, ...Table]
-                  : Table,
-              loading: false,
-              refreshing: false,
-              loadMore: false,
-              isLast,
-            },
-            () => {
-              console.log('listData', this.state.listData);
-            },
-          );
         }
       },
       () => {
+        ProgressDialog.hide()
+
         this.setState({
           loading: !this.state.refreshing && !this.state.loadMore,
         });
@@ -272,9 +295,6 @@ class Contacts extends Component {
         
         }}>
           <View style={styles.MainHeaderView}>
-
-        {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
-
             <SectionListContacts
               ref={s => (this.sectionList = s)}
               keyExtractor={(item, index) => 'key' + index}
@@ -298,20 +318,16 @@ class Contacts extends Component {
               }}
 
               refreshing={refreshing}
-              footerComponent={() => {
-                return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
-              }}
               onRefresh={() => {
                 this.setState({
                   page: 0,
-                  refreshing: true
+                  refreshing: true,
+                  listData:[]
                 }, () => {
                   this.getAllContacts()
                 })
               }}
               onEndReached={() => {
-                console.log("End")
-  
                 if (!loadMore && !isLast) {
                   this.setState({
                     page: this.state.page + 1,
@@ -319,11 +335,9 @@ class Contacts extends Component {
                   }, () => {
                     this.getAllContacts()
                   })
-  
                 }
               }}
             />
-
             {/* {this.renderFooter()} */}
           </View>
           <FAB

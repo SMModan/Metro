@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ScrollView, ActivityIndicator } from 'react-native';
 import {
+  Clickable,
   MainContainer, MyFlatList,
 } from '../common';
 import { connect } from 'react-redux';
@@ -40,7 +41,8 @@ class QuotationList extends Component {
       }-${date.getFullYear()}`;
 
     return (
-      <Card  style={{ margin: 5 }} key={index}>
+  
+      <Card  style={{ margin: 5 }} key={index}  >
       <View style={{ margin: 15 }}>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontSize: 13, width: '70%', }}>{item.QuotationNo}</Text>
@@ -54,7 +56,6 @@ class QuotationList extends Component {
         <Text style={{ fontSize: 15, color: Colors.darkGray, marginTop: 4 }}>{item.CustomerName}</Text>
       </View>
     </Card>
-    
     );
   };
 
@@ -85,6 +86,9 @@ class QuotationList extends Component {
       console.log("Table", Table)
       let isLast = true
       if (Table) {
+
+        if (Array.isArray(Table)) {
+
         this.setState({ totalCount: Table[0].TotalCount })
         let totalPage = Table[0].TotalCount / 10
         isLast = this.state.page == totalPage
@@ -97,6 +101,15 @@ class QuotationList extends Component {
           loading: false, refreshing: false, loadMore: false, isLast: true
         })
       }
+    }else{
+      let results = [
+        {...Table}
+      ];
+      this.setState({
+        listData: results,
+        loading: false, refreshing: false, loadMore: false, isLast
+      })
+    }
     }, () => {
       // let totalPage = this.state.totalCount / 10
       // let isLast = this.state.page == totalPage

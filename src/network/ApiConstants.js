@@ -82,6 +82,7 @@ export const GET_IS_ADMIN_AND_IS_MODULE_ADMIN_BY_ENTITY_ID = "GetIsAdminAndIsMod
 export const INSERT_HELP_DESK_SOLUTION_VERSION3 = "InsertHelpdeskSolutionVersion3"
 
 export const GET_QUOTATION_LIST = "GetAllQuotations"
+export const DOWNLOAD_QUOTATION = "DownloadQuotation"
 
 
 // Get Analytics 

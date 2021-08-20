@@ -54,6 +54,7 @@ export const ContactInfo = ({
        <FloatingEditText
         label={'Mobile Number'}
         value={mobileNumbers}
+        inputType={"number-pad"}
         onChangeText={text => onFloatingEditTextChange('mobileNumbers', text)}
       />
     </ViewWithTitle>

@@ -11,6 +11,7 @@ import apiCall from '../../../network/ApiService';
 
 const AppointmentApi = {
   getAllAppointment(params, onDone, onError) {
+    
     apiCall(
       GET_ALL_APPOINTMENT,
       params,

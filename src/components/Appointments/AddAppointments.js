@@ -142,7 +142,7 @@ class AddAppointments extends Component {
       ProgressDialog.show()
       AppointmentApi.InsertOrUpdateAppointment(params, (res) => {
         ProgressDialog.hide()
-        push("Appointments")
+        goBack()
       }, (error) => {
         ProgressDialog.hide()
         Utils.showDangerToast(error)
@@ -155,7 +155,7 @@ class AddAppointments extends Component {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => push("Appointments"),
+            onPress: () => goBack(),
           },
           title: 'Add Appointment',
           hideUnderLine: true,

@@ -141,6 +141,7 @@ class Home extends Component {
           title: '',
           hideUnderLine: true,
           light: true,
+          isHome: true,
           right: [{
             image: Images.ic_Refresh, onPress: () => syncAllData(false)
             ,

@@ -12,6 +12,7 @@ import { Card, Title, FAB } from 'react-native-paper';
 import { push } from '../../navigation/Navigator';
 import _ from "lodash"
 import QuotationApis from './QuotationApis';
+import { ProgressDialog} from '../common';
 
 
 class QuotationList extends Component {
@@ -42,7 +43,9 @@ class QuotationList extends Component {
 
     return (
   
-      <Card  style={{ margin: 5 }} key={index}  >
+      <Card  style={{ margin: 5 }} key={index}  onPress={()=>{
+        this.props.navigation.push('QuotationView', { QuotationID:item.ID,QuotationNo:item.QuotationNo })
+      }}>
       <View style={{ margin: 15 }}>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontSize: 13, width: '70%', }}>{item.QuotationNo}</Text>
@@ -81,11 +84,14 @@ class QuotationList extends Component {
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
     })
+    ProgressDialog.show()
+
     QuotationApis.getAllQuotation(params, (res) => {
       const { Table } = res
       console.log("Table", Table)
       let isLast = true
       if (Table) {
+        ProgressDialog.hide()
 
         if (Array.isArray(Table)) {
 
@@ -111,8 +117,8 @@ class QuotationList extends Component {
       })
     }
     }, () => {
-      // let totalPage = this.state.totalCount / 10
-      // let isLast = this.state.page == totalPage
+      ProgressDialog.hide()
+
       this.setState({
         loading: !this.state.refreshing && !this.state.loadMore, loadMore: false,
       })
@@ -181,7 +187,14 @@ class QuotationList extends Component {
             />
           </View>
         </View>
-      
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          color={Colors.white}
+          onPress={() => {
+            this.props.navigation.push('AddOpportunity')
+          }}
+        />
       </MainContainer>
     );
   }

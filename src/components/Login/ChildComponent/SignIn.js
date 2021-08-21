@@ -129,7 +129,14 @@ class SignIn extends Component {
   render() {
     return (
       <MainContainer
-        header={{ hideUnderLine: true, backgroundColor: Colors.white }}>
+        header={{ 
+          hideUnderLine: true,
+          light: false,
+          isHome: true,
+         backgroundColor: Colors.white 
+         
+         }}>
+           
         <ScrollContainer>
           {/* <ProgressDialog visible={true} /> */}
           <View style={styles.ContainerView}>

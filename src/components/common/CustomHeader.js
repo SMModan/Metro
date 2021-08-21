@@ -28,6 +28,8 @@ import ResponsivePixels from '../../utils/ResponsivePixels';
 class CustomHeader extends Component {
   componentDidMount() {
     // StatusBar.setBarStyle('light-content')
+
+    console.log("Home ------>",this.props.isHome)
   }
 
   render() {

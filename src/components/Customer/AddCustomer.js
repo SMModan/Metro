@@ -26,63 +26,11 @@ import {Icon, Image} from 'native-base';
 import CustomerApi from './Api/CustomerApi';
 import {Card, Title, FAB} from 'react-native-paper';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { goBack } from '../../navigation/Navigator';
+import {goBack} from '../../navigation/Navigator';
 
 //  JCAAGF00U916CCN
 
-export const ChildViews = props => {
-  const {
-    handleAddNewCustomerOpen,
-    countryList,
-    countryId,
-    stateId,
-    onTextChanged,
-    onStateTextChanged,
-    stateList,
-    renderCell,
-    otherInformation,
-    onFloatingEditTextChange,
-    Location,
-    City,
-    ZipCode,
-    Street,
-    saveCustomer,
-  } = props;
-  return (
-    <ScrollContainer>
-      <View style={styles.mainView}>
-        <CustomerInformation />
-        <ContactInformation />
-        {/* <AddressInformation onDialogueOpen={()=>onDialogueOpen}/>
-         */}
 
-        <ViewWithTitle title={strings.other_info}>
-          <Button
-            title="Add"
-            style={addStyles.addMoreButton}
-            onPress={() => {
-              handleAddNewCustomerOpen();
-            }}
-          />
-        </ViewWithTitle>
-
-        <MyFlatList
-          data={otherInformation || []}
-          renderItem={item => renderCell(item)}
-          style={{flex: 1, margin: 10, marginTop: 20}}
-        />
-        <Button
-          title={strings.save}
-          style={{
-            margin: ResponsivePixels.size16,
-            marginTop: ResponsivePixels.size70,
-          }}
-          onPress={saveCustomer}
-        />
-      </View>
-    </ScrollContainer>
-  );
-};
 class AddCustomer extends Component {
   constructor(props) {
     super(props);
@@ -94,10 +42,11 @@ class AddCustomer extends Component {
       otherInformation: [],
       customerType: [],
       isAddNewCustomer: false,
-      owenerName:'',
-      phoneNumber:'',
-      email:'',
-      Name:''
+      owenerName: '',
+      phoneNumber: '',
+      email: '',
+      Name: '',
+      isFromEdit:false
     };
   }
 
@@ -119,10 +68,10 @@ class AddCustomer extends Component {
       [key]: value,
     });
   };
-  onStateTextChanged = (key, value, stateName) => {
+  onStateTextChanged = (key, value, StateName) => {
     this.setState({
       [key]: value,
-      stateName,
+      StateName,
     });
   };
 
@@ -137,9 +86,8 @@ class AddCustomer extends Component {
       categoryId,
       otherInformation,
     } = this.state;
-    console.log('otherInformation', otherInformation);
     let param = {
-      CustomerID: otherInformation.length+1,
+      CustomerID: 0,
       CustomerName: Name,
       TerritoryID: 0,
       CustomerTypeID: customerTypeId,
@@ -150,18 +98,17 @@ class AddCustomer extends Component {
       PhoneNo: phoneNumber,
       EmailID: email,
       CustomerCategoryID: categoryId,
-      addressList:JSON.stringify(otherInformation),
+      addressList: JSON.stringify(otherInformation),
     };
 
     CustomerApi.AddCustomer(
       param,
       res => {
         const {IsSucceed} = res;
-        
 
         if (IsSucceed) {
-          Utils.showToast("Customer Added Successfully");
-          goBack()
+          Utils.showToast('Customer Added Successfully');
+          goBack();
         }
       },
       error => {
@@ -182,36 +129,75 @@ class AddCustomer extends Component {
   }
 
   saveOtherInformation = () => {
-    const {Location, Street, countryId, stateId, CityName, Pincode} =
+    const {Location, Street, countryId,countryName,StateName, stateId, CityName, Pincode,isFromEdit,otherInformation,_ID} =
       this.state;
-    let _otherInformation = this.state.otherInformation;
-    let objOtherInfo = {
-      ID: 0,
-      CustomerID: _otherInformation.length+1,
-      Location,
-      Street,
-      CountryID:countryId,
-      StateID:stateId,
-      StateName: this.state.stateName,
-      CityName,
-      Pincode,
-      AddressRowState: 2,
-    };
-    _otherInformation.push(objOtherInfo);
+      let _otherInformation = otherInformation;
+    if(isFromEdit){
+      var index = otherInformation.findIndex(
+        function (o) {
+          return o._ID === _ID;
+        },
+      );
+      if (index !== -1){
+     
+        let objOtherInfo = {
+          ID: 0,
+          CustomerID: 0,
+          _ID: _ID,
+          Location,
+          Street,
+          CountryID: countryId,
+          countryName:countryName,
+          StateID: stateId,
+          StateName: StateName,
+          CityName,
+          Pincode,
+          AddressRowState: 2,
+        };
 
-    this.setState(
-      {
-        otherInformation: _otherInformation,
-        isAddNewCustomer: false,
-      },
-      () => {
-        console.log('otherInformation', this.state.otherInformation);
-      },
-    );
+        _otherInformation[index]=objOtherInfo
+
+        this.setState(
+          {
+            otherInformation: _otherInformation,
+            isAddNewCustomer: false,
+          },
+          () => {
+            console.log('otherInformation', this.state.otherInformation);
+          },
+        );
+      }
+
+    }else{
+      let objOtherInfo = {
+        ID: 0,
+        CustomerID: 0,
+        _ID: _otherInformation.length + 1,
+        Location,
+        Street,
+        CountryID: countryId,
+        countryName:countryName,
+        StateID: stateId,
+        StateName: StateName,
+        CityName,
+        Pincode,
+        AddressRowState: 2,
+      };
+      _otherInformation.push(objOtherInfo);
+  
+      this.setState(
+        {
+          otherInformation: _otherInformation,
+          isAddNewCustomer: false,
+        },
+        () => {
+          console.log('otherInformation', this.state.otherInformation);
+        },
+      );
+    }
   };
 
   getAllState = countryId => {
-    console.log('<><><>countryId<><><>', countryId);
     CustomerApi.getAllStateList(
       {
         CountryID: countryId,
@@ -406,8 +392,8 @@ class AddCustomer extends Component {
       countryName,
       stateName,
       Location,
-      City,
-      ZipCode,
+      CityName,
+      Pincode,
       Street,
       isAddNewCustomer,
       qty,
@@ -418,8 +404,10 @@ class AddCustomer extends Component {
       owenerName,
       phoneNumber,
       email,
-      Name
+      Name,
+      isFromEdit
     } = this.state;
+
     return (
       <MainContainer
         header={{
@@ -440,6 +428,7 @@ class AddCustomer extends Component {
                 onChangeText={text =>
                   this.onFloatingEditTextChange('Location', text)
                 }
+                value={Location}
               />
 
               <FloatingEditText
@@ -448,6 +437,7 @@ class AddCustomer extends Component {
                 onChangeText={text =>
                   this.onFloatingEditTextChange('Street', text)
                 }
+                value={Street}
               />
               <CustomPicker
                 selectedItem={{id: countryId}}
@@ -477,15 +467,19 @@ class AddCustomer extends Component {
                 label={'City'}
                 style={addStyles.floatEditText}
                 onChangeText={text =>
-                  this.onFloatingEditTextChange('City', text)
+                  this.onFloatingEditTextChange('CityName', text)
                 }
+                value={CityName}
+
               />
               <FloatingEditText
                 label={'ZipCode'}
                 style={addStyles.floatEditText}
                 onChangeText={text =>
-                  this.onFloatingEditTextChange('ZipCode', text)
+                  this.onFloatingEditTextChange('Pincode', text)
                 }
+                value={Pincode}
+
               />
               <View
                 style={{
@@ -496,7 +490,7 @@ class AddCustomer extends Component {
                 }}>
                 <Button
                   onPress={() => {
-                    this.handleAddNewCustomerOpen();
+                    this.handleAddNewCustomerClose();
                   }}
                   title="Cancel"
                   bordered
@@ -506,13 +500,12 @@ class AddCustomer extends Component {
                   onPress={() => {
                     this.saveOtherInformation();
                   }}
-                  title={strings.submit}
+                  title={isFromEdit?(strings.update):(strings.submit)}
                   style={{flex: 1}}
                 />
               </View>
             </View>
           ) : (
-       
             <View style={styles.mainView}>
               <ViewWithTitle title="Customer Information">
                 <FloatingEditText
@@ -520,7 +513,7 @@ class AddCustomer extends Component {
                   onChangeText={text =>
                     this.onFloatingEditTextChange('Name', text)
                   }
-                value={Name}
+                  value={Name}
                 />
 
                 <CustomPicker
@@ -556,23 +549,21 @@ class AddCustomer extends Component {
                   onChangeText={text =>
                     this.onFloatingEditTextChange('owenerName', text)
                   }
-                value={owenerName}
+                  value={owenerName}
                 />
                 <FloatingEditText
                   label={'Phone Number'}
                   onChangeText={text =>
                     this.onFloatingEditTextChange('phoneNumber', text)
                   }
-                value={phoneNumber}
-
+                  value={phoneNumber}
                 />
                 <FloatingEditText
                   label={'Email'}
                   onChangeText={text =>
                     this.onFloatingEditTextChange('email', text)
                   }
-                value={email}
-
+                  value={email}
                 />
               </ViewWithTitle>
 
@@ -586,74 +577,113 @@ class AddCustomer extends Component {
                 />
               </ViewWithTitle>
 
-              {/* <MyFlatList
-              data={otherInformation || []}
-              renderItem={item => this.renderCell(item)}
-              style={{flex: 1, margin: 10, marginTop:20}}
-            /> */}
+         
 
               <View style={{flex: 1, margin: 10, marginTop: 20}}>
                 {otherInformation.length != 0 &&
                   otherInformation.map((item, index) => {
+                    console.log("item ==>",item)
+
                     return (
-                      <Card style={{margin: 5}} key={index}>
-
-                        <View style={{margin: 15}}>
-                        <View
-        style={{
-          flex: 1,
-        }}
-      >
-                          <Title style={{fontSize: 16, marginTop: 8}}>
-                            {item.Location}
-                          </Title>
-                          <Text
+                      <Card style={{margin: ResponsivePixels.size5,padding:ResponsivePixels.size5}} key={index}>
+                        <View >
+                          <View
                             style={{
-                              fontSize: 12,
-                              color: Colors.darkGray,
-                            }}>{`${item.Street}, ${item.CityName}, ${item.Pincode} `}</Text>
-                          <Text
+                              flex: 1,
+                            }}>
+                            <Title style={{fontSize: 16, marginTop: 8}}>
+                              {item.Location}
+                            </Title>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                color: Colors.darkGray,
+                              }}>{`${item.Street}, ${item.CityName}, ${item.Pincode} `}</Text>
+                            <Text
+                              style={{
+                                fontSize: 15,
+                                color: Colors.darkGray,
+                                marginTop: 4,
+                              }}>{`${item.StateName} , ${item.countryName}`}</Text>
+
+                            {/* <Image source={Images.ic_close} style={{width:25,height:25,resizeMode:'contain'}} /> */}
+                          </View>
+                          <View
                             style={{
-                              fontSize: 15,
-                              color: Colors.darkGray,
-                              marginTop: 4,
-                            }}>{`${this.state.stateName} , ${this.state.countryName}`}</Text>
+                              position: 'absolute',
+                              right: 5,
+                              top: 5,
+                              flexDirection:"row",
+                              flex:2,
+                              width:ResponsivePixels.size60,
+                              backgroundColor: 'transparent',
+                            }}>
+                     
 
-                        
-                          {/* <Image source={Images.ic_close} style={{width:25,height:25,resizeMode:'contain'}} /> */}
-                        </View>
-                        <View
-        style={{
-          position: 'absolute',
-          right: 5,
-          top: 5,
-          backgroundColor: 'transparent',
-        }}
-      >
-                        <ImageButton
-                            source={Images.ic_close}
-                            imageStyle={{width:ResponsivePixels.size20,
-                            height:ResponsivePixels.size20}}
-                            onPress={() => {
+                            <ImageButton
+                              source={Images.edit_icon}
+                              imageStyle={{
+                                width: ResponsivePixels.size30,
+                                marginEnd:ResponsivePixels.size15,
+                                height: ResponsivePixels.size30,
+                              }}
+                              onPress={() => {
+                                let otherInformation =
+                                  this.state.otherInformation;
+                                var index = otherInformation.findIndex(
+                                  function (o) {
+                                    return o._ID === item._ID;
+                                  },
+                                );
+                                if (index !== -1){
+                                   const item = otherInformation[index] 
+                                  this.setState({
+                                   isFromEdit:true,
+                                   isAddNewCustomer:true,
+                                   ID:item.ID,
+                                   _ID:item._ID,
+                                   CustomerID:item.CustomerID,
+                                   Location:item.Location,
+                                   Street:item.Street,
+                                   countryId:item.CountryID,
+                                   stateId:item.StateID,
+                                   CityName:item.CityName,
+                                   Pincode:item.Pincode,
+                                   AddressRowState: 2,
+                                  });
+                                }
+                              }}
+                            />
 
-                              let otherInformation = this.state.otherInformation 
-                              // console.log('NewArray ',newArray);
-                              // otherInformation=  otherInformation.splice(_.indexOf(otherInformation, _.findWhere(otherInformation, { CustomerID : item.CustomerID})), 1);
+<ImageButton
+                              source={Images.ic_close}
+                              imageStyle={{
+                                width: ResponsivePixels.size15,
+                                height: ResponsivePixels.size15,
+                                flex:1,
+                                justifyContent:"flex-end",
+                                alignItems:"center",
+                                
+                              }}
+                              onPress={() => {
+                                let otherInformation =
+                                  this.state.otherInformation;
+                                var index = otherInformation.findIndex(
+                                  function (o) {
+                                    return o._ID === item._ID;
+                                  },
+                                );
+                                if (index !== -1)
+                                  otherInformation.splice(index, 1);
 
+                                this.setState({
+                                  otherInformation: otherInformation,
+                                });
+                              }}
+                            />
 
-                              var index = otherInformation.findIndex(function(o){
-                                return o.CustomerID === item.CustomerID;
-                              })
-                              if (index !== -1) otherInformation.splice(index, 1);
-
-                              this.setState({
-                                otherInformation:otherInformation
-                              })
-                            }}
-                          />
                           </View>
                         </View>
-                      
                       </Card>
                     );
                   })}

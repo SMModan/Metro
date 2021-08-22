@@ -105,12 +105,12 @@ class EditCustomer extends Component {
     };
   }
 
-  onTextChanged = (key, value, countryName) => {
+  onTextChanged = (key, value, CountryName) => {
     this.setState(
       {
         [key]: value,
         stateList: [],
-        countryName,
+        CountryName,
       },
       () => {
         this.getAllState(value);
@@ -123,10 +123,10 @@ class EditCustomer extends Component {
       [key]: value,
     });
   };
-  onStateTextChanged = (key, value, stateName) => {
+  onStateTextChanged = (key, value, StateName) => {
     this.setState({
       [key]: value,
-      stateName,
+      StateName,
     });
   };
 
@@ -143,9 +143,17 @@ class EditCustomer extends Component {
       TerritoryID,
       customerId
     } = this.state;
-    console.log('otherInformation', otherInformation);
+
+    let _otherInformation = otherInformation
+
+    for (let index = 0; index < _otherInformation.length; index++) {
+      const otherInfo = _otherInformation[index];
+       delete otherInfo.CountryName;
+       _otherInformation[index] = otherInfo
+    }
+
+    // console.log("_otherInformation",_otherInformation)
     let param = {
-      ID: customerId,
       CustomerID: customerId,
       CustomerName: Name,
       TerritoryID: TerritoryID,
@@ -157,7 +165,7 @@ class EditCustomer extends Component {
       PhoneNo: phoneNumber,
       EmailID: email,
       CustomerCategoryID: categoryId,
-      addressList:JSON.stringify(otherInformation),
+      addressList:JSON.stringify(_otherInformation),
     };
 
     CustomerApi.AddCustomer(
@@ -190,77 +198,79 @@ class EditCustomer extends Component {
   }
 
 
-  
-  getAllState = countryId => {
-    console.log('<><><>countryId<><><>', countryId);
-    CustomerApi.getAllStateList(
-      {
-        CountryID: countryId,
-        StateName: '',
-      },
-      res => {
-        const {Table} = res;
-        let statebycountries = [];
-        console.log('Table', Table);
-        if (Table) {
-          for (let index = 0; index < Table.length; index++) {
-            const states = Table[index];
-            let objState = {
-              id: states.ID,
-              name: states.StateName,
-            };
-            statebycountries.push(objState);
-          }
-          this.setState(
-            {
-              stateList: statebycountries,
-            },
-            () => {
-              console.log(
-                '<------------------> State list <------------------>',
-                this.state.stateList,
-              );
-            },
-          );
-        }
-      },
-      error => {
-        Utils.showToast(error);
-      },
-    );
-  };
+
 
   saveOtherInformation = () => {
-    const {Location, Street, countryId, stateId, CityName, Pincode} =
+    const {Location, Street, countryId,CountryName,StateName, stateId, CityName, Pincode,isFromEdit,otherInformation,ID,CustomerID} =
       this.state;
-    let _otherInformation = this.state.otherInformation;
-    let objOtherInfo = {
-      ID: _otherInformation.length+1,
-      CustomerID: 0,
-      Location,
-      Street,
-      CountryID:countryId,
-      StateID:stateId,
-      StateName: this.state.stateName,
-      CityName,
-      Pincode,
-      AddressRowState: 2,
-    };
-    _otherInformation.push(objOtherInfo);
 
-    this.setState(
-      {
-        otherInformation: _otherInformation,
-        isAddNewCustomer: false,
-      },
-      () => {
-        console.log('otherInformation', this.state.otherInformation);
-      },
-    );
+       console.log("CountryName in save other info",CountryName)
+       console.log("StateName",StateName)
+
+      let _otherInformation = otherInformation;
+    if(isFromEdit){
+      var index = otherInformation.findIndex(
+        function (o) {
+          return o.ID === ID;
+        },
+      );
+      if (index !== -1){
+     
+        let objOtherInfo = {
+          ID: ID,
+          CustomerID: CustomerID,
+          Location,
+          Street,
+          CountryID: countryId,
+          CountryName:CountryName,
+          StateID: stateId,
+          StateName: StateName,
+          CityName,
+          Pincode,
+          AddressRowState: 4,
+        };
+
+
+        _otherInformation[index]=objOtherInfo
+
+        this.setState(
+          {
+            otherInformation: _otherInformation,
+            isAddNewCustomer: false,
+          }
+        );
+      }
+
+    }else{
+      let objOtherInfo = {
+        ID: 0,
+        CustomerID: 0,
+        _ID: _otherInformation.length + 1,
+        Location,
+        Street,
+        CountryID: countryId,
+        CountryName:CountryName,
+        StateID: stateId,
+        StateName: StateName,
+        CityName,
+        Pincode,
+        AddressRowState: 2,
+      };
+      _otherInformation.push(objOtherInfo);
+  
+      this.setState(
+        {
+          otherInformation: _otherInformation,
+          isAddNewCustomer: false,
+        },
+        () => {
+        },
+      );
+    }
   };
 
+
   getAllState = countryId => {
-    console.log('<><><>countryId<><><>', countryId);
     CustomerApi.getAllStateList(
       {
         CountryID: countryId,
@@ -269,7 +279,6 @@ class EditCustomer extends Component {
       res => {
         const {Table} = res;
         let statebycountries = [];
-        console.log('Table', Table);
         if (Table) {
           for (let index = 0; index < Table.length; index++) {
             const states = Table[index];
@@ -282,13 +291,7 @@ class EditCustomer extends Component {
           this.setState(
             {
               stateList: statebycountries,
-            },
-            () => {
-              console.log(
-                '<------------------> State list <------------------>',
-                this.state.stateList,
-              );
-            },
+            }
           );
         }
       },
@@ -304,11 +307,9 @@ class EditCustomer extends Component {
       res => {
         const {Table} = res;
         let customerCategory = [];
-        console.log('Table', Table);
         if (Table) {
           for (let index = 0; index < Table.length; index++) {
             const cat = Table[index];
-            console.log('cat', cat);
             let objCat = {
               id: cat.ID,
               name: cat.Name,
@@ -318,13 +319,7 @@ class EditCustomer extends Component {
           this.setState(
             {
               customerCategory: customerCategory,
-            },
-            () => {
-              console.log(
-                '<------------------> State list <------------------>',
-                this.state.customerCategory,
-              );
-            },
+            }
           );
         }
       },
@@ -340,7 +335,6 @@ class EditCustomer extends Component {
       res => {
         const {Table} = res;
         let customerType = [];
-        console.log('Table', Table);
         if (Table) {
           for (let index = 0; index < Table.length; index++) {
             const _customerType = Table[index];
@@ -353,13 +347,7 @@ class EditCustomer extends Component {
           this.setState(
             {
               customerType: customerType,
-            },
-            () => {
-              console.log(
-                '<------------------> State list <------------------>',
-                this.state.customerType,
-              );
-            },
+            }
           );
         }
       },
@@ -375,7 +363,6 @@ class EditCustomer extends Component {
       res => {
         const {Table} = res;
         let countries = [];
-        console.log('Table', Table);
         if (Table) {
           for (let index = 0; index < Table.length; index++) {
             const country = Table[index];
@@ -390,13 +377,7 @@ class EditCustomer extends Component {
           this.setState(
             {
               countryList: countries,
-            },
-            () => {
-              console.log(
-                '<------------------> countryList <------------------>',
-                this.state.countryList,
-              );
-            },
+            }
           );
         }
       },
@@ -406,6 +387,7 @@ class EditCustomer extends Component {
     );
   };
 
+
   getCustomerBaseonId = () => {
     ProgressDialog.show()
     CustomerApi.getCustomerById(
@@ -414,9 +396,7 @@ class EditCustomer extends Component {
     ProgressDialog.hide()
 
         const {Table,Table5} = res;
-        console.log('Table =================================>>>>>>>>>>>>>>>>>>>>>>>', Table5);
         if (Table) {
-         
           this.setState({
             phoneNumber:Table?.Phone,
             email:Table?.EmailID,
@@ -427,9 +407,31 @@ class EditCustomer extends Component {
           })
 
           if(Table5){
+
             let _otherInformation =[]
-            for (let index = 0; index < Table5.length; index++) {
-              const otherInfo = Table5[index];
+
+            if (Array.isArray(Table)) {
+              for (let index = 0; index < Table5.length; index++) {
+                const otherInfo = Table5[index];
+                let objOtherInfo = {
+                  ID: otherInfo?.ID,
+                  CustomerID: otherInfo?.CustomerID,
+                  Location:otherInfo?.Location,
+                  Street:otherInfo?.Street,
+                  CountryID:otherInfo?.CountryID,
+                  StateID:otherInfo?.StateID,
+                  StateName: otherInfo?.StateName,
+                  CountryName: otherInfo?.CountryName,
+                  CityName: otherInfo?.CityName,
+                  Pincode:otherInfo?.Pincode,
+                  AddressRowState: otherInfo?.AddressRowState,
+                };
+                _otherInformation.push(objOtherInfo)
+              }
+            }else{
+
+              const otherInfo = Table5;
+               console.log("======Table5=====",Table5)
               let objOtherInfo = {
                 ID: otherInfo?.ID,
                 CustomerID: otherInfo?.CustomerID,
@@ -439,11 +441,12 @@ class EditCustomer extends Component {
                 StateID:otherInfo?.StateID,
                 StateName: otherInfo?.StateName,
                 CountryName: otherInfo?.CountryName,
-                CityName: "",
-                Pincode:"",
-                AddressRowState: 2,
+                CityName: otherInfo?.CityName,
+                Pincode:otherInfo?.Pincode,
+                AddressRowState: otherInfo?.AddressRowState,
               };
               _otherInformation.push(objOtherInfo)
+           
             }
             
             this.setState({
@@ -464,7 +467,6 @@ class EditCustomer extends Component {
   };
 
   renderCell = ({index}) => {
-    // console.log(index);
     const item = this.state.otherInformation[index];
 
     return (
@@ -481,7 +483,7 @@ class EditCustomer extends Component {
               fontSize: 15,
               color: Colors.darkGray,
               marginTop: 4,
-            }}>{`${this.state.stateName} , ${this.state.countryName}`}</Text>
+            }}>{`${this.state.stateName} , ${this.state.CountryName}`}</Text>
 
           <Image
             source={Images.ic_close}
@@ -497,11 +499,13 @@ class EditCustomer extends Component {
       isAddNewCustomer: true,
     });
   };
+
   handleAddNewCustomerClose = () => {
     this.setState({
       isAddNewCustomer: false,
     });
   };
+
   render() {
     const {
       countryList,
@@ -509,11 +513,11 @@ class EditCustomer extends Component {
       countryId,
       stateId,
       otherInformation,
-      countryName,
+      CountryName,
       stateName,
       Location,
-      City,
-      ZipCode,
+      CityName,
+      Pincode,
       Street,
       isAddNewCustomer,
       qty,
@@ -524,7 +528,8 @@ class EditCustomer extends Component {
       owenerName,
       phoneNumber,
       email,
-      Name
+      Name,
+      isFromEdit
     } = this.state;
     return (
       <MainContainer
@@ -533,92 +538,97 @@ class EditCustomer extends Component {
             image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
-          title: 'Add Customer',
+          title: 'Update Customer',
           hideUnderLine: true,
           light: true,
         }}>
         <ScrollContainer>
           {isAddNewCustomer ? (
             <View
-              style={{backgroundColor: Colors.white, paddingHorizontal: 16}}>
-              <FloatingEditText
-                label={'Location'}
-                onChangeText={text =>
-                  this.onFloatingEditTextChange('Location', text)
-                }
-              />
+            style={{backgroundColor: Colors.white, paddingHorizontal: 16}}>
+            <FloatingEditText
+              label={'Location'}
+              onChangeText={text =>
+                this.onFloatingEditTextChange('Location', text)
+              }
+              value={Location}
+            />
 
-              <FloatingEditText
-                label={'Street'}
-                style={addStyles.floatEditText}
-                onChangeText={text =>
-                  this.onFloatingEditTextChange('Street', text)
-                }
-              />
-              <CustomPicker
-                selectedItem={{id: countryId}}
-                floaingStyle={addStyles.customEditText}
-                onSelect={item =>
-                  this.onTextChanged('countryId', item.id, item.name)
-                }
-                list={countryList}
-                label={strings.countries + '*'}
-                editable={false}
-                rightIcon={Images.ic_down}
-              />
+            <FloatingEditText
+              label={'Street'}
+              style={addStyles.floatEditText}
+              onChangeText={text =>
+                this.onFloatingEditTextChange('Street', text)
+              }
+              value={Street}
+            />
+            <CustomPicker
+              selectedItem={{id: countryId}}
+              floaingStyle={addStyles.customEditText}
+              onSelect={item =>
+                this.onTextChanged('countryId', item.id, item.name)
+              }
+              list={countryList}
+              label={strings.countries + '*'}
+              editable={false}
+              rightIcon={Images.ic_down}
+            />
 
-              <CustomPicker
-                selectedItem={{id: stateId}}
-                floaingStyle={addStyles.customEditText}
-                onSelect={item =>
-                  this.onStateTextChanged('stateId', item.id, item.name)
-                }
-                list={stateList}
-                label={strings.state}
-                editable={false}
-                rightIcon={Images.ic_down}
-              />
+            <CustomPicker
+              selectedItem={{id: stateId}}
+              floaingStyle={addStyles.customEditText}
+              onSelect={item =>
+                this.onStateTextChanged('stateId', item.id, item.name)
+              }
+              list={stateList}
+              label={strings.state}
+              editable={false}
+              rightIcon={Images.ic_down}
+            />
 
-              <FloatingEditText
-                label={'City'}
-                style={addStyles.floatEditText}
-                onChangeText={text =>
-                  this.onFloatingEditTextChange('City', text)
-                }
+            <FloatingEditText
+              label={'City'}
+              style={addStyles.floatEditText}
+              onChangeText={text =>
+                this.onFloatingEditTextChange('CityName', text)
+              }
+              value={CityName}
+
+            />
+            <FloatingEditText
+              label={'ZipCode'}
+              style={addStyles.floatEditText}
+              onChangeText={text =>
+                this.onFloatingEditTextChange('Pincode', text)
+              }
+              value={Pincode}
+
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                margin: ResponsivePixels.size16,
+                alignItems: 'center',
+                justifyContent: 'space-evenly',
+              }}>
+              <Button
+                onPress={() => {
+                  this.handleAddNewCustomerClose();
+                }}
+                title="Cancel"
+                bordered
+                style={{width: 100, marginEnd: 8}}
               />
-              <FloatingEditText
-                label={'ZipCode'}
-                style={addStyles.floatEditText}
-                onChangeText={text =>
-                  this.onFloatingEditTextChange('ZipCode', text)
-                }
+              <Button
+                onPress={() => {
+                  this.saveOtherInformation();
+                }}
+                title={isFromEdit?(strings.update):(strings.submit)}
+                style={{flex: 1}}
               />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  margin: ResponsivePixels.size16,
-                  alignItems: 'center',
-                  justifyContent: 'space-evenly',
-                }}>
-                <Button
-                  onPress={() => {
-                    this.handleAddNewCustomerOpen();
-                  }}
-                  title="Cancel"
-                  bordered
-                  style={{width: 100, marginEnd: 8}}
-                />
-                <Button
-                  onPress={() => {
-                    this.saveOtherInformation();
-                  }}
-                  title={strings.submit}
-                  style={{flex: 1}}
-                />
-              </View>
             </View>
-          ) : (
-       
+          </View>
+      ) : (
             <View style={styles.mainView}>
               <ViewWithTitle title="Customer Information">
                 <FloatingEditText
@@ -657,20 +667,15 @@ class EditCustomer extends Component {
               </ViewWithTitle>
 
               <ViewWithTitle title="Contact Information">
-                {/* <FloatingEditText
-                  label={'Owner Name'}
-                  onChangeText={text =>
-                    this.onFloatingEditTextChange('owenerName', text)
-                  }
-                value={owenerName}
-                /> */}
+                
                 <FloatingEditText
                   label={'Phone Number'}
                   onChangeText={text =>
                     this.onFloatingEditTextChange('phoneNumber', text)
                   }
-                value={phoneNumber}
+                  inputType={"numeric"}
 
+                   value={phoneNumber.toString()}
                 />
                 <FloatingEditText
                   label={'Email'}
@@ -692,76 +697,128 @@ class EditCustomer extends Component {
                 />
               </ViewWithTitle>
 
-              {/* <MyFlatList
-              data={otherInformation || []}
-              renderItem={item => this.renderCell(item)}
-              style={{flex: 1, margin: 10, marginTop:20}}
-            /> */}
 
               <View style={{flex: 1, margin: 10, marginTop: 20}}>
                 {otherInformation.length != 0 &&
                   otherInformation.map((item, index) => {
-                    return (
-                      <Card style={{margin: 5}} key={index}>
+                    const AddressRowState =item.AddressRowState
 
-                        <View style={{margin: 15}}>
-                        <View
-                          style={{
-                            flex: 1,
-                          }}
-                        >
-                          <Title style={{fontSize: 16, marginTop: 8}}>
-                            {item?.Location}
-                          </Title>
-                          <Text
+                    console.log("item.CountryName",item.CountryName)
+                    if(AddressRowState!=3){
+                      return (
+                        <Card style={{margin: ResponsivePixels.size5,padding:ResponsivePixels.size5}} key={index}>
+                        <View >
+                          <View
                             style={{
-                              fontSize: 12,
-                              color: Colors.darkGray,
-                            }}>{`${item?.Street}, ${item?.CityName}, ${item?.Pincode} `}</Text>
-                          <Text
+                              flex: 1,
+                            }}>
+                            <Title style={{fontSize: 16, marginTop: 8}}>
+                              {item.Location}
+                            </Title>
+                            <Text
+                              style={{
+                                fontSize: 12,
+                                color: Colors.darkGray,
+                              }}>{`${item.Street}, ${item.CityName}, ${item.Pincode} `}</Text>
+                            <Text
+                              style={{
+                                fontSize: 15,
+                                color: Colors.darkGray,
+                                marginTop: 4,
+                              }}>{`${item.StateName} , ${item.CountryName}`}</Text>
+  
+                            {/* <Image source={Images.ic_close} style={{width:25,height:25,resizeMode:'contain'}} /> */}
+                          </View>
+                          <View
                             style={{
-                              fontSize: 15,
-                              color: Colors.darkGray,
-                              marginTop: 4,
-                            }}>{`${item?.StateName} , ${item?.CountryName}`}</Text>
+                              position: 'absolute',
+                              right: 5,
+                              top: 5,
+                              flexDirection:"row",
+                              flex:2,
+                              width:ResponsivePixels.size60,
+                              backgroundColor: 'transparent',
+                            }}>
+                     
+  
+                            <ImageButton
+                              source={Images.edit_icon}
+                              imageStyle={{
+                                width: ResponsivePixels.size30,
+                                marginEnd:ResponsivePixels.size15,
+                                height: ResponsivePixels.size30,
+                              }}
+                              onPress={() => {
+                                let otherInformation =
+                                  this.state.otherInformation;
+                                var index = otherInformation.findIndex(
+                                  function (o) {
+                                    return o.ID === item.ID;
+                                  },
+                                );
+                                if (index !== -1){
+                                   const item = otherInformation[index] 
+                                   this.getAllState(item.CountryID)
 
-                          {/* <Image source={Images.ic_close} style={{width:25,height:25,resizeMode:'contain'}} /> */}
-                        </View>
-                        <View
-        style={{
-          position: 'absolute',
-          right: 5,
-          top: 5,
-          backgroundColor: 'transparent',
-        }}
-      >
-                        <ImageButton
-                            source={Images.ic_close}
-                            imageStyle={{width:ResponsivePixels.size20,
-                            height:ResponsivePixels.size20}}
-                            onPress={() => {
 
-                              let otherInformation = this.state.otherInformation 
-                              // console.log('NewArray ',newArray);
-                              // otherInformation=  otherInformation.splice(_.indexOf(otherInformation, _.findWhere(otherInformation, { CustomerID : item.CustomerID})), 1);
-
-                              var index = otherInformation.findIndex(function(o){
-                                return o.ID === item.ID;
-                              })
-                              if (index !== -1) otherInformation.splice(index, 1);
-
-                              this.setState({
-                                otherInformation:otherInformation
-                              })
-                            }}
-                          />
+                                  this.setState({
+                                   isFromEdit:true,
+                                   isAddNewCustomer:true,
+                                   ID:item.ID,
+                                   CustomerID:item.CustomerID,
+                                   Location:item.Location,
+                                   Street:item.Street,
+                                   countryId:item.CountryID,
+                                   CountryName:item.CountryName,
+                                   StateName:item.StateName,
+                                   stateId:item.StateID,
+                                   CityName:item.CityName,
+                                   Pincode:item.Pincode,
+                                   AddressRowState: item.AddressRowState,
+                                  });
+                                }
+                              }}
+                            />
+  
+                           <ImageButton
+                              source={Images.ic_close}
+                              imageStyle={{
+                                width: ResponsivePixels.size15,
+                                height: ResponsivePixels.size15,
+                                flex:1,
+                                justifyContent:"flex-end",
+                                alignItems:"center",
+                              }}
+                              onPress={() => {
+                                let _otherInformation =
+                                  this.state.otherInformation;
+                                var index = _otherInformation.findIndex(
+                                  function (o) {
+                                    return o.ID === item.ID;
+                                  },
+                                );
+                                if (index !== -1){
+                                  let item = _otherInformation[index]
+                                  item.AddressRowState = 3
+                                  _otherInformation[index] =item
+                                  this.setState({
+                                    otherInformation:_otherInformation
+                                  })
+                                }
+                              }}
+                            />
+  
                           </View>
                         </View>
-                      
                       </Card>
-                    );
+                      );
+                    }else{
+                      return null
+                    }
+                   
                   })}
               </View>
+             
               <Button
                 title={strings.update}
                 style={{

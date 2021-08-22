@@ -10,6 +10,7 @@ import { Images, Colors, FontName } from '../../../utils';
 import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 import AppointmentApi from '../Api/AppointmentApi';
 import _ from "lodash"
+import { goBack, push } from '../../../navigation/Navigator';
 
 
 class Appointments extends Component {
@@ -44,16 +45,29 @@ class Appointments extends Component {
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
     })
+    console.log("params ====>", params)
     AppointmentApi.getAllAppointment(params, (res) => {
       const { Table } = res
       let isLast = true
       if (Table) {
-        let totalPage = Table[0]?.TotalCount / 10
-        isLast = this.state.page == totalPage
-        this.setState({
-          listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
-          loading: false, refreshing: false, loadMore: false, isLast
-        })
+        if (Array.isArray(Table)) {
+          let totalPage = Table[0]?.TotalCount / 10
+          isLast = this.state.page == totalPage
+          this.setState({
+            listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
+            loading: false, refreshing: false, loadMore: false, isLast
+          })
+        } else {
+          let results = [
+            { ...Table }
+          ];
+          console.log("<===results  ===>", results)
+          this.setState({
+            listData: results,
+            loading: false,
+            refreshing: false, loadMore: false, isLast
+          })
+        }
       }
     }, () => {
       this.setState({
@@ -108,7 +122,7 @@ class Appointments extends Component {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => this.props.navigation.goBack(),
+            onPress: () => goBack(),
           },
           title: 'Appointments',
           hideUnderLine: true,
@@ -172,7 +186,7 @@ class Appointments extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            this.props.navigation.navigate('AddAppointments')
+            push('AddAppointments')
           }}
         />
       </MainContainer>

@@ -30,7 +30,7 @@ class Customer extends Component {
   };
 
   _renderItem = ({index,item}) => {
-    console.log("iitem---------------------",item)
+    //console.log("iitem---------------------",item)
     return (
       <Card style={{ margin: 7,padding:10}} key={index}
       onPress={() => {
@@ -136,7 +136,7 @@ class Customer extends Component {
             isLast = this.state.page == totalPage;
             let data = [];
   
-            console.log("TableTableTableTable",Table)
+            //console.log("TableTableTableTable",Table)
             for (let index = 0; index < Table.length; index++) {
               const _table = Table[index];
               data.push(_table);
@@ -155,11 +155,11 @@ class Customer extends Component {
                 isLast,
               },
               () => {
-                console.log('listData', this.state.listData);
+                //console.log('listData', this.state.listData);
               },
             );
           }else{
-            console.log("table name name",Table.CustomerName)
+            //console.log("table name name",Table.CustomerName)
           let results = [
               {...Table}
             ];
@@ -231,7 +231,7 @@ class Customer extends Component {
             initialNumToRender={this.state.listData.length}
             showsVerticalScrollIndicator={false}
             SectionListClickCallback={(item, index) => {
-              console.log('---SectionListClickCallback--:', item, index)
+              //console.log('---SectionListClickCallback--:', item, index)
             }}
             otherAlphabet="#"
             renderHeader={this._renderHeader}
@@ -252,7 +252,7 @@ class Customer extends Component {
               })
             }}
             onEndReached={() => {
-              console.log("End")
+              //console.log("End")
 
               if (!loadMore && !isLast) {
                 this.setState({
@@ -286,6 +286,7 @@ class Customer extends Component {
                 {
                   refreshing: true,
                   listData: [],
+                  page:0
                 },
                 () => {
                   this.getAllCustomer();
@@ -301,7 +302,7 @@ class Customer extends Component {
               return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
             }}
             onEndReached={() => {
-              console.log("End")
+              //console.log("End")
               if (!loadMore && !isLast) {
                 this.setState({
                   page: this.state.page + 1,

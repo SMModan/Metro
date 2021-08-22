@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ScrollView, ActivityIndicator } from 'react-native';
 import {
+  Clickable,
   MainContainer, MyFlatList,
 } from '../common';
 import { connect } from 'react-redux';
@@ -11,6 +12,7 @@ import { Card, Title, FAB } from 'react-native-paper';
 import { push } from '../../navigation/Navigator';
 import _ from "lodash"
 import QuotationApis from './QuotationApis';
+import { ProgressDialog} from '../common';
 
 
 class QuotationList extends Component {
@@ -40,7 +42,10 @@ class QuotationList extends Component {
       }-${date.getFullYear()}`;
 
     return (
-      <Card  style={{ margin: 5 }} key={index}>
+  
+      <Card  style={{ margin: 5 }} key={index}  onPress={()=>{
+        this.props.navigation.push('QuotationView', { QuotationID:item.ID,QuotationNo:item.QuotationNo })
+      }}>
       <View style={{ margin: 15 }}>
         <View style={{ flexDirection: 'row' }}>
           <Text style={{ fontSize: 13, width: '70%', }}>{item.QuotationNo}</Text>
@@ -54,7 +59,6 @@ class QuotationList extends Component {
         <Text style={{ fontSize: 15, color: Colors.darkGray, marginTop: 4 }}>{item.CustomerName}</Text>
       </View>
     </Card>
-    
     );
   };
 
@@ -80,11 +84,17 @@ class QuotationList extends Component {
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
     })
+    ProgressDialog.show()
+
     QuotationApis.getAllQuotation(params, (res) => {
       const { Table } = res
       console.log("Table", Table)
       let isLast = true
       if (Table) {
+        ProgressDialog.hide()
+
+        if (Array.isArray(Table)) {
+
         this.setState({ totalCount: Table[0].TotalCount })
         let totalPage = Table[0].TotalCount / 10
         isLast = this.state.page == totalPage
@@ -97,9 +107,18 @@ class QuotationList extends Component {
           loading: false, refreshing: false, loadMore: false, isLast: true
         })
       }
+    }else{
+      let results = [
+        {...Table}
+      ];
+      this.setState({
+        listData: results,
+        loading: false, refreshing: false, loadMore: false, isLast
+      })
+    }
     }, () => {
-      // let totalPage = this.state.totalCount / 10
-      // let isLast = this.state.page == totalPage
+      ProgressDialog.hide()
+
       this.setState({
         loading: !this.state.refreshing && !this.state.loadMore, loadMore: false,
       })
@@ -168,7 +187,14 @@ class QuotationList extends Component {
             />
           </View>
         </View>
-      
+        <FAB
+          style={styles.fab}
+          icon="plus"
+          color={Colors.white}
+          onPress={() => {
+            this.props.navigation.push('AddOpportunity')
+          }}
+        />
       </MainContainer>
     );
   }

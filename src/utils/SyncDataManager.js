@@ -6,11 +6,6 @@ import { setSessionField } from "../reducers/SessionReducer";
 let index = 0
 const offlineData = [
     {
-        name: "Customer Types",
-        status: 0,
-        endPoint: "GetCustomerType"
-    },
-    {
         name: "Customer Categories",
         status: 0,
         endPoint: "GetCustomerCategory"
@@ -125,6 +120,16 @@ const offlineData = [
         status: 0,
         endPoint: "GetHelpdeskStatus"
     },
+    {
+        name: "Customer Types",
+        status: 0,
+        endPoint: "GetCustomerType"
+    },
+    {
+        name: "Customer Categories",
+        status: 0,
+        endPoint: "GetCustomerCategory"
+    },
 ]
 
 const syncData = (fromLogin = true) => {
@@ -182,7 +187,6 @@ const syncData = (fromLogin = true) => {
             }
 
             console.log("--------------------------------------------")
-
         }, (error) => {
             index++
             if (index <= offlineData.length - 1)

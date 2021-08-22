@@ -18,7 +18,7 @@ class AddContacts extends Component {
 
     this.state = {
       customerList: [],
-      customerId: '',
+      customerId: 0,
       customerName: '',
       contactId: this.props?.route?.params?.contactID || 0,
       firstName:'',
@@ -64,7 +64,7 @@ class AddContacts extends Component {
           email:EmailID,
           customerName:CustomerName,
           customerId:CustomerID,
-          mobileNumbers:MobileNo,
+          mobileNumbers:MobileNo.toString(),
 
         })
         console.log("this.context", Table)
@@ -160,7 +160,11 @@ class AddContacts extends Component {
             ProgressDialog.hide()
 
             if (res.IsSucceed) {
-              Utils.showToast("Contact Added sucessfully")
+              if(contactId!=0){
+                Utils.showToast("Contact updated sucessfully")
+              }else{
+                Utils.showToast("Contact Added sucessfully")
+              }
             }
             goBack()
         }, (error) => {
@@ -181,6 +185,7 @@ class AddContacts extends Component {
       lastName,
       mobileNumbers,
       email,
+      contactId
     } = this.state;
     return (
       <MainContainer
@@ -189,7 +194,7 @@ class AddContacts extends Component {
             image: Images.ic_BackWhite,
             onPress: () => this.props.navigation.goBack(),
           },
-          title: 'Contact',
+          title: contactId!=0?'Update Contact':"Add Contact",
           hideUnderLine: true,
           light: true,
         }}>

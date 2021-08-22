@@ -26,9 +26,9 @@ class AddOppContact extends Component {
         terrotories: this.props.session[DROPDWON_GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY],
         customerCategories: this.props.session[DROPDWON_GET_CUSTOMER_CATEGORY],
         customerTypes: this.props.session[DROPDWON_GET_CUSTOMER_TYPE],
-
     }
 
+    
     onTextChanged = (key, value) => {
         // console.log("AssignTerritoryID", key, value)
 

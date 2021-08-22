@@ -13,6 +13,9 @@ import { strings } from '../../../language/Language';
 import { Images, Colors } from '../../../utils';
 import { syncAllData } from '../../../utils/SyncDataManager';
 import { reset } from '../../../navigation/Navigator';
+import { Alert } from 'react-native';
+import { store } from '../../../App';
+import { setSessionField } from '../../../reducers/SessionReducer';
 
 
 const data = [
@@ -130,17 +133,41 @@ class Home extends Component {
     );
   };
 
+  handleSignOut = () => {
+    Alert.alert(
+        'Skyward CRM',
+        'Are you sure you want to logout?', [{
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+        }, {
+            text: 'Yes',
+            onPress: ()=> {
+              store.dispatch(setSessionField('user', {}));
+              store.dispatch(setSessionField('is_logged_in', false));
+              reset("SignIn")
+            }
+        }, ], {
+            cancelable: false
+        }
+     )
+     return true;
+   } 
+
   render() {
     return (
       <MainContainer
         header={{
           left: {
-            image: Images.ic_Menu,
-            onPress: () => reset("SignIn"),
+            image: Images.ic_logout,
+            onPress: () => {
+              this.handleSignOut()
+            },
           },
           title: '',
           hideUnderLine: true,
           light: true,
+          isHome: true,
           right: [{
             image: Images.ic_Refresh, onPress: () => syncAllData(false)
             ,
@@ -170,7 +197,6 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
   session: state.session
 });
 

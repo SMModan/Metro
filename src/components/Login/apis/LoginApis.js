@@ -56,8 +56,7 @@ const loginApi = {
           onError(error);
         }
       },
-      METHOD.POST,
-      true,
+      METHOD.POST
     );
   },
 };

@@ -105,9 +105,9 @@ class AddTask extends Component {
   getDropDowns = () => {
     const taskNameList = this.props.session[DROPDWON_GET_TASK_NAME];
     const priorityList = this.props.session[DROPDWON_GET_PRIORITY];
-    const relatedTo = this.props.session.GetRelatedTo;
-    const assignTo = this.props.session.GetUserForAssignActivity;
-    const alertList = this.props.session.GetReminderAlert;
+    const relatedTo = this.props.session.GetRelatedTo || [];
+    const assignTo = this.props.session.GetUserForAssignActivity || [];
+    const alertList = this.props.session.GetReminderAlert || [];
     console.log('relatedTo', relatedTo);
 
     const mins = ["00", "15", "30", "45"].map((item, index) => {

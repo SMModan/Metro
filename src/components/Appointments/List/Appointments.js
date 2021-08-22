@@ -172,7 +172,7 @@ class Appointments extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            this.props.navigation.push('AddAppointments')
+            this.props.navigation.navigate('AddAppointments')
           }}
         />
       </MainContainer>

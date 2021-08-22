@@ -56,6 +56,9 @@ const AddOppProductUi = ({ products, onSubmit, onDelete, productLevels, oppProdu
                             setProductQuery(text)
                             setVisible(text.length > 0)
                             onSearchProduct(text)
+                            if (oppProducts.length)
+                                onTextChanged("productId", "")
+
                         }} onBlur={() => {
                             setProductQuery("")
                             // onTextChanged("productName", "")

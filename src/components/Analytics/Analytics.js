@@ -81,6 +81,9 @@ class Analytics extends Component {
         TerritoryWiseOppoRes: {},
         productCatArray:[],
         salesManArray:[],
+        territoryWiseArray:[],
+        productBrandWiseArray:[],
+        sourceWiseArray:[],
         ID:0
       });
   };
@@ -459,7 +462,7 @@ class Analytics extends Component {
                 { x: ChartColors.blue, y: 100 -_val , legend: 'Blue' },
               ]
               this.setState({
-                salesManArray:data,
+                territoryWiseArray:data,
               })
 
     }else if(type==1){
@@ -487,7 +490,7 @@ class Analytics extends Component {
                 { x: ChartColors.blue, y: 100 -_val, legend: 'Blue' },
               ]
               this.setState({
-                salesManArray:data,
+                territoryWiseArray:data,
               })
         }else if(type==2){
       Chart = TerritoryWiseOppoRes.QtyChart
@@ -514,7 +517,7 @@ class Analytics extends Component {
                 { x: ChartColors.blue, y: 100 -_val, legend: 'Blue' },
               ]
               this.setState({
-                salesManArray:data,
+                territoryWiseArray:data,
               })
               // shahil
     }
@@ -541,39 +544,38 @@ class Analytics extends Component {
 // ===================================================================
 // ===================================================================
 
-
-
   GetSourceWiseOpportunityDataForDashboardChart = () => {
-    const { StartDate, EndDate } = this.state
+    const { StartDate, EndDate,selectedIndex } = this.state
     ProgressDialog.show()
 
     AnalyticsApi.GetSourceWiseOpportunityDataForDashboardChart(
       {
-        fromDate: StartDate ? moment(StartDate).format("DD-MM-YYYY") : "",
-        toDate: EndDate ? moment(EndDate).format("DD-MM-YYYY") : ""
+        fromDate: !StartDate ? moment(StartDate).format("DD-MM-YYYY") : "",
+        toDate: !EndDate ? moment(EndDate).format("DD-MM-YYYY") : ""
       },
       res => {
-        // console.log('res4 ====>', res.AmountChart);
+         console.log('res4 ====>', res);
         ProgressDialog.hide()
         this.setState({
           SourceWiseOppoRes: res
+        },()=>{
+          this.calculateSourceWiseType(selectedIndex)
         })
 
       },
       error => {
         ProgressDialog.hide()
-
         Utils.showToast(error);
       },
     );
   };
 
 
-  calculateTerritoryManType=(type)=>{
-    const {TerritoryWiseOppoRes,ID} = this.state
+  calculateSourceWiseType=(type)=>{
+    const {SourceWiseOppoRes,ID} = this.state
     let Chart=""
     if(type==0){
-      Chart = TerritoryWiseOppoRes.AmountChart
+      Chart = SourceWiseOppoRes.AmountChart
       Chart = Chart.replace(/'/g, '"')
       Chart = `[${Chart}]`
       Chart  = JSON.parse(Chart)
@@ -586,7 +588,7 @@ class Analytics extends Component {
             total = total + value
             console.log("amountChart >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",amountChart)
 
-            if(amountChart?.ID==ID){
+            if(amountChart?.Name=="COLD CALLING"){
               unCategoriesValue= parseFloat(amountChart.Amount)
               console.log("unCategoriesValueunCategoriesValueunCategoriesValue",amountChart.Amount)
             }
@@ -599,11 +601,12 @@ class Analytics extends Component {
                 { x: ChartColors.blue, y: 100 -_val , legend: 'Blue' },
               ]
               this.setState({
-                salesManArray:data,
+                sourceWiseArray:data,
               })
 
     }else if(type==1){
-      Chart = TerritoryWiseOppoRes.CountChart
+
+      Chart = SourceWiseOppoRes.CountChart
       Chart = Chart.replace(/'/g, '"')
       Chart = `[${Chart}]`
       Chart  = JSON.parse(Chart)
@@ -615,7 +618,7 @@ class Analytics extends Component {
             const value = parseFloat(amountChart.OpportunityCount)
             total = total + value
 
-            if(amountChart?.ID==ID){
+            if(amountChart?.Name=="COLD CALLING"){
               unCategoriesValue= parseFloat(amountChart.OpportunityCount)
             }
             }
@@ -627,13 +630,13 @@ class Analytics extends Component {
                 { x: ChartColors.blue, y: 100 -_val, legend: 'Blue' },
               ]
               this.setState({
-                salesManArray:data,
+                sourceWiseArray:data,
               })
         }else if(type==2){
-      Chart = TerritoryWiseOppoRes.QtyChart
-      Chart = Chart.replace(/'/g, '"')
-      Chart = `[${Chart}]`
-      Chart  = JSON.parse(Chart)
+        Chart = SourceWiseOppoRes.QtyChart
+        Chart = Chart.replace(/'/g, '"')
+        Chart = `[${Chart}]`
+        Chart  = JSON.parse(Chart)
         let total = 0
          let unCategoriesValue =0
 
@@ -642,7 +645,8 @@ class Analytics extends Component {
             const value = parseFloat(amountChart.Quantity)
             total = total + value
 
-            if(amountChart?.ID==ID){
+           
+            if(amountChart?.Name=="COLD CALLING"){
               unCategoriesValue= parseFloat(amountChart.Quantity)
             }
             }
@@ -654,9 +658,8 @@ class Analytics extends Component {
                 { x: ChartColors.blue, y: 100 -_val, legend: 'Blue' },
               ]
               this.setState({
-                salesManArray:data,
+                sourceWiseArray:data,
               })
-              // shahil
     }
   }
 
@@ -664,12 +667,159 @@ class Analytics extends Component {
 // ===================================================================
 // ===================================================================
 // ===================================================================
-// ===============Source Chart Calculation=========================
+// ===============Source Chart Calculation============================
 // ===================================================================
 // ===================================================================
 // ===================================================================
 // ===================================================================
 
+
+
+
+
+// ===================================================================
+// ===================================================================
+// ===================================================================
+// ===================================================================
+// ===============Product Brandwise Calculation=======================
+// ===================================================================
+// ===================================================================
+// ===================================================================
+// ===================================================================
+
+
+GetProductBrandWiseOpportunityDataForDashboardChart = () => {
+  const { StartDate, EndDate,selectedIndex } = this.state
+  ProgressDialog.show()
+
+  AnalyticsApi.GetProductBrandWiseOpportunityDataForDashboardChart(
+    {
+      fromDate: !StartDate ? moment(StartDate).format("DD-MM-YYYY") : "",
+      toDate: !EndDate ? moment(EndDate).format("DD-MM-YYYY") : ""
+    },
+    res => {
+       console.log('res6 ====>', res);
+      ProgressDialog.hide()
+      this.setState({
+        ProductBrandOppoRes: res
+      },()=>{
+        this.calculateProductBrandWiseType(selectedIndex)
+      })
+
+    },
+    error => {
+      ProgressDialog.hide()
+
+      Utils.showToast(error);
+    },
+  );
+};
+
+
+
+
+calculateProductBrandWiseType=(type)=>{
+  const {ProductBrandOppoRes,ID} = this.state
+  let Chart=""
+  if(type==0){
+    Chart = ProductBrandOppoRes.AmountChart
+    Chart = Chart.replace(/'/g, '"')
+    Chart = `[${Chart}]`
+    Chart  = JSON.parse(Chart)
+      let total = 0
+       let unCategoriesValue =0
+
+        for (let index = 0; index < Chart.length; index++) {
+          const amountChart = Chart[index];
+          const value = parseFloat(amountChart.Amount)
+          total = total + value
+          console.log("amountChart >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",amountChart)
+
+          if(amountChart?.Name=="UNCATEGORISED"){
+            unCategoriesValue= parseFloat(amountChart.Amount)
+            console.log("unCategoriesValueunCategoriesValueunCategoriesValue",amountChart.Amount)
+          }
+          }
+            let _val = unCategoriesValue * 100 /total
+            console.log("_val_val_val_val_val",_val),
+            _val=Math.floor(_val)
+             let  data = [
+              { x: ChartColors.purple,y: _val, legend: 'Purple' },
+              { x: ChartColors.blue, y: 100 -_val , legend: 'Blue' },
+            ]
+            this.setState({
+              productBrandWiseArray:data,
+            })
+
+  }else if(type==1){
+
+    Chart = ProductBrandOppoRes.CountChart
+    Chart = Chart.replace(/'/g, '"')
+    Chart = `[${Chart}]`
+    Chart  = JSON.parse(Chart)
+      let total = 0
+       let unCategoriesValue =0
+
+        for (let index = 0; index < Chart.length; index++) {
+          const amountChart = Chart[index];
+          const value = parseFloat(amountChart.OpportunityCount)
+          total = total + value
+
+          if(amountChart?.Name=="UNCATEGORISED"){
+            unCategoriesValue= parseFloat(amountChart.OpportunityCount)
+          }
+          }
+
+            let _val = unCategoriesValue * 100 /total
+            _val=Math.floor(_val)
+             let  data = [
+              { x: ChartColors.purple,y: _val, legend: 'Purple' },
+              { x: ChartColors.blue, y: 100 -_val, legend: 'Blue' },
+            ]
+            this.setState({
+              productBrandWiseArray:data,
+            })
+      }else if(type==2){
+      Chart = ProductBrandOppoRes.QtyChart
+      Chart = Chart.replace(/'/g, '"')
+      Chart = `[${Chart}]`
+      Chart  = JSON.parse(Chart)
+      let total = 0
+       let unCategoriesValue =0
+
+        for (let index = 0; index < Chart.length; index++) {
+          const amountChart = Chart[index];
+          const value = parseFloat(amountChart.Quantity)
+          total = total + value
+
+         
+          if(amountChart?.Name=="UNCATEGORISED"){
+            unCategoriesValue= parseFloat(amountChart.Quantity)
+          }
+          }
+
+            let _val = unCategoriesValue * 100 /total
+            _val=Math.floor(_val)
+             let  data = [
+              { x: ChartColors.purple, y: _val, legend: 'Purple' },
+              { x: ChartColors.blue, y: 100 -_val, legend: 'Blue' },
+            ]
+            this.setState({
+              productBrandWiseArray:data,
+            })
+  }
+}
+
+
+// ===================================================================
+// ===================================================================
+// ===================================================================
+// ===================================================================
+// ===============Product Brandwise Calculation=======================
+// ===================================================================
+// ===================================================================
+// ===================================================================
+// ===================================================================
 
   GetSalesStageWiseOpportunityDataForDashboardChart = () => {
     const { StartDate, EndDate } = this.state
@@ -696,30 +846,6 @@ class Analytics extends Component {
     );
   };
 
-  GetProductBrandWiseOpportunityDataForDashboardChart = () => {
-    const { StartDate, EndDate } = this.state
-    ProgressDialog.show()
-
-    AnalyticsApi.GetProductBrandWiseOpportunityDataForDashboardChart(
-      {
-        fromDate: StartDate ? moment(StartDate).format("DD-MM-YYYY") : "",
-        toDate: EndDate ? moment(EndDate).format("DD-MM-YYYY") : ""
-      },
-      res => {
-        // console.log('res6 ====>', res.AmountChart);
-        ProgressDialog.hide()
-        this.setState({
-          ProductBrandOppoRes: res
-        })
-
-      },
-      error => {
-        ProgressDialog.hide()
-
-        Utils.showToast(error);
-      },
-    );
-  };
 
   GetOpportunityStageWiseOpportunityDataForDashboardChart = () => {
     const { StartDate, EndDate } = this.state
@@ -747,7 +873,11 @@ class Analytics extends Component {
   };
 
   render() {
-    const { StartDate, EndDate ,productCatArray,salesManArray} = this.state;
+    const { StartDate, EndDate ,
+      productCatArray,salesManArray,
+      territoryWiseArray,
+      productBrandWiseArray
+      ,sourceWiseArray} = this.state;
 
     return (
       <MainContainer
@@ -885,8 +1015,6 @@ class Analytics extends Component {
 
 
 
-
-
 {salesManArray && salesManArray.length!=0 ? (<Card style={{ margin: 15 }}>
               <Text
                 style={{
@@ -935,12 +1063,10 @@ class Analytics extends Component {
               <View style={{ height: 20 }} />
             </Card>)
 :null}
-      
 
 
-{/*  
-          {this.state.chartsData.map(cData => (
-            <Card style={{ margin: 15 }}>
+
+{territoryWiseArray && territoryWiseArray.length!=0 ? (<Card style={{ margin: 15 }}>
               <Text
                 style={{
                   fontWeight: '900',
@@ -950,18 +1076,19 @@ class Analytics extends Component {
                   marginTop: 15,
                 }}>
                 {' '}
-                {cData.title}{' '}
+               Territory
               </Text>
+
               <VictoryPie
-                colorScale={cData.data.map(d => d.x)}
+                colorScale={territoryWiseArray.map(d => d.x)}
                 innerRadius={windowWidth * 0.15}
                 animate={true}
                 width={windowWidth * 0.85}
                 height={windowWidth * 0.85}
                 labels={({ datum }) => ''}
-                data={cData.data}
+                data={territoryWiseArray||[]}
               />
-              {cData.data.map(d => (
+              {territoryWiseArray.map(d => (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -985,8 +1112,113 @@ class Analytics extends Component {
                 </View>
               ))}
               <View style={{ height: 20 }} />
-            </Card>
-          ))} */}
+            </Card>)
+:null}
+
+
+ {sourceWiseArray && sourceWiseArray.length!=0 ? (<Card style={{ margin: 15 }}>
+              <Text
+                style={{
+                  fontWeight: '900',
+                  color: '#1B2655',
+                  fontSize: 16,
+                  marginLeft: 15,
+                  marginTop: 15,
+                }}>
+                {' '}
+               Source
+              </Text>
+
+              <VictoryPie
+                colorScale={sourceWiseArray.map(d => d.x)}
+                innerRadius={windowWidth * 0.15}
+                animate={true}
+                width={windowWidth * 0.85}
+                height={windowWidth * 0.85}
+                labels={({ datum }) => ''}
+                data={sourceWiseArray||[]}
+              />
+              {sourceWiseArray.map(d => (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    margin: 10,
+                    marginLeft: 30,
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: d.x,
+                      width: 25,
+                      height: 25,
+                      borderRadius: 8,
+                    }}
+                  />
+                  <Text
+                    style={{ color: '#1B2655', fontSize: 16, marginLeft: 15 }}>
+                    {' '}
+                    {`${d.legend}: ${d.y}%`}{' '}
+                  </Text>
+                </View>
+              ))}
+              <View style={{ height: 20 }} />
+            </Card>)
+:null}     
+
+
+
+ {productBrandWiseArray && productBrandWiseArray.length!=0 ? (<Card style={{ margin: 15 }}>
+              <Text
+                style={{
+                  fontWeight: '900',
+                  color: '#1B2655',
+                  fontSize: 16,
+                  marginLeft: 15,
+                  marginTop: 15,
+                }}>
+                {' '}
+               Product Brand
+              </Text>
+
+              <VictoryPie
+                colorScale={productBrandWiseArray.map(d => d.x)}
+                innerRadius={windowWidth * 0.15}
+                animate={true}
+                width={windowWidth * 0.85}
+                height={windowWidth * 0.85}
+                labels={({ datum }) => ''}
+                data={productBrandWiseArray||[]}
+              />
+              {productBrandWiseArray.map(d => (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    margin: 10,
+                    marginLeft: 30,
+                    alignItems: 'center',
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: d.x,
+                      width: 25,
+                      height: 25,
+                      borderRadius: 8,
+                    }}
+                  />
+                  <Text
+                    style={{ color: '#1B2655', fontSize: 16, marginLeft: 15 }}>
+                    {' '}
+                    {`${d.legend}: ${d.y}%`}{' '}
+                  </Text>
+                </View>
+              ))}
+              <View style={{ height: 20 }} />
+            </Card>)
+:null}     
+
+
+
+
         </ScrollContainer>
       </MainContainer>
     );

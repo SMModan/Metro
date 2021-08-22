@@ -254,7 +254,7 @@ class AddTask extends Component {
     } = this.state;
     const isOwner = ActivityOwnerID == this.props.session.user.ID
 
-    console.log("this.props.taskContext.item.TaskStatus", this.props.taskContext.item.TaskStatus)
+    // console.log("this.props.taskContext.item.TaskStatus", this.props.taskContext.item.TaskStatus)
     return (
 
       loading ? <ProgressView /> : <ScrollContainer>

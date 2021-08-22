@@ -119,8 +119,7 @@ class AddAppointments extends Component {
       Utils.showToast("Please enter Subject")
 
     } else {
-
-
+      
       const params = {
         Location,
         IsFullDayEvent,

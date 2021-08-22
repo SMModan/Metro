@@ -20,7 +20,7 @@ export default function HomeTabs() {
   return (
     <Tab.Navigator
       shifting
-      initialRouteName="Dashboard"
+      initialRouteName="Analytics"
       tabBarOptions={{
         activeTintColor: Colors.primaryColor500,
         inactiveTintColor: Colors.blueGray500,

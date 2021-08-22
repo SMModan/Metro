@@ -197,7 +197,6 @@ class Home extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
   session: state.session
 });
 

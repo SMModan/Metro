@@ -27,6 +27,8 @@ export default class CustomDatePicker extends Component {
                     // Utils.showToast("Test")
                     // console.log("Print")
                     // console.log("this.props.list", this.props.list)
+                    if (this.props.disabled == true)
+                        return;
                     this.setState({
                         isDatePickerVisible: true
                     })

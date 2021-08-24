@@ -42,12 +42,13 @@ class AddAppointments extends Component {
     loading: false,
     AssignUserID: [],
     ActivityOwnerID: 0,
-    user: this.props.session.user
+    user: this.props.session.user,
+    AssignUserRemarks: []
   }
 
   componentDidMount = () => {
 
-    console.log("this.props.route.params?.item?.ID", this.props.route)
+    console.log("this.props.route.params?.item?.ID", this.state.user)
     if (this.props.route.params?.item?.ID)
       this.getAppointmentDetails()
   }

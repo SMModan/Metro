@@ -309,8 +309,17 @@ const TaskApi = {
               }
             }
             const dueDate = moment(Table1.DueDate)
+            let StartHr = 0
+            let StartMin = 0
+            if (Table1.DueDate) {
+              const date = Table1.DueDate.split("T")
+              const time = date[1].split(":")
+              StartHr = time[0]
+              StartMin = time[1]
+            }
+            console.log("Hr", StartHr, StartMin, dueDate.toDate().getTime())
             results = {
-              ...Table1, taskId: Table1.TaskNameID, StartDate: dueDate.toDate(), alertId: Table1.ReminderAlertID,
+              ...Table1, taskId: Table1.TaskNameID, StartHr, StartMin, StartDate: dueDate.toDate(), alertId: Table1.ReminderAlertID,
               ownerRemarks: Table1.Remarks, AssignUserName: users, attachments
             }
           }

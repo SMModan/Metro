@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { store } from '../../../App';
 import {
   GET_ALL_APPOINTMENT,
   GET_ALL_NOTIFICATION,
@@ -11,7 +12,7 @@ import apiCall from '../../../network/ApiService';
 
 const AppointmentApi = {
   getAllAppointment(params, onDone, onError) {
-    
+
     apiCall(
       GET_ALL_APPOINTMENT,
       params,
@@ -85,11 +86,42 @@ const AppointmentApi = {
 
       apiCall(GET_APPOINTMENT_ACTIVITY_BY_ID, { ID }, (res) => {
 
-        const { Table, Table2 } = res
+        const { Table, Table2, Table3 } = res
         let results = {}
+        const user = store.getState().session
         if (Table) {
           let users = []
           let usersIds = []
+          // const isOwner = Table.ActivityOwnerID == user.ID
+
+          let AssignUserRemarks = []
+          let AssigneeRemarks = ""
+          if (Table3) {
+            if (Array.isArray(Table3)) {
+
+              AssignUserRemarks = Table3.map((t) => {
+
+                if (t.UserId == user.ID) {
+                  AssigneeRemarks = t.Response
+                }
+                return ({
+                  id: t.UserId,
+                  name: t.UserName,
+                  response: t.Response
+                })
+              })
+            } else {
+              AssigneeRemarks = Table3.Response
+
+              AssignUserRemarks = [{
+                id: Table3.UserId,
+                name: Table3.UserName,
+                response: Table3.Response
+              }]
+            }
+          }
+
+
           if (Table2) {
             let { AssignUserName, AssignUserID } = Table2
             users = AssignUserName.split(",").map((item) => {
@@ -100,7 +132,7 @@ const AppointmentApi = {
             })
             usersIds = AssignUserID.toString().split(",")
           }
-          results = { ...Table, ActivityID: Table.ID, OwnerRemarks: Table.Remarks, AssignUserID: usersIds, AssignUserName: users, IsFullDayEvent: Table.IsAllDayEvent ? 1 : 0 }
+          results = { ...Table, ID: Table.ID, AssigneeRemarks, AssignUserRemarks, OwnerRemarks: Table.Remarks, AssignUserID: usersIds, AssignUserName: users, IsFullDayEvent: Table.IsAllDayEvent ? 1 : 0 }
         }
 
         // results = results.filter((t) => t.name.length > 0)

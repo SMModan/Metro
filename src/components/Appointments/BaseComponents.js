@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { View, Text } from 'react-native';
-import { Images, Colors, FontName } from '../../utils';
+import { View, Text, FlatList } from 'react-native';
+import { Images, Colors, FontName, FontSize } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import { Checkbox, ChipViewContainer, FloatingEditText, ViewWithTitle, DatePicker, CustomDatePicker, CustomPicker, ImageButton } from '../common';
 import { AppoinmentContext } from './AddAppointments';
@@ -67,6 +67,8 @@ export const AppointmentInfo = () => {
             <ChipViewContainer selectedChip={{ id: EntityID }} onSelect={(item) => {
                 onTextChanged("EntityID", item.id)
                 onTextChanged("EntityName", item.name)
+                onTextChanged("EntityFieldID", 0)
+
             }} title="Related to" chips={[{ id: 0, name: "General" }, ...session.GetRelatedTo]} />
             {EntityID == 0 ? <FloatingEditText onChangeText={(text) => onTextChanged("EntityFieldName", text)} value={EntityFieldName} label={'Related Name'} />
                 : RelatedList.length ? <CustomPicker list={RelatedList} selectedItem={{ id: EntityFieldID }} label={'Related Name'} onSelect={(item) => onTextChanged("EntityFieldID", item.id)} /> : null}
@@ -118,12 +120,34 @@ export const AppointmentInfo = () => {
 
 export const Remarks = () => {
 
-    const { OwnerRemarks, ActivityOwnerID, user, ActivityID, AssigneeRemarks, AssignUserID, onTextChanged, } = useContext(AppoinmentContext)
+    const { OwnerRemarks, ActivityOwnerID, user, ActivityID, AssignUserRemarks, AssigneeRemarks, AssignUserID, onTextChanged, } = useContext(AppoinmentContext)
     const isOwner = ActivityOwnerID == user.ID
+    console.log("ActivityID", ActivityID)
+    const isAssignedToMe = AssignUserID.find((item) => item == user.ID)
     return (
         <ViewWithTitle title={'Remarks'}>
             <FloatingEditText editable={ActivityID == 0 || isOwner} value={OwnerRemarks} onChangeText={(text) => onTextChanged("OwnerRemarks", text)} label={ActivityID == 0 || isOwner ? "Write here" : "Owner's Remark"} />
-            {!isOwner ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
+            {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
+            {isOwner && AssignUserRemarks.length ? <FlatList style={{ marginTop: 16 }} data={AssignUserRemarks}
+                ListHeaderComponent={() => (<View style={{ flexDirection: "row", alignItems: "center", }}>
+                    <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                        <Text style={{ color: Colors.black, fontSize: FontSize.fontSize16 }}>{"UserName"}</Text>
+                    </View>
+                    <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                        <Text style={{ color: Colors.black, fontSize: FontSize.fontSize16 }}>{"Remarks"}</Text>
+                    </View>
+                </View>)}
+                renderItem={({ item }) => (
+                    <View style={{ flexDirection: "row", alignItems: "center", }}>
+                        <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                            <Text style={{ color: Colors.blueGray900 }}>{item.name}</Text>
+                        </View>
+                        <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                            <Text numberOfLines={3} style={{ color: Colors.blueGray900 }}>{item.response}</Text>
+                        </View>
+                    </View>
+                )}
+            /> : null}
         </ViewWithTitle>
     )
 }

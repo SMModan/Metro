@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, View, Text, TouchableOpacity } from 'react-native'
 
-const ImageButton = ({ source, style, imageStyle, onPress, }) => {
+const ImageButton = ({ source, style, imageStyle, onPress, disabled }) => {
 
-    return (<TouchableOpacity disabled={onPress == undefined} onPress={onPress} style={[style]}>
+    return (<TouchableOpacity disabled={disabled || onPress == undefined} onPress={onPress} style={[style]}>
 
         <Image resizeMode="contain" style={{ ...styles.actionStyle, ...imageStyle }} source={source} />
 

@@ -42,6 +42,7 @@ class AddTask extends Component {
       ActivityID: 0,
       SetNextTimeHr: "",
       SetNextTimeMin: "",
+      user: this.props.session.user,
       loading: true
     };
   }
@@ -250,11 +251,13 @@ class AddTask extends Component {
       SetNextReminderDate,
       SetNextTimeHr,
       SetNextTimeMin,
-      loading
+      loading,
+      user
     } = this.state;
-    const isOwner = ActivityOwnerID == this.props.session.user.ID
+    const isOwner = ActivityID == 0 || ActivityOwnerID == this.props.session.user.ID
+    const isAssignedToMe = AssignUserName?.find((item) => item == user.ID)
 
-    console.log("this.props.taskContext.item.TaskStatus", this.props.taskContext.item.TaskStatus)
+    // console.log("this.props.taskContext.item.TaskStatus", this.props.taskContext.item.TaskStatus)
     return (
 
       loading ? <ProgressView /> : <ScrollContainer>
@@ -266,6 +269,7 @@ class AddTask extends Component {
               this.onTextChanged('taskId', item.id);
               this.onTextChanged('TaskName', item.name);
             }}
+            disabled={!isOwner}
             list={taskNameList}
             label={'Task Name'}
             rightIcon={Images.ic_down}
@@ -273,6 +277,8 @@ class AddTask extends Component {
 
           <ChipViewContainer
             selectedChip={{ id: EntityID }}
+            disabled={!isOwner}
+
             onSelect={item => {
               console.log('item', item);
               this.onTextChanged('EntityID', item.id);
@@ -283,6 +289,7 @@ class AddTask extends Component {
           />
           {EntityID == 0 ? (
             <FloatingEditText
+              disabled={!isOwner}
               onChangeText={text =>
                 this.onTextChanged('EntityFieldName', text)
               }
@@ -292,6 +299,7 @@ class AddTask extends Component {
           ) : RelatedList.length ? (
             <CustomPicker
               list={RelatedList}
+              disabled={!isOwner}
               selectedItem={{ id: EntityFieldID }}
               label={'Related Name'}
               onSelect={item => {
@@ -303,6 +311,7 @@ class AddTask extends Component {
 
           <CustomPicker
             selectedItem={{ id: PriorityID }}
+            disabled={!isOwner}
             onSelect={item => {
               this.onTextChanged('PriorityID', item.id);
               this.onTextChanged('PriorityName', item.name);
@@ -320,6 +329,7 @@ class AddTask extends Component {
               }}>
               <ImageButton
                 source={Images.ic_add_blue}
+                disabled={!isOwner}
                 onPress={() => {
                   SelectionView.show({
                     title: 'Assign to',
@@ -349,11 +359,12 @@ class AddTask extends Component {
                   {AssignUserName.map((item, index) => (
                     <Chip
                       key={index}
+                      disabled={!isOwner}
                       style={{ margin: 5, backgroundColor: Colors.blueGray200 }}
                       textStyle={{ fontSize: 13, color: Colors.black }}
-                      onClose={() => {
+                      onClose={isOwner ? () => {
                         this.onRemoveUser(index);
-                      }}
+                      } : undefined}
                       icon="account">
                       {item.name}
                     </Chip>
@@ -371,14 +382,17 @@ class AddTask extends Component {
         <ViewWithTitle title="Reminder">
 
           <View style={{ flexDirection: 'row', width: '100%', }}>
-            <CustomDatePicker selectedDate={StartDate} onDateChanged={(date) => {
-              this.onTextChanged("StartDate", date)
-            }} label={"Due Date"} containerStyle={{ flex: 1, }} />
-            <CustomPicker selectedItem={{ id: StartHr }}
+            <CustomDatePicker disabled={!isOwner}
+              selectedDate={StartDate} onDateChanged={(date) => {
+                this.onTextChanged("StartDate", date)
+              }} label={"Due Date"} containerStyle={{ flex: 1, }} />
+            <CustomPicker disabled={!isOwner}
+              selectedItem={{ id: StartHr }}
               onSelect={(item) => this.onTextChanged("StartHr", item.id)} list={hours} label={'HH'}
               inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />
             <CustomPicker selectedItem={{ id: StartMin }} onSelect={(item) => this.onTextChanged("StartMin", item.id)}
-              list={mins} label={'MM'} inputType="numeric" floaingStyle={{ width: 80 }} />
+              list={mins} disabled={!isOwner}
+              label={'MM'} inputType="numeric" floaingStyle={{ width: 80 }} />
           </View>
           {this.props.taskContext.item ? <View style={{ flexDirection: 'row', width: '100%', }}>
             <CustomDatePicker selectedDate={SetNextReminderDate} onDateChanged={(date) => {
@@ -392,6 +406,7 @@ class AddTask extends Component {
           </View> : null}
           <CustomPicker
             selectedItem={{ id: alertId }}
+            disabled={!isOwner}
             onSelect={item => {
               this.onTextChanged('alertId', item.id);
             }}
@@ -406,15 +421,15 @@ class AddTask extends Component {
             onChangeText={text =>
               this.onTextChanged('ownerRemarks', text)
             }
-            editable={!ActivityID || isOwner}
+            editable={isOwner}
             value={ownerRemarks}
             label={'Owner Remarks'}
           />
-          {!isOwner ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => this.onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
+          {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => this.onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
 
         </ViewWithTitle>
 
-        {!this.props.taskContext.item || this.props.taskContext.item.TaskStatus.toLowerCase() != 'completed' ? <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>
+        {!this.props.taskContext.item || this.props.taskContext.item.TaskStatus?.toLowerCase() != 'completed' ? <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>
           <Button title={strings.save} bordered style={{ width: 100, marginEnd: 8 }}
             onPress={() => {
               this.setState({

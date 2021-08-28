@@ -11,6 +11,7 @@ import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 import AppointmentApi from '../Api/AppointmentApi';
 import _ from "lodash"
 import { goBack, push } from '../../../navigation/Navigator';
+import ResponsivePixels from '../../../utils/ResponsivePixels';
 
 
 class Appointments extends Component {
@@ -76,25 +77,47 @@ class Appointments extends Component {
     })
   }
 
+
+
+  createdDateTime = (strDate)=>{
+    let date = ""
+    if(strDate){
+      const TStartSplit =  strDate.split('T');
+      const sTime =  TStartSplit[1]
+      const sDate =  TStartSplit[0]
+      const StartHr = sTime.substring(0,2)  
+      const StartMin = sTime.substring(3,5)  
+      date =`${sDate} ${StartHr}:${StartMin}`
+    }
+    return date
+  }
+
+  createdDate = (strDate)=>{
+    let date = ""
+    if(strDate){
+      const TStartSplit =  strDate.split('T');
+      const sDate =  TStartSplit[0]
+      date =`${sDate}`
+    }
+    return date
+  }
   renderCell = ({ index }) => {
     console.log(index);
     const item = this.state.listData[index];
-    console.log('item', item);
-    var date = new Date(item.CreatedDate);
-    date.toISOString().substring(0, 10);
-    let myDate = `${date.getDay()}-${date.getMonth() + 1
-      }-${date.getFullYear()} ${date.getHours()} : ${date.getMinutes()}`;
+    console.log('item.CreatedDate ======>', item.CreatedDate);
+    var date = item.CreatedDate
+   
     return (
-      <Card style={{ margin: 5 }} key={item.index} onPress={() => {
+      <Card style={{ margin: ResponsivePixels.size10}} key={item.index} onPress={() => {
         this.props.navigation.push('AddAppointments', { item })
       }}>
-        <View style={{ margin: 15 }}>
-          <Text style={{ fontSize: 12 }}>{item.date}</Text>
-          <Text style={{ fontSize: 18, fontFamily: FontName.medium, marginTop: 8 }}>{item.Subject}</Text>
+        <View style={{ margin: ResponsivePixels.size15}}>
+          <Text style={{ fontSize: 12 }}>{this.createdDate(date)}</Text>
+          <Text style={{ fontSize: 18, fontFamily: FontName.medium, marginTop:ResponsivePixels.size5 }}>{item.Subject}</Text>
           <Title style={{ fontSize: 13, fontFamily: FontName.regular }}> Created By {item.OwnerName}</Title>
 
-          <Text style={{ fontSize: 13, fontFamily: FontName.medium, marginTop: 8 }}>{item.Regarding}</Text>
-          <Text style={{ fontSize: 12, fontFamily: FontName.regular, color: Colors.darkGray, marginTop: 5 }}>{myDate}</Text>
+          <Text style={{ fontSize: 13, fontFamily: FontName.medium, marginTop:ResponsivePixels.size5 }}>{item.Regarding}</Text>
+          <Text style={{ fontSize: 12, fontFamily: FontName.medium, color: Colors.darkGray, marginTop: ResponsivePixels.size5 }}>{this.createdDateTime(date)}</Text>
         </View>
       </Card>
     );

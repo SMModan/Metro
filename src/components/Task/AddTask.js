@@ -48,7 +48,6 @@ class AddTask extends Component {
   }
 
   componentDidMount = () => {
-    console.log("this.props.taskContext.item", this.props.taskContext.item)
 
     this.getTaskDetails()
   }
@@ -62,8 +61,6 @@ class AddTask extends Component {
   // };
 
   onTextChanged = (key, value) => {
-    console.log('key', key, value);
-
     this.setState({
       [key]: value,
     });
@@ -109,7 +106,6 @@ class AddTask extends Component {
     const relatedTo = this.props.session.GetRelatedTo || [];
     const assignTo = this.props.session.GetUserForAssignActivity || [];
     const alertList = this.props.session.GetReminderAlert || [];
-    console.log('relatedTo', relatedTo);
 
     const mins = ["00", "15", "30", "45"].map((item, index) => {
       return { id: item, name: item.toString() }
@@ -121,6 +117,22 @@ class AddTask extends Component {
 
       return { id: value, name: value }
     })
+
+    if (this.props.taskContext.item) {
+      const {PriorityID} = this.state
+      for (let index = 0; index < priorityList.length; index++) {
+        const element = priorityList[index];
+        if(element.id === PriorityID){
+          this.setState({
+            PriorityName:element.name
+          },()=>{
+            console.log("Priority Name ====>   ",this.state.PriorityName)
+          })
+        }
+      }
+      console.log("<======= priorityList ===>",priorityList)
+    }
+   
     this.setState(
       {
         taskNameList,
@@ -133,16 +145,17 @@ class AddTask extends Component {
         loading: false
       },
       () => {
-        console.log('taskNametaskName', taskNameList);
+        // console.log('taskNametaskName', taskNameList);
       },
     );
   }
   getTaskDetails = async () => {
-    console.log("this.props.item", this.props.taskContext.item)
     if (this.props.taskContext.item) {
 
       const details = await TaskApi.getTaskDetails(this.props.taskContext.item?.TaskActivityID)
-      console.log("details", details)
+      console.log("<================================= details =====================================>", details)
+
+
       this.setState({
         ...details
       })
@@ -158,62 +171,59 @@ class AddTask extends Component {
 
   }
 
+
+
+
+
+
   handleSubmit = () => {
     // InsertOrUpdateTaskActivityVersion4{Token=7FEFC4F7-65A0-436D-A2CA-C7AE96FD15B3; MachineCode=ce4620df04b20dca; ConnectionString=Data Source=NEXUS;Initial Catalog=SKYWARD_SkywardTechnoSolutionsPvtLtd_20160702051609037;User Id=apex;Password=passw0rd!;; ActivityID=0; TaskNameID=2; TaskName=Phone; TaskStatusID=1; EntityID=13; EntityName=Customer; EntityFieldID=2710; EntityFieldName=(A.Y.A.Y GHARKUL PVT LTD.) TECHNO SHARES; OwnerRemarks=remarks; AssigneeRemarks=; AssignUserName=,talatizalak@gmail.com; PriorityID=3; PriorityName=High; DueDate=01-08-2021; DueTime=16:15; ReminderAlertID=8; GeneralActivityName=; CompletionDateTime=; SetNextReminderDate=; SetNextReminderTime=; CommandName=SaveAndComplete; }
+    const { taskId, TaskName, EntityID, TaskActivityID, AssigneeRemarks, EntityName, EntityFieldID, EntityFieldName, ownerRemarks,
+      AssignUserName, PriorityID, SetNextReminderDate, SetNextTimeHr, SetNextTimeMin, PriorityName, StartDate, StartHr, StartMin, 
+      alertId, CommandName,RelatedList } = this.state
+      let _RelatedName= ""
+      console.log("===>SetNextTimeHrSetNextTimeHr ===>",""+SetNextTimeHr)
+      console.log("===>SetNextTimeMinSetNextTimeMin ===>",""+SetNextTimeMin)
+      for (let index = 0; index < RelatedList.length; index++) {
+        const _related = RelatedList[index];
+        if(_related.id == EntityFieldID){
+          _RelatedName=_related.name
+        }
+      }
+      let _nextHrMin = ''
+      if(SetNextTimeHr && SetNextTimeMin){
+        _nextHrMin = `${SetNextTimeHr}:${SetNextTimeMin}`
+      }
 
-    const { taskId, TaskName, EntityID, ActivityID, AssigneeRemarks, EntityName, EntityFieldID, EntityFieldName, ownerRemarks,
-      AssignUserName, PriorityID, SetNextReminderDate, SetNextTimeHr, SetNextTimeMin, PriorityName, StartDate, StartHr, StartMin, alertId, CommandName } = this.state
-
-    const params = {
-      ActivityID: ActivityID,
-      TaskNameID: taskId || 0,
-      TaskName: TaskName || "",
-      TaskStatusID: 1,
-      EntityID: EntityID || 0,
-      EntityName: EntityName || '',
-      EntityFieldID: EntityFieldID || 0,
-      EntityFieldName: EntityFieldName || "",
-      OwnerRemarks: ownerRemarks || "",
-      AssigneeRemarks: AssigneeRemarks || "",
-      AssignUserName: AssignUserName.map((item) => item.name).join(","),
-      PriorityID: PriorityID || 0,
-      PriorityName: PriorityName || "",
-      DueDate: moment(StartDate).format("DD-MM-YYYY"),
-      DueTime: `${StartHr}:${StartMin}`,
-      ReminderAlertID: alertId || 0,
-      GeneralActivityName: "",
-      CompletionDateTime: "",
-      SetNextReminderDate: SetNextReminderDate ? moment(SetNextReminderDate).format("DD-MM-YYYY") : "",
-      SetNextReminderTime: SetNextTimeHr && SetNextTimeMin ? `${SetNextTimeHr}:${SetNextTimeMin}` : "",
-      CommandName: CommandName || "Save"
-    }
+    let params={ActivityID:TaskActivityID,
+       TaskNameID:taskId,
+        TaskName:TaskName,
+         TaskStatusID:1,
+          EntityID:EntityID,
+           EntityName:EntityName,
+            EntityFieldID:EntityFieldID,
+             EntityFieldName:_RelatedName,
+              OwnerRemarks:ownerRemarks,
+               AssigneeRemarks:AssigneeRemarks,
+                AssignUserName:"megha@skywardcloud.com",
+                 PriorityID:PriorityID,
+                  PriorityName:PriorityName,
+                   DueDate:moment(StartDate).format("DD-MM-YYYY"),
+                    DueTime:`${StartHr}:${StartMin}`,
+                    ReminderAlertID: alertId||0 ,
+                      GeneralActivityName:"",
+                       CompletionDateTime:"",
+                        SetNextReminderDate:moment(SetNextReminderDate).format("DD-MM-YYYY"),
+                         SetNextReminderTime:_nextHrMin||"",
+                          CommandName:CommandName || "Save" 
+                        }
     ProgressDialog.show()
     console.log("params======", params)
     TaskApi.addTask(params, (res) => {
       ProgressDialog.hide()
+      Utils.showToast("Task Updated Successfully.")
       if (res.ID && !this.props.taskContext.item) {
         push("TaskAttachment", { id: res.ID, editMode: false })
-
-        // AlertDialog.show({
-        //     title: "Attachment",
-        //     message: "Do you want to add attachment",
-        //     positiveButton: {
-        //         onPress: () => {
-        //             AlertDialog.hide()
-        //             console.log("============================== res ==================================== ",res.ID)
-        //          //  navigate("TaskAttachment", { id: res.ID, editMode: false })
-        //          this.props.navigation.replace("TaskAttachment", { id: res.ID, editMode: false })
-
-        //         },
-        //         title: "Yes"
-        //     },
-        //     negativeButton: {
-        //         onPress: () => {
-        //             AlertDialog.hide()
-        //         },
-        //         title: "No"
-        //     }
-        // })
       }
       else
         goBack()
@@ -255,7 +265,7 @@ class AddTask extends Component {
       user
     } = this.state;
     const isOwner = ActivityID == 0 || ActivityOwnerID == this.props.session.user.ID
-    const isAssignedToMe = AssignUserName?.find((item) => item == user.ID)
+    const isAssignedToMe = AssignUserName?.find((item) => item.id == user.ID)
 
     // console.log("this.props.taskContext.item.TaskStatus", this.props.taskContext.item.TaskStatus)
     return (
@@ -280,7 +290,7 @@ class AddTask extends Component {
             disabled={!isOwner}
 
             onSelect={item => {
-              console.log('item', item);
+              // console.log('item', item);
               this.onTextChanged('EntityID', item.id);
               this.onTextChanged('EntityName', item.name);
             }}
@@ -425,7 +435,7 @@ class AddTask extends Component {
             value={ownerRemarks}
             label={'Owner Remarks'}
           />
-          {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => this.onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
+          {/* {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => this.onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null} */}
 
         </ViewWithTitle>
 

@@ -6,7 +6,11 @@ import {
   ADD_TASK,
   DELETE_TASK_ATTACHMENT,
   GET_TASK_BY_ACTIVITY_ID,
-  IMAGE_BASE_URL
+  IMAGE_BASE_URL,
+  GETMULTIPLEREMARKS,
+  SENDREMARKS,
+  DELETEREMARKS,
+  UPDATETASKSTATUS
 } from '../../../network/ApiConstants';
 import { store } from "../../../App"
 import apiCall, { METHOD } from "../../../network/ApiService"
@@ -15,7 +19,68 @@ import moment from 'moment';
 
 
 const TaskApi = {
-  getAllTaskList(params, onDone, onError) {
+  updateTaskStatus(params, onDone, onError) {
+    apiCall(
+      UPDATETASKSTATUS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },deleteRemarks(params, onDone, onError) {
+    apiCall(
+      DELETEREMARKS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },
+  sendRemarks(params, onDone, onError) {
+    apiCall(
+      SENDREMARKS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  }, getAllRemarsk(params, onDone, onError) {
+    apiCall(
+      GETMULTIPLEREMARKS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  }, getAllTaskList(params, onDone, onError) {
     apiCall(
       GET_ALL_TASKLIST,
       params,
@@ -30,7 +95,9 @@ const TaskApi = {
         }
       },
     );
-  }, addTask(params, onDone, onError) {
+  }, 
+  
+  addTask(params, onDone, onError) {
     apiCall(
       ADD_TASK,
       params,

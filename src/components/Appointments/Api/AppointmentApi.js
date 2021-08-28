@@ -180,15 +180,14 @@ const AppointmentApi = {
           EndHr = eTime.substring(0,2)  
           EndMin = eTime.substring(3,5)  
         }
-        
 
 
         const endMoment = moment(EndTime).local()
         const startMoment = moment(StartTime).local()
-          const startDate = startMoment.toDate()
+        const startDate = startMoment.toDate()
         const endDate = endMoment.toDate()
 
-        
+
         resolve({ StartDate: startDate, EndDate: endDate, StartHr, EndHr, StartMin, EndMin })
       }, (error) => {
         resolve([])

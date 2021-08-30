@@ -270,12 +270,14 @@ class TaskList extends Component {
 
   getAllTaskList = () => {
     const { searchQuery, status,selectedIndex } = this.state
+    console.log("selectedIndexselectedIndex ===========>",selectedIndex)
+    console.log("statusstatusstatusstatus ===========>",status)
     ProgressDialog.show()
     const params = {
       PageIndex: this.state.page,
       PageSize: 10,
       Filter: searchQuery || "",
-      TaskStatusID: selectedIndex,
+      TaskStatusID: status,
     };
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore,
@@ -372,7 +374,7 @@ class TaskList extends Component {
             <ScrollView
               horizontal={true}
               showsHorizontalScrollIndicator={false}>
-              {[{ name: "All", id: 0, }, { name: "Open", id: 1 }, { name: "In Progress", id: 3 }, { name: "Completed", id: 2 }].map(
+              {[{ name: "All", id: 0, }, { name: "Open", id: 1 }, { name: "In Progress", id: 3 }, { name: "Completed", id: 2}].map(
                 (item, index) => (
                   <Chip
                     key={index}
@@ -391,7 +393,7 @@ class TaskList extends Component {
                           : Colors.black,
                     }}
                     onPress={() => {
-                      this.setState({ selectedIndex: index, status: item.id, refreshing: true }, () => this.getAllTaskList());
+                      this.setState({ selectedIndex: index, status: item.id }, () => this.getAllTaskList());
                     }}>
                     {item.name}
                   </Chip>

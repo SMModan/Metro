@@ -2,6 +2,7 @@ import _ from "lodash";
 import moment from 'moment';
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
+import { FlatList } from "react-native-gesture-handler";
 import { Chip } from 'react-native-paper';
 import { strings } from '../../language/Language';
 import { goBack, push } from '../../navigation/Navigator';
@@ -153,7 +154,8 @@ class AddTask extends Component {
     if (this.props.taskContext.item) {
 
       const details = await TaskApi.getTaskDetails(this.props.taskContext.item?.TaskActivityID)
-      console.log("<================================= details =====================================>", details)
+      
+      console.log("<================================= details =====================================>", details._assigneeDetails)
 
 
       this.setState({
@@ -262,7 +264,8 @@ class AddTask extends Component {
       SetNextTimeHr,
       SetNextTimeMin,
       loading,
-      user
+      user,
+      _assigneeDetails
     } = this.state;
     const isOwner = ActivityID == 0 || ActivityOwnerID == this.props.session.user.ID
     const isAssignedToMe = AssignUserName?.find((item) => item.id == user.ID)
@@ -439,6 +442,38 @@ class AddTask extends Component {
 
         </ViewWithTitle>
 
+      
+
+        {isOwner && _assigneeDetails.length ?  <FlatList style={{ marginTop: ResponsivePixels.size10 }} data={_assigneeDetails}
+                ListHeaderComponent={() => (<View style={{ flexDirection: "row", alignItems: "center", }}>
+                    <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                        <Text style={{ color: Colors.black, fontSize: FontSize.fontSize16 }}>{"UserName"}</Text>
+                    </View>
+                    <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                        <Text style={{ color: Colors.black, fontSize: FontSize.fontSize16 }}>{"Completion Date"}</Text>
+                    </View>
+                </View>)}
+                renderItem={({ item }) => (
+                    <View style={{ flexDirection: "row", alignItems: "center", }}>
+                        <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                            <Text style={{ color: Colors.blueGray900 }}>{item.userName}</Text>
+                        </View>
+                        <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
+                            <Text numberOfLines={3} style={{ color: Colors.blueGray900 }}>{item.formatedCompletionDate?item.formatedCompletionDate:"12-3-2123"}</Text>
+                        </View>
+                       
+                    </View>
+                )}
+            /> 
+            : null}
+
+
+     
+
+
+
+
+
         {!this.props.taskContext.item || this.props.taskContext.item.TaskStatus?.toLowerCase() != 'completed' ? <View style={{ flexDirection: "row", margin: ResponsivePixels.size16, alignItems: "center", justifyContent: "space-evenly" }}>
           <Button title={strings.save} bordered style={{ width: 100, marginEnd: 8 }}
             onPress={() => {
@@ -456,6 +491,9 @@ class AddTask extends Component {
             })
           }} />
         </View> : null}
+
+
+
       </ScrollContainer>
     );
   }

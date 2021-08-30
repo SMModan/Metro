@@ -238,7 +238,7 @@ class AddHelpDesk extends Component {
       console.log("uploadedFile", uploadedFile)
       const params = {
         CustomerID, ContactID: ContactID.id, ProductCategoryID, ProductID, ProductRemarks, ProblemDescription,
-        SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID, TypeOfCallID,
+        SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID: ProductSerialNoDetailID || 0, TypeOfCallID,
         SerialNo, StatusID,
         AssignUserDetails: assignUser || "",
         CurrencyID, PlanVisitDate: Utils.formatDate(PlanVisitDate, "DD-MM-YYYY"),
@@ -303,6 +303,7 @@ class AddHelpDesk extends Component {
   verifyHelpDesk = () => {
     const { CustomerID, ContactID, ProductCategoryID, ProblemDescription, solutions } = this.state
 
+    // console.log("solutions", solutions)
     if (Utils.isEmpty(CustomerID)) {
       Utils.showToast("Please select customer")
       return false
@@ -322,6 +323,17 @@ class AddHelpDesk extends Component {
       Utils.showToast("Please add atleast one solution")
       return false
     }
+    const AssignUserDetails = this.state.AssignUserDetails
+    for (let index = 0; index < AssignUserDetails.length; index++) {
+      const element = AssignUserDetails[index];
+
+      if (element.Priority == 3 && Utils.isEmpty(element.OnHoldReason)) {
+        Utils.showDangerToast(`Please enter on hold reason for ${element.name}`)
+        this.setState({ selectedIndex: index })
+        return false
+      }
+    }
+
 
     return true
 
@@ -379,15 +391,15 @@ class AddHelpDesk extends Component {
         DigiSignFilePath: finalSignature?.FilePath || p.DigiSignFilePath || "",
         DigiSignContentType: finalSignature?.FileContentType || p.DigiSignContentType || "",
         DigiSignRemarks: finalSignature?.FileName ? ratingRemarks : p.DigiSignRemarks || "",
-        DigiSignRating: finalSignature?.FileName ? rating : p.DigiSignRating || 0
-
+        DigiSignRating: finalSignature?.FileName ? rating : p.DigiSignRating || 0,
       }
     })
 
     const params = {
       helpdeskID: this.item.ID,
       CustomerID, ContactID: ContactID.id, ProductCategoryID, ProductID: ProductID || 0, ProductRemarks, ProblemDescription,
-      SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID, TypeOfCallID,
+      SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID: ProductSerialNoDetailID || 0
+      , TypeOfCallID,
       SerialNo, StatusID, OnHoldReason: "",
       AssignUserDetails: JSON.stringify(assignUser) || "", HelpDeskProductDetailID: 0,
       CurrencyID, PlanVisitDate: Utils.formatDate(PlanVisitDate, "DD-MM-YYYY"),
@@ -447,6 +459,7 @@ class AddHelpDesk extends Component {
             initialRouteName="Issue"
             backBehavior="initialRoute"
             keyboardDismissMode="auto"
+            lazy
             tabBarOptions={{
               activeTintColor: 'white',
               labelStyle: { textTransform: 'none', fontSize: 15, fontFamily: FontName.regular, },

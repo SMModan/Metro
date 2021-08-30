@@ -42,6 +42,10 @@ export default class App extends Component {
       this.notif.localNotif(body, title)
       // Alert.alert(title, body);
     }
+    else if (notif.userInteraction) {
+      navigate("NotificationList")
+
+    }
   }
 
   componentDidMount() {

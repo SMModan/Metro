@@ -1,6 +1,7 @@
 import PushNotification from 'react-native-push-notification';
 import { Colors } from '.';
 import messaging from '@react-native-firebase/messaging';
+import { navigate } from '../navigation/Navigator';
 
 export default class NotifService {
     constructor(onRegister, onNotification) {
@@ -23,6 +24,11 @@ export default class NotifService {
         this.bgHandler = messaging().onTokenRefresh(async token => {
             // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
             onRegister({ token })
+        })
+        this.bgHandler = messaging().onNotificationOpenedApp(async token => {
+            // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+
+            navigate("NotificationList")
         })
 
         // // Clear badge number at start

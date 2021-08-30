@@ -31,8 +31,9 @@ export const EventInfo = () => {
         <ViewWithTitle title="Event Information">
             <FloatingEditText value={Location} onChangeText={(text) => onTextChanged("Location", text)} label={'Location'} />
             <View style={{ flexDirection: 'row', width: '100%', }}>
-                <CustomDatePicker selectedDate={StartDate} onDateChanged={(date) => {
-
+                <CustomDatePicker selectedDate={StartDate} 
+                minimumDate={StartDate || new Date()}
+                onDateChanged={(date) => {
                     onTextChanged("StartDate", date)
                 }} label={"Start Date"} containerStyle={{ flex: 1, }} />
                 <CustomPicker selectedItem={{ id: StartHr }} onSelect={(item) => onTextChanged("StartHr", item.id)} list={hours} label={'HH'} inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />
@@ -40,7 +41,6 @@ export const EventInfo = () => {
             </View>
             {!endDateEnable ? <Text onPress={() => setEndDateEnable(true)} style={{ fontSize: 14, fontFamily: FontName.regular, color: Colors.blue, marginTop: 15, marginBottom: 15 }}> + Add End Date</Text> : <View style={{ flexDirection: 'row', width: '100%', marginBottom: ResponsivePixels.size16 }}>
                 <CustomDatePicker minimumDate={StartDate || new Date()} selectedDate={EndDate} onDateChanged={(date) => {
-
                     onTextChanged("EndDate", date)
                 }} label={"End Date"} containerStyle={{ flex: 1, }} />
                 <CustomPicker selectedItem={{ id: EndHr }} onSelect={(item) => onTextChanged("EndHr", item.id)} list={hours} label={'HH'} inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />

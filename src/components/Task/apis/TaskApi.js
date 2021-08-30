@@ -6,7 +6,11 @@ import {
   ADD_TASK,
   DELETE_TASK_ATTACHMENT,
   GET_TASK_BY_ACTIVITY_ID,
-  IMAGE_BASE_URL
+  IMAGE_BASE_URL,
+  GETMULTIPLEREMARKS,
+  SENDREMARKS,
+  DELETEREMARKS,
+  UPDATETASKSTATUS
 } from '../../../network/ApiConstants';
 import { store } from "../../../App"
 import apiCall, { METHOD } from "../../../network/ApiService"
@@ -15,7 +19,68 @@ import moment from 'moment';
 
 
 const TaskApi = {
-  getAllTaskList(params, onDone, onError) {
+  updateTaskStatus(params, onDone, onError) {
+    apiCall(
+      UPDATETASKSTATUS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },deleteRemarks(params, onDone, onError) {
+    apiCall(
+      DELETEREMARKS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },
+  sendRemarks(params, onDone, onError) {
+    apiCall(
+      SENDREMARKS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  }, getAllRemarsk(params, onDone, onError) {
+    apiCall(
+      GETMULTIPLEREMARKS,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  }, getAllTaskList(params, onDone, onError) {
     apiCall(
       GET_ALL_TASKLIST,
       params,
@@ -30,7 +95,9 @@ const TaskApi = {
         }
       },
     );
-  }, addTask(params, onDone, onError) {
+  }, 
+  
+  addTask(params, onDone, onError) {
     apiCall(
       ADD_TASK,
       params,
@@ -265,13 +332,15 @@ const TaskApi = {
         GET_TASK_BY_ACTIVITY_ID,
         { ID },
         res => {
-          const { Table1, Table3, Table6 } = res;
+          const { Table1, Table3, Table6,Table5 } = res;
+          let _assigneeDetails = []
+
           let results = {};
           if (Table1) {
             let users = []
             let attachments = []
             if (Table3) {
-
+                console.log("Table3 ===>>>>>",Table3)
               if (Array.isArray(Table3)) {
                 users = Table3.map(t => ({
                   id: t.AssignUserID,
@@ -286,6 +355,32 @@ const TaskApi = {
                 ];
               }
             }
+
+            if (Table5) {
+                if (Array.isArray(Table5)) {
+                  _assigneeDetails = Table5.map(t => ({
+                    id: t.ID,
+                    taskStatusId: t.TaskStatusID,
+                    userId: t.UserID,
+                    userName: t.UserName,
+                    TaskRemarks: t.TaskRemarks,
+                    formatedCompletionDate: t.FormatedCompletionDate,
+                  }));
+                } else {
+                  _assigneeDetails = [
+                    {
+                      id: Table5.ID,
+                      taskStatusId: Table5.TaskStatusID,
+                      userId: Table5.UserID,
+                      userName: Table5.UserName,
+                      TaskRemarks: Table5.TaskRemarks,
+                      formatedCompletionDate: Table5.FormatedCompletionDate,
+                    },
+                  ];
+                }
+              }
+
+
             if (Table6) {
 
               if (Array.isArray(Table6)) {
@@ -320,7 +415,7 @@ const TaskApi = {
             console.log("Hr", StartHr, StartMin, dueDate.toDate().getTime())
             results = {
               ...Table1, taskId: Table1.TaskNameID, StartHr, StartMin, StartDate: dueDate.toDate(), alertId: Table1.ReminderAlertID,
-              ownerRemarks: Table1.Remarks, AssignUserName: users, attachments
+              ownerRemarks: Table1.Remarks, AssignUserName: users, attachments,_assigneeDetails
             }
           }
           // results = results.filter((t) => t.name.length > 0)

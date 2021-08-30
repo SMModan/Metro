@@ -30,6 +30,11 @@ export const INSERT_OR_UPDATE_CUSTOMER_VERSION1 = "InsertOrUpdateCustomerVersion
 // TaskList Api end points
 
 export const GET_ALL_TASKLIST = "GetAllTaskActivityVersion1"
+export const GETMULTIPLEREMARKS = "GetTaskActivityMultipleRemarksByTaskActivityID"
+export const SENDREMARKS = "InsertTaskActivityMultipleRemarks"
+export const DELETEREMARKS = "DeleteTaskActivityMultipleRemarks"
+export const UPDATETASKSTATUS = "UpdateTaskStatusVersion1"
+
 export const ADD_TASK = "InsertOrUpdateTaskActivityVersion4"
 export const INSERT_TASK_ATTACHMENT = "InsertTaskAttachment"
 export const UPDATE_TASK_ATTACHMENT = "UpdateTaskAttachment"

@@ -161,17 +161,33 @@ const AppointmentApi = {
         // results = results.filter((t) => t.name.length > 0)
 
         // console.log("results", results)
+        let StartHr ="00"
+        let StartMin ="00"
 
-        const startMoment = moment(StartTime).local()
+        let EndHr ="00"
+        let EndMin ="00"
+
+        if(StartTime){
+          const TStartSplit =  StartTime.split('T');
+          const sTime =  TStartSplit[1]
+           StartHr = sTime.substring(0,2)  
+           StartMin = sTime.substring(3,5)  
+        }
+
+        if(EndTime){
+          const TEndSplit =  EndTime.split('T');
+          const eTime =  TEndSplit[1]
+          EndHr = eTime.substring(0,2)  
+          EndMin = eTime.substring(3,5)  
+        }
+
+
         const endMoment = moment(EndTime).local()
-
+        const startMoment = moment(StartTime).local()
         const startDate = startMoment.toDate()
         const endDate = endMoment.toDate()
-        const StartHr = startMoment.format("HH")
-        const EndHr = endMoment.format("HH")
-        const StartMin = startMoment.format("mm")
-        const EndMin = endMoment.format("mm")
-        console.log("startMoment", startMoment.get("hours"), startMoment.get("minute"))
+
+
         resolve({ StartDate: startDate, EndDate: endDate, StartHr, EndHr, StartMin, EndMin })
       }, (error) => {
         resolve([])

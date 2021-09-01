@@ -79,7 +79,7 @@ export default () => {
           <Stack.Screen component={QuotationList} name="Quotation" />
           <Stack.Screen component={QuotationView} name="QuotationView" />
           <Stack.Screen component={MainAddTask} name="MainAddTask" />
-          <Stack.Screen component={NotificationList} name="Notifications" />
+          {/* <Stack.Screen component={NotificationList} name="Notifications" /> */}
           <Stack.Screen component={AddNewTask} name="AddNewTask" />
           <Stack.Screen component={AddRemarks} name="AddRemarks" />
         </Stack.Navigator>

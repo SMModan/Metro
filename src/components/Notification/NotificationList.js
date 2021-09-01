@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {FlatList, Text, View, Image} from 'react-native';
-import {Button, Card, Title} from 'react-native-paper';
-import {connect} from 'react-redux';
-import {Colors, Images} from '../../utils';
-import {MainContainer} from '../common';
+import React, { Component } from 'react';
+import { FlatList, Text, View, Image } from 'react-native';
+import { Button, Card, Title } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { Colors, Images } from '../../utils';
+import { MainContainer, MyFlatList } from '../common';
 import styles from './styles/NotificationStyle';
 import NotificationApi from './Api/NotificationApi';
 import ResponsivePixels from '../../utils/ResponsivePixels';
@@ -14,22 +14,22 @@ class NotificationList extends Component {
     selectedIndex: 0,
     refreshing: false,
     loading: true,
+    loadMore: false,
     listData: [],
   };
 
-  renderCell = ({index}) => {
+  renderCell = ({ index }) => {
     console.log(index);
     const item = this.state.listData[index];
 
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
 
-    let myDate = `${date.getDate()}-${
-      date.getMonth() + 1
-    }-${date.getFullYear()}`;
+    let myDate = `${date.getDate()}-${date.getMonth() + 1
+      }-${date.getFullYear()}`;
     return (
-      <Card style={{margin: 5}} key={item.index} onPress={() => {}}>
-        <View style={{margin: 15, flexDirection: 'row'}}>
+      <Card style={{ margin: 5 }} key={item.index} onPress={() => { }}>
+        <View style={{ margin: 15, flexDirection: 'row' }}>
           {/* <View style={{width: '20%'}}>
             <View
               style={{
@@ -45,9 +45,9 @@ class NotificationList extends Component {
           </View> */}
 
           <View
-            style={{flexDirection: 'column', width: '100%', color: '#485780'}}>
-            <Text style={{fontSize: 12,fontWeight: "bold",marginBottom:ResponsivePixels.size10}}>{myDate}</Text>
-            <Text style={{fontSize: 15, color: '#1B2655'}}>
+            style={{ flexDirection: 'column', width: '100%', color: '#485780' }}>
+            <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: ResponsivePixels.size10 }}>{myDate}</Text>
+            <Text style={{ fontSize: 15, color: '#1B2655' }}>
               {item.Message}
             </Text>
           </View>
@@ -67,7 +67,7 @@ class NotificationList extends Component {
     NotificationApi.getAllNotificaiton(
       {},
       res => {
-        const {Table} = res;
+        const { Table } = res;
         console.log('Table', Table);
         if (Table) {
           this.setState({
@@ -86,7 +86,7 @@ class NotificationList extends Component {
   };
 
   render() {
-    const {listData, refreshing, loading} = this.state;
+    const { listData, refreshing, loading } = this.state;
 
     return (
       <MainContainer
@@ -100,11 +100,11 @@ class NotificationList extends Component {
           light: true,
         }}>
         <View style={styles.MainList}>
-          {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
-          <FlatList
+          {/* {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />} */}
+          <MyFlatList
             data={listData || []}
             renderItem={item => this.renderCell(item)}
-            style={{flex: 1, margin: 10}}
+            style={{ flex: 1, margin: 10 }}
             refreshing={refreshing}
             loading={loading}
             onRefresh={() => {
@@ -124,7 +124,7 @@ class NotificationList extends Component {
             showsHorizontalScrollIndicator={false}
             keyExtractor={(item, index) => 'key' + index}
             footerComponent={() => {
-              return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
+              return (this.state.loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
             }}
           />
         </View>

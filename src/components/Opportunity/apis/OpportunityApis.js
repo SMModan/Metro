@@ -1,6 +1,6 @@
 import axios from "axios"
 import { store } from "../../../App"
-import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_ATTACHMENT, GET_OPPORTUNITY_BY_ID, GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_BY_ID, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID, GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY, GET_USERS_BY_TERRITORY_ID_FOR_ASSIGN_OPPORTUNITY, IMAGE_BASE_URL, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_CUSTOMER_VERSION1, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
+import { DELETE_OPPORTUNITY_ATTACHMENT, GET_ALL_OPPORTUNITIES, GET_COMPANY_BY_USERNAME, GET_CONATACTS_BY_CUSTOMER_ID, GET_CUSTOMER, GET_OPPORTUNITY_ACTIVITY_BY_ID, GET_OPPORTUNITY_ATTACHMENT, GET_OPPORTUNITY_BY_ID, GET_PRICE_BOOK_LEVEL_BY_CURRENCY_ID, GET_PRODUCTS_FOR_OPP, GET_PRODUCT_BY_ID, GET_PRODUCT_CATEGORIES, GET_PRODUCT_GROUPS, GET_PRODUCT_RATE_BY_CURRENCY_ID_LEVEL_ID, GET_TERRITORY_FOR_ASSIGN_OPPORTUNITY, GET_USERS_BY_TERRITORY_ID_FOR_ASSIGN_OPPORTUNITY, IMAGE_BASE_URL, INSERT_OPPORTUNITY_ATTACHMENT, INSERT_OR_UPDATE_CUSTOMER_VERSION1, INSERT_OR_UPDATE_OPPORTUNITY, UPDATE_OPPORTUNITY_ATTACHMENT, USER_AUTHENTICATION } from "../../../network/ApiConstants"
 import apiCall, { METHOD } from "../../../network/ApiService"
 
 const opportunityApi = {
@@ -27,6 +27,34 @@ const opportunityApi = {
             if (onDone) {
                 onDone(res)
             }
+        }, (error) => {
+            if (onError) {
+                onError(error)
+            }
+        })
+    },
+    getOpportunityActivityByID(OpportunityID, onDone, onError) {
+
+        apiCall(GET_OPPORTUNITY_ACTIVITY_BY_ID, { OpportunityID }, (res) => {
+
+
+
+            if (onDone) {
+                const { Table } = res
+                let results = []
+                if (Table) {
+                    if (Array.isArray(Table)) {
+
+                        results = Table
+                    } else {
+                        results = [Table]
+                    }
+                }
+
+                console.log("results", results)
+                onDone(results)
+            }
+
         }, (error) => {
             if (onError) {
                 onError(error)

@@ -110,19 +110,39 @@ const HelpDeskApi = {
         if (Table2) {
           if (Array.isArray(Table2)) {
 
-            solutions = Table2.map((t) => ({
-              id: t.ID,
-              HelpDeskID: t.HelpDeskID,
-              SolutionDate: moment(t.SolutionDate).toDate(),
-              Actiontaken: t.ActionTaken,
-              SolutionUserId: t.UserID,
-              ExternalSolution: t.ExternalSolution,
-              TimetakenHr: t.TimeTaken.toString().split(".")[0],
-              TimetakenMin: t.TimeTaken.toString().split(".")[1],
-              RowStatus: "modify"
-
-            }))
+            solutions = Table2.map((t) => {
+              let StartHr = ""
+              let StartMin = ""
+              if (t.SolutionDate) {
+                const date = t.SolutionDate.split("T")
+                const time = date[1].split(":")
+                StartHr = time[0]
+                StartMin = time[1]
+              }
+              return {
+                id: t.ID,
+                HelpDeskID: t.HelpDeskID,
+                SolutionDate: moment(t.SolutionDate).toDate(),
+                Actiontaken: t.ActionTaken,
+                SolutionUserId: t.UserID,
+                ExternalSolution: t.ExternalSolution,
+                TimetakenHr: t.TimeTaken.toString().split(".")[0],
+                TimetakenMin: t.TimeTaken.toString().split(".")[1],
+                RowStatus: "modify",
+                SolutionMin: StartMin,
+                SolutionHr: StartHr,
+              }
+            })
           } else {
+
+            let StartHr = ""
+            let StartMin = ""
+            if (Table2.SolutionDate) {
+              const date = Table2.SolutionDate.split("T")
+              const time = date[1].split(":")
+              StartHr = time[0]
+              StartMin = time[1]
+            }
             solutions = [{
               id: Table2.ID,
               HelpDeskID: Table2.HelpDeskID,
@@ -130,6 +150,8 @@ const HelpDeskApi = {
               Actiontaken: Table2.ActionTaken,
               SolutionUserId: Table2.UserID,
               ExternalSolution: Table2.ExternalSolution,
+              SolutionMin: StartMin,
+              SolutionHr: StartHr,
               TimetakenHr: Table2.TimeTaken.toString().split(".")[0],
               TimetakenMin: Table2.TimeTaken.toString().split(".")[1],
               RowStatus: "modify"

@@ -28,7 +28,9 @@ export default class NotifService {
         this.bgHandler = messaging().onNotificationOpenedApp(async token => {
             // Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
 
-            navigate("NotificationList")
+            // navigate("NotificationList")
+            navigate("Home", { screen: "Notifications" })
+
         })
 
         // // Clear badge number at start
@@ -73,7 +75,7 @@ export default class NotifService {
             // smallIcon: '@drawable/ic_notification_icon', // (optional) default: "ic_notification" with fallback for "ic_launcher"
             bigText: message, // (optional) default: "message" prop
             // subText: 'This is a subText', // (optional) default: none
-            color: Colors.red, // (optional) default: system default
+            color: Colors.primary, // (optional) default: system default
             vibrate: true, // (optional) default: true
             vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
             channelId: "Skyward",

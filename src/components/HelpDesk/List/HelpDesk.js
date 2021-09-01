@@ -91,9 +91,9 @@ class HelpDesk extends Component {
           <Title style={{ fontSize: 16, marginTop: 8 }}>{item.ContactPersonName}</Title>
           <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.AssignedToName}</Text>
           {
-            item.StatusId === 2 ?
+            item.StatusID === 2 && item.HelpDeskOwnerID == this.props.session.user.ID ?
               <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }}
-                onPress={() => { this.setState({ contactDialogVisible: true }) }}
+                onPress={() => { this.setState({ contactDialogVisible: true, selectedItem: item }) }}
                 uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
@@ -233,7 +233,9 @@ class HelpDesk extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  session: state.session
+});
 
 const mapDispatchToProps = {};
 

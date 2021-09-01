@@ -43,7 +43,7 @@ export default class App extends Component {
       // Alert.alert(title, body);
     }
     else if (notif.userInteraction) {
-      navigate("NotificationList")
+      navigate("Home", { screen: "Notifications" })
 
     }
   }

@@ -308,7 +308,7 @@ class AddHelpDesk extends Component {
       Utils.showToast("Please select customer")
       return false
     }
-    else if (Utils.isEmpty(ContactID)) {
+    else if (Utils.isEmpty(ContactID.id)) {
       Utils.showToast("Please select Contact")
       return false
     }
@@ -397,12 +397,12 @@ class AddHelpDesk extends Component {
 
     const params = {
       helpdeskID: this.item.ID,
-      CustomerID, ContactID: ContactID.id, ProductCategoryID, ProductID: ProductID || 0, ProductRemarks, ProblemDescription,
-      SeverityID, HelpdeskCharges, RootCauseAnalysisID, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID: ProductSerialNoDetailID || 0
-      , TypeOfCallID,
-      SerialNo, StatusID, OnHoldReason: "",
+      CustomerID, ContactID: ContactID.id || 0, ProductCategoryID, ProductID: ProductID || 0, ProductRemarks, ProblemDescription,
+      SeverityID: SeverityID || 0, HelpdeskCharges, RootCauseAnalysisID: RootCauseAnalysisID || 0, sendMailToCustomer, AMCID, CustomerAddressID, IsChargeableService, TotalFreePending, TotalServiceTaken, FileName: uploadedFile.FileName || "", FilePath: uploadedFile.FilePath || "", ContentType: uploadedFile.FileContentType || "", CustomerAdditionalEmail, ProductSerialNoDetailID: ProductSerialNoDetailID || 0
+      , TypeOfCallID: TypeOfCallID || 0,
+      SerialNo, StatusID: StatusID || 0, OnHoldReason: "",
       AssignUserDetails: JSON.stringify(assignUser) || "", HelpDeskProductDetailID: 0,
-      CurrencyID, PlanVisitDate: Utils.formatDate(PlanVisitDate, "DD-MM-YYYY"),
+      CurrencyID: CurrencyID || 0, PlanVisitDate: Utils.formatDate(PlanVisitDate, "DD-MM-YYYY"),
     }
 
     console.log("params", params)

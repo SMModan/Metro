@@ -70,6 +70,7 @@ const AddOpportunityUi = ({ opportunityId }) => {
                     <Tab.Screen
                         name="Task"
                         component={OppTaskList}
+                        initialParams={{ id: opportunityId }}
                         options={{ tabBarLabel: 'Task', tabBarIcon: ({ color }) => <Image style={{ tintColor: color, width: 16, height: 16, resizeMode: "contain" }} source={Images.ic_task} /> }}
                     /> : null}
 

@@ -99,7 +99,6 @@ class SignIn extends Component {
             syncAllData()
           } else {
             ProgressDialog.hide();
-
             reset('Home');
           }
         } else

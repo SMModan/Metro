@@ -17,7 +17,7 @@ import _ from "lodash"
 
 class HelpDesk extends Component {
   state = {
-    selectedIndex: 0,
+    selectedIndex: 1,
     page: 0,
     totalPage: 0,
     refreshing: false,
@@ -73,7 +73,7 @@ class HelpDesk extends Component {
     const item = this.state.listData[index];
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
-
+    console.log("itemm ==========>",item)
     let myDate = `${date.getDay()}-${date.getMonth() + 1
       }-${date.getFullYear()}`;
     return (
@@ -84,7 +84,7 @@ class HelpDesk extends Component {
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, width: '70%', }}>{myDate}</Text>
             <View style={{ width: 80, backgroundColor: item.Status.toLowerCase() == 'open' ? Colors.secondary100 : item.Status.toLowerCase() == 'completed' ? Colors.Green100 : Colors.Orange100, borderRadius: 5 }}>
-              <Text style={{ textAlign: 'center', fontSize: 12, color: item.Status.toLowerCase() == 'open' ? Colors.secondary900 : item.Status.toLowerCase() == 'completed' ? Colors.Green800 : Colors.Orange900, margin: 3 }}>{item.Status}</Text>
+              <Text style={{ textAlign: 'center', fontSize: 12, color: item.Status.toLowerCase() == 'open' ? Colors.secondary900 : item.Status.toLowerCase() == 'completed' ? Colors.Green800 : Colors.Orange900, margin: 3 }}>{item.StatusName}</Text>
             </View>
           </View>
           <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 8 }}>{item.CustomerName}</Text>
@@ -97,7 +97,6 @@ class HelpDesk extends Component {
                 uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
-
       </Card>
     );
   };

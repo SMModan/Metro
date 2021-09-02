@@ -127,7 +127,6 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
 
                         // console.log("jsonResponse",jsonResponse.Response.)
                         if (jsonResponse && jsonResponse.Response) {
-
                             if (jsonResponse.Response.IsSucceed) {
                                 // console.log(endpoint + '\n JSONResponse', JSON.stringify(jsonResponse.Response.Data['diffgr:diffgram']['NewDataSet']));
 
@@ -143,10 +142,9 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
                             } else {
                                 if (jsonResponse.Response.ErrorMessage === "UnAuthorized User") {
                                     onFailure('Session expired')
-
+                                    
                                 } else
                                     onFailure(jsonResponse.Response.ErrorMessage || "Something went wrong")
-
                             }
                         } else {
                             onFailure('Something went wrong')

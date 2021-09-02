@@ -46,30 +46,37 @@ class Appointments extends Component {
     this.setState({
       loading: !this.state.refreshing && !this.state.loadMore
     })
-    console.log("params ====>", params)
     AppointmentApi.getAllAppointment(params, (res) => {
-      const { Table } = res
-      let isLast = true
-      if (Table) {
-        if (Array.isArray(Table)) {
-          let totalPage = Table[0]?.TotalCount / 10
-          isLast = this.state.page == totalPage
-          this.setState({
-            listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
-            loading: false, refreshing: false, loadMore: false, isLast
-          })
-        } else {
-          let results = [
-            { ...Table }
-          ];
-          console.log("<===results  ===>", results)
-          this.setState({
-            listData: results,
-            loading: false,
-            refreshing: false, loadMore: false, isLast
-          })
+      if(res){
+        const { Table } = res && res
+        let isLast = true
+        if (Table) {
+          if (Array.isArray(Table)) {
+            let totalPage = Table[0]?.TotalCount / 10
+            isLast = this.state.page == totalPage
+            this.setState({
+              listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
+              loading: false, refreshing: false, loadMore: false, isLast
+            })
+          } else {
+            let results = [
+              { ...Table }
+            ];
+            console.log("<===results  ===>", results)
+            this.setState({
+              listData: results,
+              loading: false,
+              refreshing: false, loadMore: false, isLast
+            })
+          }
         }
+      }else{
+        this.setState({
+          loading: false,
+          refreshing: false, loadMore: false, isLast:true
+        })
       }
+      
     }, () => {
       this.setState({
         loading: !this.state.refreshing && !this.state.loadMore

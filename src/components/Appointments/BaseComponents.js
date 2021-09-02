@@ -27,30 +27,37 @@ export const EventInfo = () => {
 
     const isOwner = ActivityID == 0 || ActivityOwnerID == user.ID
 
+
     return (
         <ViewWithTitle title="Event Information">
-            <FloatingEditText value={Location} onChangeText={(text) => onTextChanged("Location", text)} label={'Location'} />
+            <FloatingEditText value={Location} onChangeText={(text) => onTextChanged("Location", text)} 
+            label={'Location'} editable={ActivityID == 0 || isOwner} />
             <View style={{ flexDirection: 'row', width: '100%', }}>
                 <CustomDatePicker selectedDate={StartDate} 
                 minimumDate={StartDate || new Date()}
+                disabled={ActivityID != 0 || !isOwner}
                 onDateChanged={(date) => {
                     onTextChanged("StartDate", date)
                 }} label={"Start Date"} containerStyle={{ flex: 1, }} />
-                <CustomPicker selectedItem={{ id: StartHr }} onSelect={(item) => onTextChanged("StartHr", item.id)} list={hours} label={'HH'} inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />
-                <CustomPicker selectedItem={{ id: StartMin }} onSelect={(item) => onTextChanged("StartMin", item.id)} list={mins} label={'MM'} inputType="numeric" floaingStyle={{ width: 80 }} />
+                <CustomPicker 
+                disabled={ActivityID != 0 || !isOwner} selectedItem={{ id: StartHr }} onSelect={(item) => onTextChanged("StartHr", item.id)} list={hours} label={'HH'} inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />
+                <CustomPicker 
+                disabled={ActivityID != 0 || !isOwner} selectedItem={{ id: StartMin }} onSelect={(item) => onTextChanged("StartMin", item.id)} list={mins} label={'MM'} inputType="numeric" floaingStyle={{ width: 80 }} />
             </View>
             {!endDateEnable ? <Text onPress={() => setEndDateEnable(true)} style={{ fontSize: 14, fontFamily: FontName.regular, color: Colors.blue, marginTop: 15, marginBottom: 15 }}> + Add End Date</Text> : <View style={{ flexDirection: 'row', width: '100%', marginBottom: ResponsivePixels.size16 }}>
                 <CustomDatePicker minimumDate={StartDate || new Date()} selectedDate={EndDate} onDateChanged={(date) => {
                     onTextChanged("EndDate", date)
-                }} label={"End Date"} containerStyle={{ flex: 1, }} />
-                <CustomPicker selectedItem={{ id: EndHr }} onSelect={(item) => onTextChanged("EndHr", item.id)} list={hours} label={'HH'} inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />
-                <CustomPicker selectedItem={{ id: EndMin }} onSelect={(item) => onTextChanged("EndMin", item.id)} list={mins} label={'MM'} inputType="numeric" floaingStyle={{ width: 80 }} />
+                }} label={"End Date"} containerStyle={{ flex: 1, }} 
+                disabled={ActivityID != 0 || !isOwner} />
+                <CustomPicker disabled={ActivityID != 0 || !isOwner} selectedItem={{ id: EndHr }} onSelect={(item) => onTextChanged("EndHr", item.id)} list={hours} label={'HH'} inputType="numeric" floaingStyle={{ width: 80, marginHorizontal: 10 }} />
+                <CustomPicker disabled={ActivityID != 0 || !isOwner} selectedItem={{ id: EndMin }} onSelect={(item) => onTextChanged("EndMin", item.id)} list={mins} label={'MM'} inputType="numeric" floaingStyle={{ width: 80 }} />
             </View>}
-            <Checkbox disabled={!isOwner} label={'Is fullday event?'} labelColor={Colors.darkGray} checked={IsFullDayEvent == 0 ? false : true} onPress={() => {
+            <Checkbox disabled={ActivityID != 0 || !isOwner} label={'Is fullday event?'} labelColor={Colors.darkGray} checked={IsFullDayEvent == 0 ? false : true} onPress={() => {
                 onTextChanged("IsFullDayEvent", IsFullDayEvent == 0 ? 1 : 0)
 
             }} color={Colors.BlueColor400} style={{ margin: 0 }} />
-            <FloatingEditText value={Subject} onChangeText={(text) => onTextChanged("Subject", text)} label={'Subject'} />
+            <FloatingEditText value={Subject} onChangeText={(text) => onTextChanged("Subject", text)} label={'Subject'} 
+            editable={ActivityID == 0 || isOwner} />
         </ViewWithTitle>
     )
 }
@@ -59,7 +66,9 @@ export const EventInfo = () => {
 export const AppointmentInfo = () => {
     const session = useSelector(state => state.session)
 
-    const { AssignUserName, onTextChanged, EntityID, onSelectUser, onRemoveUser, RelatedList, ReminderAlertID, EntityFieldID, EntityFieldName, } = useContext(AppoinmentContext)
+    const { AssignUserName, onTextChanged,ActivityID,ActivityOwnerID, EntityID,user, onSelectUser, onRemoveUser,
+         RelatedList, ReminderAlertID, EntityFieldID, EntityFieldName, } = useContext(AppoinmentContext)
+    const isOwner = ActivityID == 0 || ActivityOwnerID == user.ID
 
     console.log("EntityFieldID", EntityFieldID)
     return (
@@ -68,14 +77,19 @@ export const AppointmentInfo = () => {
                 onTextChanged("EntityID", item.id)
                 onTextChanged("EntityName", item.name)
                 onTextChanged("EntityFieldID", 0)
+                
 
-            }} title="Related to" chips={[{ id: 0, name: "General" }, ...session.GetRelatedTo]} />
-            {EntityID == 0 ? <FloatingEditText onChangeText={(text) => onTextChanged("EntityFieldName", text)} value={EntityFieldName} label={'Related Name'} />
-                : RelatedList.length ? <CustomPicker list={RelatedList} selectedItem={{ id: EntityFieldID }} label={'Related Name'} onSelect={(item) => onTextChanged("EntityFieldID", item.id)} /> : null}
+            }} disabled={ActivityID != 0 || !isOwner} title="Related to" chips={[{ id: 0, name: "General" }, ...session.GetRelatedTo]} />
+            {EntityID == 0 ? 
+            <FloatingEditText onChangeText={(text) => onTextChanged("EntityFieldName", text)} value={EntityFieldName} label={'Related Name'} 
+            editable={ActivityID == 0 || isOwner} />
+                : RelatedList.length ? 
+                <CustomPicker list={RelatedList} disabled={ActivityID != 0 || !isOwner} selectedItem={{ id: EntityFieldID }} label={'Related Name'} onSelect={(item) => onTextChanged("EntityFieldID", item.id)} /> : null}
 
             <View style={{ flexDirection: "row", marginVertical: 16, alignItems: "flex-start" }}>
-                <ImageButton source={Images.ic_add_blue} onPress={() => {
-
+                <ImageButton
+                    disabled={ActivityID != 0 || !isOwner}
+                source={Images.ic_add_blue} onPress={() => {
                     SelectionView.show({
                         title: "Invites to",
                         onSelect: onSelectUser,
@@ -95,10 +109,14 @@ export const AppointmentInfo = () => {
 
                     {AssignUserName?.length ?
                         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                            {AssignUserName.map((item, index) => <Chip key={index} style={{ margin: 5, backgroundColor: Colors.blueGray200 }}
+                            {AssignUserName.map((item, index) => <Chip 
+                              disabled={ActivityID != 0 || !isOwner}
+                            key={index} style={{ margin: 5, backgroundColor: Colors.blueGray200 }}
                                 textStyle={{ fontSize: 13, color: Colors.black }}
                                 onClose={() => {
-                                    onRemoveUser(index)
+                                    if(ActivityID == 0 || isOwner){
+                                        onRemoveUser(index)
+                                    }
                                 }}
                                 icon="account">{item.name}</Chip>)}
                         </View> : null}
@@ -109,7 +127,9 @@ export const AppointmentInfo = () => {
                         </View> */}
             </View>
             {/* <FloatingEditText label={'Invites to'} editable={false} rightIcon={Images.ic_down} /> */}
-            <ChipViewContainer selectedChip={{ id: ReminderAlertID }} onSelect={(item) => {
+            <ChipViewContainer 
+                            disabled={ActivityID != 0 || !isOwner}
+            selectedChip={{ id: ReminderAlertID }} onSelect={(item) => {
                 onTextChanged("ReminderAlertID", item.id)
             }} title="Alert" chips={session.GetReminderAlert} />
             {/* <FloatingEditText inputType="numeric" label={'Charges'} /> */}
@@ -126,8 +146,10 @@ export const Remarks = () => {
     const isAssignedToMe = AssignUserID.find((item) => item == user.ID)
     return (
         <ViewWithTitle title={'Remarks'}>
-            <FloatingEditText editable={ActivityID == 0 || isOwner} value={OwnerRemarks} onChangeText={(text) => onTextChanged("OwnerRemarks", text)} label={ActivityID == 0 || isOwner ? "Write here" : "Owner's Remark"} />
-            {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
+            <FloatingEditText editable={ActivityID == 0 || isOwner} 
+ value={OwnerRemarks} onChangeText={(text) => onTextChanged("OwnerRemarks", text)} label={ActivityID == 0 || isOwner ? "Write here" : "Owner's Remark"} />
+            {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} 
+            onChangeText={(text) => onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null}
             {isOwner && AssignUserRemarks.length ? <FlatList style={{ marginTop: 16 }} data={AssignUserRemarks}
                 ListHeaderComponent={() => (<View style={{ flexDirection: "row", alignItems: "center", }}>
                     <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>

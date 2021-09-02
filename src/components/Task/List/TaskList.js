@@ -92,13 +92,14 @@ class TaskList extends Component {
     const {TaskActivityID,ActivityID,ActivityOwnerID,TaskStatusID} = item
     ProgressDialog.show()
   
+    // completed status == 2
     const params = {
-      TaskStatusID:4,
+      TaskStatusID:TaskStatusID,
       TaskID:TaskActivityID,
       AssignTaskActivityID:ActivityID,
       ActivityOwnerID,ActivityOwnerID
     };
-   
+    
     TaskApi.updateTaskStatus(
       params,
       res => {

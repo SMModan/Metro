@@ -58,7 +58,7 @@ class AddAppointments extends Component {
     this.setState({ ...this.props.route.params?.item, loading: true })
     const appointment = await AppointmentApi.getAppointmentDetails(this.props.route.params?.item?.ID)
 
-    console.log("appointment", appointment)
+    console.log("appointment ======> in response", appointment)
     if (appointment.EntityID)
       this.getRelatedToByEntityID(appointment.EntityID, true)
     this.setState({ ...appointment, loading: false })
@@ -106,7 +106,9 @@ class AddAppointments extends Component {
 
   saveAppoinment = () => {
 
-    const { Location, AssignUserName, EntityName, ActivityID, EntityID, ReminderAlertID, EntityFieldID, EntityFieldName, AssigneeRemarks, IsFullDayEvent, OwnerRemarks, StartDate, StartHr, StartMin, EndDate, EndHr, EndMin, Subject, } = this.state
+    const { Location, AssignUserName, EntityName, ActivityID, EntityID, ReminderAlertID, EntityFieldID, 
+      EntityFieldName, AssigneeRemarks, IsFullDayEvent, OwnerRemarks, StartDate, StartHr, StartMin, EndDate,
+       EndHr, EndMin, Subject, } = this.state
     if (Utils.isEmpty(Location)) {
       Utils.showToast("Please enter Location")
     }
@@ -142,6 +144,12 @@ class AddAppointments extends Component {
       ProgressDialog.show()
       AppointmentApi.InsertOrUpdateAppointment(params, (res) => {
         ProgressDialog.hide()
+        if (this.props.route.params?.item?.ID){
+        Utils.showToast("Appointment updated succesfully.")
+        }else{
+          Utils.showToast("Appointment added succesfully.")
+        }
+
         goBack()
       }, (error) => {
         ProgressDialog.hide()

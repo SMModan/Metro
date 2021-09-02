@@ -87,40 +87,47 @@ class QuotationList extends Component {
     ProgressDialog.show()
 
     QuotationApis.getAllQuotation(params, (res) => {
-      const { Table } = res
-      console.log("Table", Table)
-      let isLast = true
-      if (Table) {
-        ProgressDialog.hide()
-
-        if (Array.isArray(Table)) {
-
-        this.setState({ totalCount: Table[0].TotalCount })
-        let totalPage = Table[0].TotalCount / 10
-        isLast = this.state.page == totalPage
+      if(res){
+        const { Table } = res
+        console.log("Table", Table)
+        let isLast = true
+        if (Table) {
+          ProgressDialog.hide()
+  
+          if (Array.isArray(Table)) {
+  
+          this.setState({ totalCount: Table[0].TotalCount })
+          let totalPage = Table[0].TotalCount / 10
+          isLast = this.state.page == totalPage
+          this.setState({
+            listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
+            loading: false, refreshing: false, loadMore: false, isLast
+          })
+        } else {
+          this.setState({
+            loading: false, refreshing: false, loadMore: false, isLast: true
+          })
+        }
+      }else{
+        let results = [
+          {...Table}
+        ];
         this.setState({
-          listData: this.state.page > 0 ? [...this.state.listData, ...Table] : Table,
+          listData: results,
           loading: false, refreshing: false, loadMore: false, isLast
         })
-      } else {
+      }
+      }else{
         this.setState({
-          loading: false, refreshing: false, loadMore: false, isLast: true
+          listData: results,
+          loading: false, refreshing: false, loadMore: false, isLast
         })
       }
-    }else{
-      let results = [
-        {...Table}
-      ];
-      this.setState({
-        listData: results,
-        loading: false, refreshing: false, loadMore: false, isLast
-      })
-    }
+     
     }, () => {
       ProgressDialog.hide()
-
       this.setState({
-        loading: !this.state.refreshing && !this.state.loadMore, loadMore: false,
+        loading: false, refreshing: false, loadMore: false, isLast:true
       })
     })
   }
@@ -187,14 +194,14 @@ class QuotationList extends Component {
             />
           </View>
         </View>
-        <FAB
+        {/* <FAB
           style={styles.fab}
           icon="plus"
           color={Colors.white}
           onPress={() => {
             this.props.navigation.push('AddOpportunity')
           }}
-        />
+        /> */}
       </MainContainer>
     );
   }

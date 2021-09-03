@@ -57,7 +57,7 @@ const HelpDeskApi = {
         resolve();
         },
         error => {
-        //  Utils.showDangerToast(error)
+          Utils.showDangerToast(error)
           hideDialogue
           reject(error)
         },

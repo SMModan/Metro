@@ -18,7 +18,7 @@ import TaskApi from './apis/TaskApi';
 import WrappedComponentTask from './WrappedComponentTask';
 
 
-class AddTask extends Component {
+class UpdateTask extends Component {
   constructor(props) {
     super(props);
 
@@ -444,7 +444,7 @@ class AddTask extends Component {
 
       
 
-        {isOwner && _assigneeDetails.length ?  <FlatList style={{ marginTop: ResponsivePixels.size10 }} data={_assigneeDetails}
+        {isOwner && _assigneeDetails.length ?  <FlatList style={{ margin: ResponsivePixels.size10 }} data={_assigneeDetails}
                 ListHeaderComponent={() => (<View style={{ flexDirection: "row", alignItems: "center", }}>
                     <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
                         <Text style={{ color: Colors.black, fontSize: FontSize.fontSize16 }}>{"UserName"}</Text>
@@ -456,10 +456,12 @@ class AddTask extends Component {
                 renderItem={({ item }) => (
                     <View style={{ flexDirection: "row", alignItems: "center", }}>
                         <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
-                            <Text style={{ color: Colors.blueGray900 }}>{item.userName}</Text>
+                            <Text style={{ color: Colors.blueGray900,minHeight:ResponsivePixels.size60 ,textAlignVertical:"center"  }}>{item.userName}</Text>
                         </View>
                         <View style={{ borderWidth: 1, flex: 1, padding: 8 }}>
-                            <Text numberOfLines={3} style={{ color: Colors.blueGray900 }}>{item.formatedCompletionDate?item.formatedCompletionDate:"12-3-2123"}</Text>
+                            <Text numberOfLines={3} style={{ color: Colors.blueGray900,textAlign:"center"
+                            ,minHeight:ResponsivePixels.size60,textAlignVertical:"center" }}>
+                              {item.formatedCompletionDate?item.formatedCompletionDate:"--"}</Text>
                         </View>
                        
                     </View>
@@ -499,4 +501,4 @@ class AddTask extends Component {
   }
 }
 
-export default WrappedComponentTask(AddTask);
+export default WrappedComponentTask(UpdateTask);

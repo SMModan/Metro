@@ -6,16 +6,18 @@ import {
   Clickable,
   Button,
   EditText,
+  ProgressDialog,
 } from '../../common';
 import { connect } from 'react-redux';
 import styles from '../styles/Home.style';
 import { strings } from '../../../language/Language';
-import { Images, Colors } from '../../../utils';
+import { Images, Colors, Utils } from '../../../utils';
 import { syncAllData } from '../../../utils/SyncDataManager';
 import { reset } from '../../../navigation/Navigator';
 import { Alert } from 'react-native';
 import { store } from '../../../App';
 import { setSessionField } from '../../../reducers/SessionReducer';
+import loginApi from '../../Login/apis/LoginApis';
 
 
 const data = [
@@ -50,9 +52,83 @@ const data = [
 ];
 
 class Home extends Component {
+constructor(props) {
+  super(props)
+
+  this.state = {
+    checkinout:true,
+    customer:true,
+    contact:true,
+    opportunity:true,
+    task:true,
+    helpDesk:true,
+    quotation:true,
+    data:[]
+  }
+}
 
 
   componentDidMount = () => {
+
+    const checkinout =this.props.session.checkinout
+    const customer =this.props.session.customer
+    const contact =this.props.session.contact
+    const opportunity =this.props.session.opportunity
+    const task =this.props.session.task
+    const appointment =this.props.session.appointment
+    const helpDesk =this.props.session.helpDesk
+    const quotation =this.props.session.quotation
+
+    const data = [
+      {
+        icon: Images.ic_Person,
+        title: "Customer",
+        isVisible:customer
+      },
+      {
+        icon: Images.ic_Contacts,
+        title: "Contacts",
+        isVisible:contact
+      },
+      {
+        icon: Images.ic_Opportunities,
+        title: "Opportunities",
+        isVisible:opportunity
+      },
+      {
+        icon: Images.ic_Tasks,
+        title: "Tasks",
+        isVisible:task
+      },
+      {
+        icon: Images.ic_Appointment,
+        title: "Appointment",
+        isVisible:appointment
+      },
+      {
+        icon: Images.ic_HelpDesk,
+        title: "Help Desk",
+        isVisible:helpDesk
+      },
+      {
+        icon: Images.ic_Quotation,
+        title: "Quotation",
+        isVisible:quotation
+      },
+    ];
+
+
+    this.setState({
+      checkinout,
+      customer,
+      contact,
+      opportunity,
+      task,
+      appointment,
+      helpDesk,
+      quotation,
+      data
+    })
 
     console.log("this.props.session.user", this.props.session.user)
   }
@@ -93,9 +169,17 @@ class Home extends Component {
     );
   };
 
+
+
   renderHomeCell = ({ index }) => {
+    const {data} = this.state
+    console.log("data ======>",data)
+    let isVisible 
+    if(index!=0){
+       isVisible = data[index - 1].isVisible
+    }
     return (
-      index === 0 ? <View style={styles.cellStyle} key={index} /> :
+      index === 0 ? <View style={styles.cellStyle} key={index} />:isVisible?
         <View style={styles.cellStyle} key={index}>
           <Clickable onPress={() => {
             switch (index) {
@@ -129,7 +213,7 @@ class Home extends Component {
             <Image source={data[index - 1].icon} style={{ marginTop: 30 }} />
             <Text style={styles.leftText}>{data[index - 1].title}</Text>
           </Clickable>
-        </View>
+        </View>:null
     );
   };
 
@@ -143,9 +227,7 @@ class Home extends Component {
         }, {
             text: 'Yes',
             onPress: ()=> {
-              store.dispatch(setSessionField('user', {}));
-              store.dispatch(setSessionField('is_logged_in', false));
-              reset("SignIn")
+                this.logoutApiCall()
             }
         }, ], {
             cancelable: false
@@ -154,7 +236,30 @@ class Home extends Component {
      return true;
    } 
 
+
+   logoutApiCall = ()=>{
+      const params = {
+        DeviceToken: this.props.session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" })
+      };
+      ProgressDialog.show();
+      loginApi.LogoutApi(
+        params,
+        res => {
+          ProgressDialog.hide();
+          if (res) {
+            store.dispatch(setSessionField('user', {}));
+            store.dispatch(setSessionField('is_logged_in', false));
+            reset("SignIn")
+          } 
+        },
+        error => {
+          ProgressDialog.hide();
+          Utils.showToast(error);
+        },
+      );
+   }
   render() {
+    const {data} = this.state
     return (
       <MainContainer
         header={{
@@ -178,7 +283,7 @@ class Home extends Component {
             <Text style={styles.firstTitle}>Hi {this.props.session.user.FirstName || ""}</Text>
           </View>
           <View style={styles.MainList}>
-            <FlatList
+            {data.length!=0 && <FlatList
               horizontal={false}
               scrollEnabled={true}
               numColumns={3}
@@ -188,7 +293,8 @@ class Home extends Component {
               keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
               contentContainerStyle={{ paddingVertical: 30 }}
-            />
+            />}
+            
           </View>
         </View>
       </MainContainer>

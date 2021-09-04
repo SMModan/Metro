@@ -70,7 +70,7 @@ class TaskList extends Component {
     selectedStuasIndex: 0,
     showSearch: false,
     searchQuery: false,
-    status:0
+    status:1
   };
 
 
@@ -86,6 +86,8 @@ class TaskList extends Component {
     }
     return date
   }
+
+
 
   handleCompleteTaskApi =(item)=>{
 
@@ -132,6 +134,7 @@ class TaskList extends Component {
   renderCell = ({ index }) => {
     const item = this.state.listData[index];
     var date = item.CreatedDate;
+    console.log("item ======>",item)
     return (
       <Card
         style={{ margin: 5 }}
@@ -218,7 +221,7 @@ class TaskList extends Component {
          </Clickable>
         </View>
         <View style={{flexDirection:"row",width:'100%',
-        marginBottom:ResponsivePixels.size10,
+        marginBottom:ResponsivePixels.size5,
               textAlign: 'left',
             }}>
           <Button
@@ -248,13 +251,14 @@ class TaskList extends Component {
           }}
             uppercase={false}
             onPress={() => {
+
+              console.log("item ====> ",item);
                 this.handleCompleteTaskApi(item)
             }}>
             Complete Task
           </Button>
           </View>
 
-      
       </Card>
     );
   };

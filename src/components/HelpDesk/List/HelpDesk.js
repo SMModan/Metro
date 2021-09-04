@@ -1,19 +1,17 @@
+import _ from "lodash";
 import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView, Image, ActivityIndicator } from 'react-native';
-import { Button as DialogButton, Dialog, Portal, RadioButton } from 'react-native-paper'
-
-import {
-  MainContainer, MyFlatList,
-} from '../../common';
-import { connect } from 'react-redux';
-import styles from '../styles/HelpDesk.style';
-import { strings } from '../../../language/Language';
-import { Images, Colors } from '../../../utils';
-import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
+import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
+import { Button, Button as DialogButton, Card, Chip, Dialog, FAB, Portal, Title } from 'react-native-paper';
 import { AirbnbRating } from 'react-native-ratings';
+import { connect } from 'react-redux';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
+import {
+  MainContainer, MyFlatList
+} from '../../common';
 import HelpDeskApi from '../Api/HelpDeskApi';
-import _ from "lodash"
+import styles from '../styles/HelpDesk.style';
+
 
 class HelpDesk extends Component {
   state = {
@@ -28,12 +26,17 @@ class HelpDesk extends Component {
     contactDialogVisible: false,
     showSearch: false,
     searchQuery: false,
-    statusId: 0
-
+    statusId: 0,
+    isCheckInPermission:false
   };
 
   componentDidMount = () => {
     this.getAllList()
+
+    const checkinout =this.props.session.checkinout
+    this.setState({
+      isCheckInPermission:checkinout
+    })
   }
 
   getAllList = () => {
@@ -68,6 +71,11 @@ class HelpDesk extends Component {
     })
   }
 
+  generateUniqueId=(date)=>{
+    let myDate = `HEL${date.getMonth() + 1
+    }${date.getFullYear()}-${date.getDay()}`;
+    return myDate
+  }
 
   renderCell = ({ index }) => {
     const item = this.state.listData[index];
@@ -76,6 +84,8 @@ class HelpDesk extends Component {
     console.log("itemm ==========>",item)
     let myDate = `${date.getDay()}-${date.getMonth() + 1
       }-${date.getFullYear()}`;
+
+      const {isCheckInPermission} = this.state
     return (
       <Card style={{ margin: 5 }} key={item.index} onPress={() => {
         this.props.navigation.push('AddHelpDesk', { item })
@@ -97,6 +107,87 @@ class HelpDesk extends Component {
                 uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
+      
+
+{isCheckInPermission &&   
+        <View
+        style={{
+          flexDirection: 'row',
+          width: '100%',
+          padding: ResponsivePixels.size5,
+          paddingRight: ResponsivePixels.size10,
+        }}>
+        <Button
+          labelStyle={{
+            fontSize: ResponsivePixels.size12,
+            color: '#2262F7',
+            textAlign: 'left',
+            textAlignVertical: 'center',
+          }}
+          style={{
+            alignItems: 'flex-start',
+            width: '35%',
+            borderWidth: ResponsivePixels.size1,
+            borderColor: Colors.Black,
+          }}
+          uppercase={false}
+          onPress={() => {
+            this.props.navigation.push('AddRemarks', {
+              TaskActivityID: item.TaskActivityID,
+            });
+          }}>
+          {this.generateUniqueId(date)}
+        </Button><View
+          style={{
+            flexDirection: 'row',
+            width: '65%',
+            borderWidth: ResponsivePixels.size1,
+            borderRadius: ResponsivePixels.size5,
+            borderColor: Colors.Black,
+            marginLeft: ResponsivePixels.size5,
+            marginRight: ResponsivePixels.size5,
+          }}>
+          <Button
+            labelStyle={{
+              fontSize: ResponsivePixels.size12,
+              color: Colors.Black,
+              textAlign: 'left',
+            }}
+            style={{
+              alignItems: 'flex-start',
+              width: '55%',
+              borderEndColor: '#2262F7',
+              backgroundColor: Colors.BlackColor100,
+            }}
+            uppercase={false}
+            onPress={() => {
+              console.log('item ====> ', item);
+              this.handleCompleteTaskApi(item);
+            }}>
+            My Check-In
+          </Button>
+
+          <Button
+            labelStyle={{
+              fontSize: ResponsivePixels.size12,
+              color: '#2262F7',
+              textAlign: 'left',
+            }}
+            style={{
+              alignItems: 'flex-start',
+              width: '45%',
+              borderEndColor: '#2262F7',
+            }}
+            uppercase={false}
+            onPress={() => {
+              console.log('item ====> ', item);
+              this.handleCompleteTaskApi(item);
+            }}>
+            {item.IsCheckIn=='No'?"CheckIn":"CheckOut"}
+          </Button>
+        </View>
+        </View>
+      }
       </Card>
     );
   };

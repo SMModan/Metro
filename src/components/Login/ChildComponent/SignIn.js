@@ -77,6 +77,92 @@ class SignIn extends Component {
     );
   };
 
+
+
+
+
+  permissionApi = (userId,connectionString)=>{
+    const params = {
+      UserID: userId,
+      ConnectionString: connectionString,
+    };
+    
+    loginApi.PermissionApi(
+      params,
+      res => {
+        if (res) {
+          
+          const table = res.Table
+          for (let index = 0; index < table.length; index++) {
+            const permission = table[index];
+            const programName = permission.ProgramName
+            const showIcon = permission.ShowIcon
+            console.log("<============================ programName ============================>", programName)
+
+            if(programName=="Check In/Out"){
+            console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("checkinout", showIcon));
+            }else if(programName=="Mark In - Out"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("markinout", showIcon));
+            }else if(programName=="Trip In - Out"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("tripinout", showIcon));
+            }else if(programName=="Customer"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("customer", showIcon));
+            }else if(programName=="Contact"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("contact", showIcon));
+            }else if(programName=="Opportunity"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("opportunity", showIcon));
+            }else if(programName=="Task Activity"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("task", showIcon));
+            }else if(programName=="Appointment Activity"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("appointment", showIcon));
+            }else if(programName=="HelpDesk"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("helpDesk", showIcon));
+            }else if(programName=="Quotation"){
+              console.log("<============================ Res ============================>", showIcon)
+
+              store.dispatch(setSessionField("quotation", showIcon));
+            }
+          }
+          ProgressDialog.hide();
+          reset('Home');
+
+          if (!this.props.session.isSync) {
+            syncAllData()
+          } else {
+            ProgressDialog.hide();
+            reset('Home');
+          }
+        } else
+          ProgressDialog.hide();
+       
+      },
+      error => {
+        ProgressDialog.hide();
+        Utils.showToast(error);
+      },
+    );
+  }
+
+
+
   login = () => {
     const params = {
       UserName: this.state.userName,
@@ -91,16 +177,12 @@ class SignIn extends Component {
 
         if (res) {
           const { Table } = res;
-
+          const userId = Table.ID
+          const connectionString = store.getState().session.connectionString;
           store.dispatch(setSessionField('user', Table));
           store.dispatch(setSessionField('is_logged_in', true));
           loginApi.setDeviceToken({ DeviceToken: this.props.session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" }) })
-          if (!this.props.session.isSync) {
-            syncAllData()
-          } else {
-            ProgressDialog.hide();
-            reset('Home');
-          }
+          this.permissionApi(userId,connectionString)
         } else
           ProgressDialog.hide();
 

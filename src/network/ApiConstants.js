@@ -89,6 +89,8 @@ export const INSERT_HELP_DESK_SOLUTION_VERSION3 = "InsertHelpdeskSolutionVersion
 
 export const GET_QUOTATION_LIST = "GetAllQuotations"
 export const DOWNLOAD_QUOTATION = "DownloadQuotation"
+export const LOGOUTAPI= "LogoutVersion1"
+export const USERPERMISSION= "GetUserPermissions"
 
 
 // Get Analytics 

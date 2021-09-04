@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
-import AddTask from './AddTask'
+import AddTask from './UpdateTask'
 import { TaskContext } from './TaskContext'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import TaskAttachment from './attachment/TaskAttachment'

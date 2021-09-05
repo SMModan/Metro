@@ -46,7 +46,7 @@ const HelpDeskApi = {
       );
     })
   },
-  insertSolution(params,hideDialogue) {
+  insertSolution(params, hideDialogue) {
     return new Promise((resolve, reject) => {
 
       apiCall(
@@ -54,7 +54,7 @@ const HelpDeskApi = {
         params,
         res => {
           hideDialogue
-        resolve();
+          resolve();
         },
         error => {
           Utils.showDangerToast(error)
@@ -127,7 +127,7 @@ const HelpDeskApi = {
                 HelpDeskID: t.HelpDeskID,
                 SolutionDate: moment(t.SolutionDate).toDate(),
                 Actiontaken: t.ActionTaken,
-                SolutionUserId: t.UserID,
+                SolutionUserID: t.UserID,
                 ExternalSolution: t.ExternalSolution,
                 TimetakenHr: t.TimeTaken.toString().split(".")[0],
                 TimetakenMin: t.TimeTaken.toString().split(".")[1],
@@ -151,7 +151,7 @@ const HelpDeskApi = {
               HelpDeskID: Table2.HelpDeskID,
               SolutionDate: moment(Table2.SolutionDate).toDate(),
               Actiontaken: Table2.ActionTaken,
-              SolutionUserId: Table2.UserID,
+              SolutionUserID: Table2.UserID,
               ExternalSolution: Table2.ExternalSolution,
               SolutionMin: StartMin,
               SolutionHr: StartHr,

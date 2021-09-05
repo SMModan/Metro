@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {View, Text, ScrollView} from 'react-native';
-import {connect} from 'react-redux';
-import {Chip} from 'react-native-paper';
-import {Colors, FontName, Images, Utils} from '../../utils';
-import {strings} from '../../language/Language';
+import React, { Component } from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { Chip } from 'react-native-paper';
+import { Colors, FontName, Images, Utils } from '../../utils';
+import { strings } from '../../language/Language';
 import {
   Checkbox,
   Button,
@@ -19,7 +19,7 @@ import {
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import moment from 'moment';
 import HelpDeskApi from './Api/HelpDeskApi';
-import {goBack} from '../../navigation/Navigator';
+import { goBack } from '../../navigation/Navigator';
 
 class Solution extends Component {
   state = {
@@ -42,7 +42,7 @@ class Solution extends Component {
       ExternalSolution: false,
       id: 0,
     });
-    this.setState({solutions: [...solution]});
+    this.setState({ solutions: [...solution] });
   };
 
   updateSolution = (key, value) => {
@@ -53,8 +53,28 @@ class Solution extends Component {
     solution[key] = value;
 
     solutions.splice(this.state.selectedIndex, solution);
-    this.setState({solution: [...solutions]});
+    this.setState({ solution: [...solutions] });
   };
+
+  deleteSolution = () => {
+
+
+    const { solutions, selectedIndex } = this.state
+
+    console.log("selectedIndex", selectedIndex, solutions[selectedIndex]["RowStatus"])
+    if (solutions[selectedIndex]["RowStatus"] == "add") {
+      solutions.splice(selectedIndex, 1)
+
+    } else
+      solutions[selectedIndex]["RowStatus"] = "delete"
+
+
+    this.setState({ selectedIndex: solutions.filter(p => p.RowStatus != "delete").length - 1 })
+
+    this.setState({
+      solutions,
+    })
+  }
 
   insertSolution = async () => {
     const solutions = this.state.solutions;
@@ -63,11 +83,11 @@ class Solution extends Component {
 
       if (Utils.isEmpty(element.SolutionDate)) {
         Utils.showDangerToast('Select Solution date');
-        this.setState({selectedIndex: index});
+        this.setState({ selectedIndex: index });
         return;
       } else if (Utils.isEmpty(element.Actiontaken)) {
         Utils.showDangerToast('Enter action');
-        this.setState({selectedIndex: index});
+        this.setState({ selectedIndex: index });
 
         return;
       }
@@ -75,12 +95,14 @@ class Solution extends Component {
         Utils.isEmpty(element.TimetakenHr) ||
         Utils.isEmpty(element.TimetakenMin)
       ) {
-        this.setState({selectedIndex: index});
+        this.setState({ selectedIndex: index });
 
         Utils.showDangerToast('End Time taken');
         return;
       }
     }
+
+
 
     ProgressDialog.show();
     await Promise.all(
@@ -91,9 +113,8 @@ class Solution extends Component {
           RowStatus: item.RowStatus,
           SolutionUserID: item.SolutionUserID,
           ExternalSolution: item.ExternalSolution,
-          SolutionDate: `${Utils.formatDate(item.SolutionDate, 'DD-MM-YYYY')} ${
-            item.SolutionHr
-          }:${item.SolutionMin}`,
+          SolutionDate: `${Utils.formatDate(item.SolutionDate, 'DD-MM-YYYY')} ${item.SolutionHr
+            }:${item.SolutionMin}`,
           HelpdeskID: this.props.item.ID,
           id: item.id,
         };
@@ -113,25 +134,25 @@ class Solution extends Component {
     ProgressDialog.hide();
   };
   render() {
-    const {solutions} = this.state;
+    const { solutions } = this.state;
     const solution = solutions.length
       ? solutions[this.state.selectedIndex]
       : undefined;
 
-      const SolutionUserId = solution?.SolutionUserId || 0
-      let isSolutionOwner =true
-      if(SolutionUserId != 0){
-        isSolutionOwner = SolutionUserId== this.props.session.user.ID ;
-      }else{
-        isSolutionOwner=true
-      }
+    const SolutionUserId = solution?.SolutionUserId || 0
+    let isSolutionOwner = true
+    if (SolutionUserId != 0) {
+      isSolutionOwner = SolutionUserId == this.props.session.user.ID;
+    } else {
+      isSolutionOwner = true
+    }
     console.log('isSolutionOwner ', isSolutionOwner);
     console.log('solution.SolutionUserId ', SolutionUserId);
     return (
       <ScrollContainer>
-        <View style={{flex: 1, backgroundColor: Colors.white}}>
+        <View style={{ flex: 1, backgroundColor: Colors.white }}>
           <ViewWithTitle title={'Solutions'}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <ImageButton
                 onPress={this.addSolution}
                 source={Images.ic_add_blue}
@@ -159,18 +180,18 @@ class Solution extends Component {
                   borderBottomColor: Colors.secondary50,
                   borderWidth: 1,
                 }}>
-                {solutions.map((item, index) => (
+                {solutions.filter(p => p.RowStatus != "delete").map((item, index) => (
                   <View>
                     <Chip
-                      onClose={() => {}}
+                      onClose={isSolutionOwner ? this.deleteSolution : undefined}
                       key={index}
-                      style={{backgroundColor: Colors.white}}
-                      textStyle={{fontSize: 13, color: Colors.black}}
+                      style={{ backgroundColor: Colors.white }}
+                      textStyle={{ fontSize: 13, color: Colors.black }}
                       onPress={() => {
-                        this.setState({selectedIndex: index});
+                        this.setState({ selectedIndex: index });
                       }}>{`Soulution${index + 1}`}</Chip>
                     {this.state.selectedIndex === index ? (
-                      <View style={{height: 3, backgroundColor: Colors.blue}} />
+                      <View style={{ height: 3, backgroundColor: Colors.blue }} />
                     ) : null}
                   </View>
                 ))}
@@ -200,8 +221,8 @@ class Solution extends Component {
                       // onTextChanged("StartDate", date)
                     }}
                     label={'Solution Date'}
-                    disabled={SolutionUserId !=0 || !isSolutionOwner}
-                    containerStyle={{flex: 1, marginTop: 3.5, marginEnd: 8}}
+                    disabled={SolutionUserId != 0 || !isSolutionOwner}
+                    containerStyle={{ flex: 1, marginTop: 3.5, marginEnd: 8 }}
                   />
                   <View>
                     <FloatingEditText
@@ -212,7 +233,7 @@ class Solution extends Component {
                       editable={isSolutionOwner}
                       value={solution.SolutionHr}
                       inputType="numeric"
-                      style={{width: 80, marginEnd: 8}}
+                      style={{ width: 80, marginEnd: 8 }}
                     />
                   </View>
                   <View>
@@ -224,7 +245,7 @@ class Solution extends Component {
                       editable={isSolutionOwner}
                       label={'MM'}
                       inputType="numeric"
-                      style={{width: 80}}
+                      style={{ width: 80 }}
                     />
                   </View>
                 </View>
@@ -239,7 +260,7 @@ class Solution extends Component {
                   label={'Enter action taken'}
                   value={solution.Actiontaken}
                 />
-                <View style={{margin: 5}}>
+                <View style={{ margin: 5 }}>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -252,7 +273,7 @@ class Solution extends Component {
                         justifyContent: 'center',
                         flex: 1,
                       }}>
-                      <Text style={{fontSize: 17, marginTop: 10}}>
+                      <Text style={{ fontSize: 17, marginTop: 10 }}>
                         {'Time Spent:'}
                       </Text>
                     </View>
@@ -264,7 +285,7 @@ class Solution extends Component {
                       label={'HH'}
                       editable={isSolutionOwner}
                       inputType="numeric"
-                      style={{width: 80, marginRight: 10}}
+                      style={{ width: 80, marginRight: 10 }}
                     />
                     <FloatingEditText
                       value={solution.TimetakenMin}
@@ -274,7 +295,7 @@ class Solution extends Component {
                       editable={isSolutionOwner}
                       label={'MM'}
                       inputType="numeric"
-                      style={{width: 80}}
+                      style={{ width: 80 }}
                     />
                   </View>
                 </View>
@@ -298,7 +319,7 @@ class Solution extends Component {
             <Button
               onPress={this.insertSolution}
               title={strings.save}
-              style={{margin: ResponsivePixels.size16}}
+              style={{ margin: ResponsivePixels.size16 }}
             />
           ) : null}
         </View>

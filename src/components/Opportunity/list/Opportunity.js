@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, ScrollView, ActivityIndicator } from 'react-native';
 import {
+  Clickable,
   MainContainer, MyFlatList,
 } from '../../common';
 import { connect } from 'react-redux';
@@ -11,6 +12,7 @@ import { Card, Title, FAB } from 'react-native-paper';
 import { push } from '../../../navigation/Navigator';
 import opportunityApi from '../apis/OpportunityApis';
 import _ from "lodash"
+import { CheckIn } from '../../CheckInOut/CheckIn';
 
 
 class Opportunity extends Component {
@@ -29,15 +31,16 @@ class Opportunity extends Component {
   };
 
   renderCell = ({ index }) => {
-    // console.log(index);
-
+    const {isCheckInPermission,userID} = this.state
+    
     const item = this.state.listData[index];
+    console.log("item  =======>",item);
 
     return (
-      <Card onPress={() => {
+      <Card  style={{ margin: 5 }} key={index}>
+        <Clickable onPress={() => {
         push("AddOpportunity", { opportunityId: item.ID })
-
-      }} style={{ margin: 5 }} key={index}>
+      }}>
         <View style={{ margin: 15 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 13, width: '70%', }}>{item.CloseDate}</Text>
@@ -50,14 +53,62 @@ class Opportunity extends Component {
           {/* <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 16 }}>{"item.header"}</Text> */}
           <Text style={{ fontSize: 15, color: Colors.darkGray, marginTop: 4 }}>{item.OpportunityName}</Text>
         </View>
+        </Clickable>
+        {isCheckInPermission &&   
+   <CheckIn  lableText={item.OpportunityStage} TransactionTypeID={2} HeaderID={item.ID} 
+   IsCheckIn={item.IsCheckIn} 
+   CheckInID={item.CheckInID} CheckInTime={item.CheckInTime}
+   userID={userID}
+   updateListAfterCheckInCheckOut={(type,ID,HeaderID)=>{this.updateListAfterCheckInCheckOut(type,ID,HeaderID)}}/>
+   }
       </Card>
     );
   };
 
   componentDidMount = () => {
-    this.getAllOpportunities()
+
+    const checkinout =this.props.session.checkinout
+    const user =this.props.session.user
+    this.setState({
+      isCheckInPermission:checkinout,
+      userID :user.ID
+    },()=>{
+      this.getAllOpportunities();
+    })
+
   }
 
+  updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
+
+    console.log("type =====>",type)
+    console.log("CheckInID =====>",CheckInID)
+    console.log("HeaderID =====>",HeaderID)
+    let listData = this.state.listData;
+  
+    if(type==0){
+      let index = listData.findIndex(el => el.ID == HeaderID);
+      console.log("index ===>",index)
+      if (index != -1) {
+        let item = listData[index];
+        item.CheckInID = CheckInID;
+        item.IsCheckIn = 'Yes';
+        listData[index] = item;
+      }
+    }else{
+          let index = listData.findIndex(el => el.CheckInID == CheckInID);
+          if (index != -1) {
+            let item = listData[index];
+            item.CheckInID = 0;
+            item.IsCheckIn = 'No';
+            listData[index] = item;
+          }
+    }
+  
+    this.setState({
+      listData,
+    });
+  }
+  
 
   searchOpp = async () => {
     this.getAllOpportunities()
@@ -180,7 +231,9 @@ class Opportunity extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  session: state.session
+});
 
 const mapDispatchToProps = {};
 

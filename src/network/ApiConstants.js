@@ -103,3 +103,11 @@ export const GET_SALESSTAGE_WISE_OPPORTUNITYDATA_DASHBOARD = "GetSalesStageWiseO
 export const GET_PRODUCTBRAND_WISE_OPPORTUNITYDATA_DASHBOARD = "GetProductBrandWiseOpportunityDataForDashboardChart"
 export const GET_OPPORTUNITY_STAGE_WISE_OPPORTUNITYDATA_DASHBOARD = "GetOpportunityStageWiseOpportunityDataForDashboardChart"
 
+
+// Check In Out Api
+
+
+export const CHECKIN = "InsertCheckInOut"
+export const CHECKOUT = "UpdateCheckInOut"
+export const CHECKINOUTLISTING = "GetCheckInoutByTransactionType"
+

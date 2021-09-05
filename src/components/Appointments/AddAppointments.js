@@ -165,7 +165,7 @@ class AddAppointments extends Component {
             image: Images.ic_BackWhite,
             onPress: () => goBack(),
           },
-          title: 'Add Appointment',
+          title: this.props.route?.params?.item?.ID?'Update Appointment':"Add Appointment",
           hideUnderLine: true,
           light: true,
         }}>

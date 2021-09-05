@@ -73,6 +73,8 @@ class Solution extends Component {
 
     this.setState({
       solutions,
+    },()=>{
+      console.log("solutaion === ==== ==>",this.state.solutions)
     })
   }
 
@@ -116,7 +118,7 @@ class Solution extends Component {
           SolutionDate: `${Utils.formatDate(item.SolutionDate, 'DD-MM-YYYY')} ${item.SolutionHr
             }:${item.SolutionMin}`,
           HelpdeskID: this.props.item.ID,
-          id: item.id,
+          Id: item.id,
         };
 
         await HelpDeskApi.insertSolution(params, this.hideDialogue());
@@ -127,7 +129,11 @@ class Solution extends Component {
       this.props.onSolutionSaved(this.state.solutions);
 
     goBack();
-    Utils.showToast('Soulution added');
+    if(this.props.item.ID){
+      Utils.showToast('Soulution updated');
+    }else{
+      Utils.showToast('Soulution added');
+    }
   };
 
   hideDialogue = () => {

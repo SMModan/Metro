@@ -39,4 +39,6 @@ export default ImageName = {
   edit_icon: require('../../res/images/edit_icon.png'),
   ic_home: require('../../res/images/ic_home.png'),
   ic_logout: require('../../res/images/ic_logout.png'),
+  ic_download_arrow: require('../../res/images/ic_download_arrow.png'),
+  ic_share: require('../../res/images/ic_share.png'),
 };

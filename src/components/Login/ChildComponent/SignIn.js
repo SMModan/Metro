@@ -97,6 +97,7 @@ class SignIn extends Component {
             const permission = table[index];
             const programName = permission.ProgramName
             const showIcon = permission.ShowIcon
+            
             console.log("<============================ programName ============================>", programName)
 
             if(programName=="Check In/Out"){
@@ -137,8 +138,9 @@ class SignIn extends Component {
               store.dispatch(setSessionField("helpDesk", showIcon));
             }else if(programName=="Quotation"){
               console.log("<============================ Res ============================>", showIcon)
-
+              const canExport = permission.CanExport
               store.dispatch(setSessionField("quotation", showIcon));
+              store.dispatch(setSessionField("quotationCanExport", canExport));
             }
           }
           ProgressDialog.hide();

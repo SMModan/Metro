@@ -6,6 +6,8 @@ import SectionListContacts from 'react-native-sectionlist-contacts';
 import { connect } from 'react-redux';
 import { goBack, push } from '../../../navigation/Navigator';
 import { Colors, FontName, Images } from '../../../utils';
+import ResponsivePixels from "../../../utils/ResponsivePixels";
+import { CheckIn } from "../../CheckInOut/CheckIn";
 import {
   Clickable,
   MainContainer
@@ -29,11 +31,44 @@ class Customer extends Component {
     searchQuery: false,
   };
 
+  updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
+
+    console.log("type =====>",type)
+    console.log("CheckInID =====>",CheckInID)
+    console.log("HeaderID =====>",HeaderID)
+    let listData = this.state.listData;
+  
+    if(type==0){
+      let index = listData.findIndex(el => el.ID == HeaderID);
+      console.log("index ===>",index)
+      if (index != -1) {
+        let item = listData[index];
+        item.CheckInID = CheckInID;
+        item.IsCheckIn = 'Yes';
+        listData[index] = item;
+      }
+    }else{
+          let index = listData.findIndex(el => el.CheckInID == CheckInID);
+          if (index != -1) {
+            let item = listData[index];
+            item.CheckInID = 0;
+            item.IsCheckIn = 'No';
+            listData[index] = item;
+          }
+    }
+  
+    this.setState({
+      listData,
+    });
+  }
+  
   _renderItem = ({index,item}) => {
-    //console.log("iitem---------------------",item)
+    const {isCheckInPermission,userID} = this.state
+    console.log("item ==========>",item)
     return (
       <Card style={{ margin: 7,padding:10}} key={index}
-      onPress={() => {
+     >
+        <Clickable  onPress={() => {
         this.props.navigation.push('EditCustomer', { item })
       }}>
          <View style={{flexDirection:'row'}}>
@@ -72,8 +107,19 @@ class Customer extends Component {
                     color:'#485780'
                 }}>{item.EmailID}</Text>
         </View>
+        </Clickable>
      
-     
+        {isCheckInPermission &&   
+   <CheckIn  lableText={item.CustomerType} TransactionTypeID={1} HeaderID={item.ID} 
+   IsCheckIn={item.IsCheckIn} 
+   CheckInID={item.CheckInID} CheckInTime={item.CheckInTime}
+   userID={userID}
+   updateListAfterCheckInCheckOut={(type,ID,HeaderID)=>{this.updateListAfterCheckInCheckOut(type,ID,HeaderID)}}/>
+   }
+
+
+
+
       </Card>
     )
   }
@@ -111,7 +157,17 @@ class Customer extends Component {
 
   
   componentDidMount = () => {
-    this.getAllCustomer();
+
+    const checkinout =this.props.session.checkinout
+    const user =this.props.session.user
+    this.setState({
+      isCheckInPermission:checkinout,
+      userID :user.ID
+    },()=>{
+      this.getAllCustomer();
+
+    })
+
   };
 
   getAllCustomer = () => {
@@ -223,62 +279,10 @@ class Customer extends Component {
         }}>
         <View style={styles.MainHeaderView}>
         {loading && <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} />}
-
-          {/* <FlatList
-            ref={s => this.sectionList = s}
-            keyExtractor={(item, index) => 'key' + index}
-            sectionListData={this.state.listData}
-            initialNumToRender={this.state.listData.length}
-            showsVerticalScrollIndicator={false}
-            SectionListClickCallback={(item, index) => {
-              //console.log('---SectionListClickCallback--:', item, index)
-            }}
-            otherAlphabet="#"
-            renderHeader={this._renderHeader}
-            renderItem={this._renderItem}
-            letterViewStyle={{
-              marginRight: -5,
-            }}
-            refreshing={refreshing}
-            footerComponent={() => {
-              return (loadMore ? <ActivityIndicator size={"large"} color={Colors.blueGray900} style={{ margin: 8 }} /> : null)
-            }}
-            onRefresh={() => {
-              this.setState({
-                page: 0,
-                refreshing: true
-              }, () => {
-                this.getAllCustomer()
-              })
-            }}
-            onEndReached={() => {
-              //console.log("End")
-
-              if (!loadMore && !isLast) {
-                this.setState({
-                  page: this.state.page + 1,
-                  loadMore: true
-                }, () => {
-                  this.getAllCustomer()
-                })
-
-              }
-            }}
-            // ListFooterComponent={this._renderFooter}
-            letterTextStyle={{
-              fontFamily: FontName.regular,
-              fontSize: 14,
-              marginLeft:4,
-              fontWeight: '400',
-              color: Colors.blue
-            }}
-          /> */}
-
-
           <FlatList
             data={listData || []}
             renderItem={item => this._renderItem(item)}
-            style={{flex: 1, margin: 10}}
+            style={{flex: 1, margin: ResponsivePixels.size5}}
             refreshing={refreshing}
             loading={loading}
             onRefresh={() => {
@@ -328,7 +332,9 @@ class Customer extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  session: state.session
+});
 
 const mapDispatchToProps = {};
 

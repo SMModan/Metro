@@ -438,8 +438,6 @@ class UpdateTask extends Component {
             value={ownerRemarks}
             label={'Owner Remarks'}
           />
-          {/* {isAssignedToMe ? <FloatingEditText value={AssigneeRemarks} onChangeText={(text) => this.onTextChanged("AssigneeRemarks", text)} label={"Your Remarks"} /> : null} */}
-
         </ViewWithTitle>
 
       

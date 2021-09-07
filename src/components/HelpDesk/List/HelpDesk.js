@@ -1,17 +1,25 @@
 import _ from "lodash";
 import React, { Component } from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, View } from 'react-native';
-import { Button, Button as DialogButton, Card, Chip, Dialog, FAB, Portal, Title } from 'react-native-paper';
+import {
+  ActivityIndicator, Alert, Image, PermissionsAndroid,
+  Platform, ScrollView, Text, View
+} from 'react-native';
+import Geocoder from 'react-native-geocoding';
+import Geolocation from 'react-native-geolocation-service';
+import { Button, Button as DialogButton, Card, Chip, Dialog, FAB, Portal, TextInput, Title } from 'react-native-paper';
 import { AirbnbRating } from 'react-native-ratings';
 import { connect } from 'react-redux';
-import { Colors, Images } from '../../../utils';
+import { Colors, Images, Utils } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
+import CheckIn from "../../CheckInOut/CheckIn";
 import {
-  MainContainer, MyFlatList
+  Clickable,
+  FloatingEditText,
+  MainContainer, MyFlatList, ProgressDialog
 } from '../../common';
 import HelpDeskApi from '../Api/HelpDeskApi';
 import styles from '../styles/HelpDesk.style';
-
+// import Geolocation from '@react-native-community/geolocation';
 
 class HelpDesk extends Component {
   state = {
@@ -27,18 +35,55 @@ class HelpDesk extends Component {
     showSearch: false,
     searchQuery: false,
     statusId: 0,
-    isCheckInPermission:false
+    isCheckInPermission:false,
+    checkoutDialogue:false
   };
 
   componentDidMount = () => {
-    this.getAllList()
-
+   
     const checkinout =this.props.session.checkinout
+    const user =this.props.session.user
+
     this.setState({
-      isCheckInPermission:checkinout
+      isCheckInPermission:checkinout,
+      userID :user.ID
+    },()=>{
+      this.getAllList()
     })
   }
 
+updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
+
+  console.log("type =====>",type)
+  console.log("CheckInID =====>",CheckInID)
+  console.log("HeaderID =====>",HeaderID)
+  let listData = this.state.listData;
+
+  if(type==0){
+    let index = listData.findIndex(el => el.ID == HeaderID);
+    console.log("index ===>",index)
+    if (index != -1) {
+      let item = listData[index];
+      item.CheckInID = CheckInID;
+      item.IsCheckIn = 'Yes';
+      listData[index] = item;
+    }
+  }else{
+        let index = listData.findIndex(el => el.CheckInID == CheckInID);
+        if (index != -1) {
+          let item = listData[index];
+          item.CheckInID = 0;
+          item.IsCheckIn = 'No';
+          listData[index] = item;
+        }
+  }
+
+  this.setState({
+    listData,
+  });
+}
+
+  // AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs
   getAllList = () => {
     const { searchQuery } = this.state
 
@@ -81,13 +126,13 @@ class HelpDesk extends Component {
     const item = this.state.listData[index];
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
-    console.log("itemm ==========>",item)
     let myDate = `${date.getDay()}-${date.getMonth() + 1
       }-${date.getFullYear()}`;
 
-      const {isCheckInPermission} = this.state
+      const {isCheckInPermission,userID} = this.state
     return (
-      <Card style={{ margin: 5 }} key={item.index} onPress={() => {
+      <Card style={{ margin: 5 }} key={item.index}>
+        <Clickable  onPress={() => {
         this.props.navigation.push('AddHelpDesk', { item })
       }}>
         <View style={{ margin: 15 }}>
@@ -107,87 +152,15 @@ class HelpDesk extends Component {
                 uppercase={false}> View ratings & digital signature </Button> : null
           }
         </View>
-      
+      </Clickable>
 
 {isCheckInPermission &&   
-        <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          padding: ResponsivePixels.size5,
-          paddingRight: ResponsivePixels.size10,
-        }}>
-        <Button
-          labelStyle={{
-            fontSize: ResponsivePixels.size12,
-            color: '#2262F7',
-            textAlign: 'left',
-            textAlignVertical: 'center',
-          }}
-          style={{
-            alignItems: 'flex-start',
-            width: '35%',
-            borderWidth: ResponsivePixels.size1,
-            borderColor: Colors.Black,
-          }}
-          uppercase={false}
-          onPress={() => {
-            this.props.navigation.push('AddRemarks', {
-              TaskActivityID: item.TaskActivityID,
-            });
-          }}>
-          {this.generateUniqueId(date)}
-        </Button><View
-          style={{
-            flexDirection: 'row',
-            width: '65%',
-            borderWidth: ResponsivePixels.size1,
-            borderRadius: ResponsivePixels.size5,
-            borderColor: Colors.Black,
-            marginLeft: ResponsivePixels.size5,
-            marginRight: ResponsivePixels.size5,
-          }}>
-          <Button
-            labelStyle={{
-              fontSize: ResponsivePixels.size12,
-              color: Colors.Black,
-              textAlign: 'left',
-            }}
-            style={{
-              alignItems: 'flex-start',
-              width: '55%',
-              borderEndColor: '#2262F7',
-              backgroundColor: Colors.BlackColor100,
-            }}
-            uppercase={false}
-            onPress={() => {
-              console.log('item ====> ', item);
-              this.handleCompleteTaskApi(item);
-            }}>
-            My Check-In
-          </Button>
-
-          <Button
-            labelStyle={{
-              fontSize: ResponsivePixels.size12,
-              color: '#2262F7',
-              textAlign: 'left',
-            }}
-            style={{
-              alignItems: 'flex-start',
-              width: '45%',
-              borderEndColor: '#2262F7',
-            }}
-            uppercase={false}
-            onPress={() => {
-              console.log('item ====> ', item);
-              this.handleCompleteTaskApi(item);
-            }}>
-            {item.IsCheckIn=='No'?"CheckIn":"CheckOut"}
-          </Button>
-        </View>
-        </View>
-      }
+   <CheckIn  lableText={date} TransactionTypeID={4} HeaderID={item.ID} 
+   IsCheckIn={item.IsCheckIn} 
+   CheckInID={item.CheckInID} CheckInTime={item.CheckInTime}
+   userID={userID}
+   updateListAfterCheckInCheckOut={(type,ID,HeaderID)=>{this.updateListAfterCheckInCheckOut(type,ID,HeaderID)}}/>
+   }
       </Card>
     );
   };
@@ -209,7 +182,7 @@ class HelpDesk extends Component {
 
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast, contactDialogVisible, showSearch } = this.state
+    const { listData, refreshing, loading, loadMore, isLast, contactDialogVisible, showSearch,checkoutDialogue } = this.state
 
     return (
       <MainContainer
@@ -284,8 +257,7 @@ class HelpDesk extends Component {
                 }
               }}
             />
-
-
+           
             <Portal>
               <Dialog visible={contactDialogVisible} onDismiss={() => { this.setState({ contactDialogVisible: false }) }}>
                 <Dialog.Title> Ratting & Digital signature </Dialog.Title>
@@ -310,6 +282,7 @@ class HelpDesk extends Component {
             </Portal>
           </View>
         </View>
+        
         <FAB
           style={styles.fab}
           icon="plus"

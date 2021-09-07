@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -6,17 +6,17 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {Clickable, MainContainer, MyFlatList} from '../../common';
-import {connect} from 'react-redux';
+import { Clickable, MainContainer, MyFlatList } from '../../common';
+import { connect } from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors, FontName} from '../../../utils';
-import {Chip, Card, Title, Button, FAB} from 'react-native-paper';
+import { strings } from '../../../language/Language';
+import { Images, Colors, FontName } from '../../../utils';
+import { Chip, Card, Title, Button, FAB } from 'react-native-paper';
 import AppointmentApi from '../Api/AppointmentApi';
 import _ from 'lodash';
-import {goBack, push} from '../../../navigation/Navigator';
+import { goBack, push } from '../../../navigation/Navigator';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
-import {CheckIn} from '../../CheckInOut/CheckIn';
+import CheckIn from '../../CheckInOut/CheckIn';
 
 class Appointments extends Component {
   state = {
@@ -78,7 +78,7 @@ class Appointments extends Component {
   };
 
   getAllAppointment = () => {
-    const {searchQuery} = this.state;
+    const { searchQuery } = this.state;
 
     const params = {
       PageIndex: this.state.page,
@@ -92,7 +92,7 @@ class Appointments extends Component {
       params,
       res => {
         if (res) {
-          const {Table} = res && res;
+          const { Table } = res && res;
           let isLast = true;
           if (Table) {
             if (Array.isArray(Table)) {
@@ -109,7 +109,7 @@ class Appointments extends Component {
                 isLast,
               });
             } else {
-              let results = [{...Table}];
+              let results = [{ ...Table }];
               console.log('<===results  ===>', results);
               this.setState({
                 listData: results,
@@ -159,21 +159,21 @@ class Appointments extends Component {
     }
     return date;
   };
-  renderCell = ({index}) => {
-    const {isCheckInPermission, userID} = this.state;
+  renderCell = ({ index }) => {
+    const { isCheckInPermission, userID } = this.state;
 
     const item = this.state.listData[index];
     console.log('item.CreatedDate ======>', item);
     var date = item.CreatedDate;
 
     return (
-      <Card style={{margin: ResponsivePixels.size10}} key={item.index}>
+      <Card style={{ margin: ResponsivePixels.size10 }} key={item.index}>
         <Clickable
           onPress={() => {
-            this.props.navigation.push('AddAppointments', {item});
+            this.props.navigation.push('AddAppointments', { item });
           }}>
-          <View style={{margin: ResponsivePixels.size15}}>
-            <Text style={{fontSize: 12}}>{this.createdDate(date)}</Text>
+          <View style={{ margin: ResponsivePixels.size15 }}>
+            <Text style={{ fontSize: 12 }}>{this.createdDate(date)}</Text>
             <Text
               style={{
                 fontSize: 18,
@@ -182,7 +182,7 @@ class Appointments extends Component {
               }}>
               {item.Subject}
             </Text>
-            <Title style={{fontSize: 13, fontFamily: FontName.regular}}>
+            <Title style={{ fontSize: 13, fontFamily: FontName.regular }}>
               {' '}
               Created By {item.OwnerName}
             </Title>
@@ -240,7 +240,7 @@ class Appointments extends Component {
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
-    const {listData, refreshing, loading, loadMore, isLast, showSearch} =
+    const { listData, refreshing, loading, loadMore, isLast, showSearch } =
       this.state;
 
     return (
@@ -257,11 +257,11 @@ class Appointments extends Component {
             this.searchOpp();
           },
           onChangeSearch: text => {
-            this.setState({searchQuery: text});
+            this.setState({ searchQuery: text });
           },
           onCloseSearch: () => {
             this.setState(
-              {showSearch: false, searchQuery: '', page: 0, refreshing: true},
+              { showSearch: false, searchQuery: '', page: 0, refreshing: true },
               () => {
                 this.getAllAppointment();
               },
@@ -271,7 +271,7 @@ class Appointments extends Component {
           right: [
             {
               image: Images.ic_Search,
-              onPress: () => this.setState({showSearch: true}),
+              onPress: () => this.setState({ showSearch: true }),
             },
           ],
         }}>
@@ -283,7 +283,7 @@ class Appointments extends Component {
               data={listData || []}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
-              style={{flex: 1, margin: ResponsivePixels.size5}}
+              style={{ flex: 1, margin: ResponsivePixels.size5 }}
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
@@ -302,7 +302,7 @@ class Appointments extends Component {
                   <ActivityIndicator
                     size={'large'}
                     color={Colors.blueGray900}
-                    style={{margin: 8}}
+                    style={{ margin: 8 }}
                   />
                 ) : null;
               }}

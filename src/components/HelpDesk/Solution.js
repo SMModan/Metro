@@ -73,6 +73,7 @@ class Solution extends Component {
 
     this.setState({
       solutions,
+
     })
   }
 
@@ -135,8 +136,9 @@ class Solution extends Component {
   };
   render() {
     const { solutions } = this.state;
-    const solution = solutions.length
-      ? solutions[this.state.selectedIndex]
+    const finalSolutions = solutions.filter(p => p.RowStatus != "delete")
+    const solution = finalSolutions.length
+      ? finalSolutions[this.state.selectedIndex]
       : undefined;
 
     const SolutionUserId = solution?.SolutionUserId || 0
@@ -180,7 +182,7 @@ class Solution extends Component {
                   borderBottomColor: Colors.secondary50,
                   borderWidth: 1,
                 }}>
-                {solutions.filter(p => p.RowStatus != "delete").map((item, index) => (
+                {finalSolutions.map((item, index) => (
                   <View>
                     <Chip
                       onClose={isSolutionOwner ? this.deleteSolution : undefined}

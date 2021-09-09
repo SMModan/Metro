@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { Image, Platform, Text, View } from 'react-native';
 import { connect } from 'react-redux';
+import session from 'redux-persist/lib/storage/session';
 import { store } from '../../../App';
 import { strings } from '../../../language/Language';
 import { reset } from '../../../navigation/Navigator';
@@ -33,7 +34,6 @@ class SignIn extends Component {
 
   async componentDidMount() {
     // createDefaultTables();
-    console.log("session.deviceToken", this.props.session)
   }
 
   getCompnayNameByUserName = userName => {
@@ -77,94 +77,6 @@ class SignIn extends Component {
     );
   };
 
-
-
-
-
-  permissionApi = (userId,connectionString)=>{
-    const params = {
-      UserID: userId,
-      ConnectionString: connectionString,
-    };
-    
-    loginApi.PermissionApi(
-      params,
-      res => {
-        if (res) {
-          
-          const table = res.Table
-          for (let index = 0; index < table.length; index++) {
-            const permission = table[index];
-            const programName = permission.ProgramName
-            const showIcon = permission.ShowIcon
-            
-            console.log("<============================ programName ============================>", programName)
-
-            if(programName=="Check In/Out"){
-            console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("checkinout", showIcon));
-            }else if(programName=="Mark In - Out"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("markinout", showIcon));
-            }else if(programName=="Trip In - Out"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("tripinout", showIcon));
-            }else if(programName=="Customer"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("customer", showIcon));
-            }else if(programName=="Contact"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("contact", showIcon));
-            }else if(programName=="Opportunity"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("opportunity", showIcon));
-            }else if(programName=="Task Activity"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("task", showIcon));
-            }else if(programName=="Appointment Activity"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("appointment", showIcon));
-            }else if(programName=="HelpDesk"){
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("helpDesk", showIcon));
-            }else if(programName=="Quotation"){
-              console.log("<============================ Res ============================>", showIcon)
-              const canExport = permission.CanExport
-              store.dispatch(setSessionField("quotation", showIcon));
-              store.dispatch(setSessionField("quotationCanExport", canExport));
-            }
-          }
-          ProgressDialog.hide();
-          reset('Home');
-
-          if (!this.props.session.isSync) {
-            syncAllData()
-          } else {
-            ProgressDialog.hide();
-            reset('Home');
-          }
-        } else
-          ProgressDialog.hide();
-       
-      },
-      error => {
-        ProgressDialog.hide();
-        Utils.showToast(error);
-      },
-    );
-  }
-
-
-
   login = () => {
     const params = {
       UserName: this.state.userName,
@@ -179,12 +91,19 @@ class SignIn extends Component {
 
         if (res) {
           const { Table } = res;
-          const userId = Table.ID
-          const connectionString = store.getState().session.connectionString;
+
           store.dispatch(setSessionField('user', Table));
           store.dispatch(setSessionField('is_logged_in', true));
-          loginApi.setDeviceToken({ DeviceToken: this.props.session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" }) })
-          this.permissionApi(userId,connectionString)
+          
+          
+          if (!this.props.session.isSync){
+             syncAllData()
+          }
+          else {
+            ProgressDialog.hide();
+
+            reset('Home');
+          }
         } else
           ProgressDialog.hide();
 
@@ -212,14 +131,10 @@ class SignIn extends Component {
   render() {
     return (
       <MainContainer
-        header={{ 
-          hideUnderLine: true,
-          light: false,
+        header={{ hideUnderLine: true,
           isHome: true,
-         backgroundColor: Colors.white 
-         
-         }}>
-           
+           backgroundColor: Colors.white }}
+        >
         <ScrollContainer>
           {/* <ProgressDialog visible={true} /> */}
           <View style={styles.ContainerView}>

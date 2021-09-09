@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import _ from 'lodash';
 import {
   ActivityIndicator,
@@ -23,9 +23,9 @@ import {
   TextInput,
   Title,
 } from 'react-native-paper';
-import { AirbnbRating } from 'react-native-ratings';
-import { connect } from 'react-redux';
-import { Colors, Images, Utils } from '../../utils';
+import {AirbnbRating} from 'react-native-ratings';
+import {connect} from 'react-redux';
+import {Colors, Images, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Clickable,
@@ -37,19 +37,19 @@ import {
 import CheckInApi from './Api/CheckInApi';
 import { push } from '../../navigation/Navigator';
 
-class CheckIn extends Component {
+export class CheckIn extends Component {
 
 
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      checkoutDialogue: false,
-      latitude: 0,
-      longitude: 0
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            checkoutDialogue:false,
+            latitude:0,
+            longitude:0
+        }
     }
-  }
-
+    
 
   hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -69,14 +69,14 @@ class CheckIn extends Component {
     }
 
     if (status === 'disabled') {
-      ProgressDialog.hide()
+        ProgressDialog.hide()
 
       Alert.alert(
         `Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`,
         '',
         [
-          { text: 'Go to Settings', onPress: openSetting },
-          { text: "Don't Use Location", onPress: () => { } },
+          {text: 'Go to Settings', onPress: openSetting},
+          {text: "Don't Use Location", onPress: () => {}},
         ],
       );
     }
@@ -131,11 +131,11 @@ class CheckIn extends Component {
 
     Geolocation.getCurrentPosition(
       position => {
-        const { latitude, longitude } = position.coords;
+        const {latitude, longitude} = position.coords;
 
         console.log('latitude == ', latitude);
         console.log('longitude == ', longitude);
-        ProgressDialog.hide()
+      ProgressDialog.hide()
 
         this.setState(
           {
@@ -143,13 +143,13 @@ class CheckIn extends Component {
             longitude,
           },
           () => {
-            if (type == 0) {
-              this.checkInApiCall()
-            } else {
-              this.setState({
-                checkoutDialogue: true
-              })
-            }
+              if(type == 0){
+                  this.checkInApiCall()
+              }else{
+                  this.setState({
+                    checkoutDialogue:true
+                  })
+              }
           },
         );
         // setLocation(position);
@@ -182,11 +182,11 @@ class CheckIn extends Component {
   };
 
   checkInApiCall = () => {
-    const { latitude, longitude } = this.state;
+    const {latitude, longitude} = this.state;
 
     // const userID =this.props.session.user.ID
 
-    const { TransactionTypeID, HeaderID, IsCheckIn, userID, CheckInID, CheckInTime } = this.props
+    const {TransactionTypeID,HeaderID,IsCheckIn,userID,CheckInID,CheckInTime} = this.props
 
 
 
@@ -229,7 +229,7 @@ class CheckIn extends Component {
         console.log('res  ==================>', res);
 
         const CheckInID = res.ID;
-        this.props.updateListAfterCheckInCheckOut(0, CheckInID, HeaderID)
+        this.props.updateListAfterCheckInCheckOut(0,CheckInID,HeaderID)
 
         Utils.showToast('CheckIn SuccessFully.');
       },
@@ -241,37 +241,38 @@ class CheckIn extends Component {
   };
 
   generateUniqueId = date => {
-    let myDate = `HEL${date.getMonth() + 1
-      }${date.getFullYear()}-${date.getDay()}`;
+    let myDate = `HEL${
+      date.getMonth() + 1
+    }${date.getFullYear()}-${date.getDay()}`;
     return myDate;
   };
 
   checkOutApiCall = () => {
-    const { remarks } = this.state;
+    const {remarks} = this.state;
     // const userID =this.props.session.user.ID
 
 
-    const { CheckInID, CheckInTime, userID } = this.props
-    let splitString, _date, time, checkInHr, checkInMin
+    const {CheckInID,CheckInTime,userID} = this.props
+    let splitString,_date,time,checkInHr,checkInMin
 
-    console.log("checkinTime ======>", CheckInTime)
-    if (CheckInTime) {
-      splitString = CheckInTime.split('T');
-      _date = splitString[0];
-      time = splitString[1].split(':');
-      checkInHr = time[0];
-      checkInMin = time[1];
-    } else {
-      checkInHr = 0;
-      checkInMin = 0;
+    console.log("checkinTime ======>",CheckInTime)
+    if(CheckInTime){
+        splitString = CheckInTime.split('T');
+        _date = splitString[0];
+        time = splitString[1].split(':');
+        checkInHr = time[0];
+        checkInMin = time[1];
+    }else{
+        checkInHr = 0;
+        checkInMin = 0;
     }
-
+    
 
     console.log('_date', _date);
     console.log('checkInHr', checkInHr);
     console.log('checkInMin', checkInMin);
 
-    const { latitude, longitude } = this.state;
+    const { latitude, longitude} = this.state;
     ProgressDialog.show();
     // completed status == 2
     const date = new Date().getDate(); //Current Date
@@ -285,18 +286,18 @@ class CheckIn extends Component {
     let formattedDateTime =
       date + '-' + month + '-' + year + ' ' + hours + ':' + min;
     const latlang = `${latitude},${longitude}`;
-    let spentHours, spentMin
+    let spentHours,spentMin
 
-    if (CheckInTime) {
-      spentHours = hours - checkInHr;
-      spentHours = Math.abs(spentHours);
-      spentMin = min - checkInMin;
-      spentMin = Math.abs(spentMin);
-    } else {
-      spentHours = 0
-      spentMin = 0
+    if(CheckInTime){
+        spentHours = hours - checkInHr;
+        spentHours = Math.abs(spentHours);
+        spentMin = min - checkInMin;
+        spentMin = Math.abs(spentMin);
+    }else{
+        spentHours=0
+        spentMin=0
     }
-
+  
 
     let spentTime = `${spentHours}.${spentMin}`;
     console.log('spentTime =======>   ', spentTime);
@@ -326,8 +327,8 @@ class CheckIn extends Component {
       res => {
         ProgressDialog.hide();
         console.log('res  ==================>', res);
-
-        this.props.updateListAfterCheckInCheckOut(1, CheckInID, 0)
+    
+        this.props.updateListAfterCheckInCheckOut(1,CheckInID,0)
 
         Utils.showToast('CheckOut SuccessFully.');
       },
@@ -353,8 +354,8 @@ class CheckIn extends Component {
   };
 
   render() {
-    const { lableText, TransactionTypeID, HeaderID, IsCheckIn, CheckInID, CheckInTime } = this.props
-    const { checkoutDialogue } = this.state
+      const {lableText,TransactionTypeID,HeaderID,IsCheckIn,CheckInID,CheckInTime} = this.props
+      const {checkoutDialogue} = this.state
     return (
       <View
         style={{
@@ -377,8 +378,8 @@ class CheckIn extends Component {
             borderColor: Colors.Black,
           }}
           uppercase={false}
-          onPress={() => { }}>
-          {TransactionTypeID == 4 ? this.generateUniqueId(lableText) : lableText}
+          onPress={() => {}}>
+          {TransactionTypeID==4?this.generateUniqueId(lableText):lableText}
         </Button>
         <View
           style={{
@@ -404,10 +405,10 @@ class CheckIn extends Component {
             }}
             uppercase={false}
             onPress={() => {
-              push('MyCheckInOut', {
-                TransactionTypeID,
-                HeaderID,
-              });
+                push('MyCheckInOut', {
+                     TransactionTypeID,
+                     HeaderID,
+                  });
             }}>
             My Check-In
           </Button>
@@ -427,12 +428,12 @@ class CheckIn extends Component {
             }}
             uppercase={false}
             onPress={() => {
-              ProgressDialog.show()
+                ProgressDialog.show()
               if (IsCheckIn == 'No') {
                 // this.checkInApiCall(HeaderID);
                 this.getLocation(0)
               } else {
-                this.getLocation(1)
+              this.getLocation(1)
               }
             }}>
             {IsCheckIn == 'No' ? 'CheckIn' : 'CheckOut'}
@@ -440,32 +441,32 @@ class CheckIn extends Component {
         </View>
 
         <Portal>
-          <Dialog visible={checkoutDialogue} onDismiss={() => { this.setState({ checkoutDialogue: false }) }}>
-            <Dialog.Title>Add Remarks</Dialog.Title>
-            <Dialog.Content>
-              <View style={{ paddingVertical: 8 }}>
-                <TextInput label={"Enter Remarks"} onChangeText={(remarks) => { this.setState({ remarks }) }} />
-              </View>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <DialogButton color={Colors.blueGray600} style={{}} onPress={() => this.setState({ checkoutDialogue: false })}>Cancel</DialogButton>
-              <DialogButton color={Colors.primaryColor500} onPress={() => {
-                const { checkoutID, checkoutTime, remarks } = this.state
-                //       checkoutID:item.ID,
-                // checkoutTime:item.CheckInTime
+                <Dialog visible={checkoutDialogue} onDismiss={() => { this.setState({ checkoutDialogue: false }) }}>
+                    <Dialog.Title>Add Remarks</Dialog.Title>
+                    <Dialog.Content>
+                        <View style={{ paddingVertical: 8 }}>
+                            <TextInput label={"Enter Remarks"} onChangeText={(remarks)=>{this.setState({remarks})}} />
+                        </View>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <DialogButton color={Colors.blueGray600} style={{}} onPress={()=>this.setState({ checkoutDialogue: false }) }>Cancel</DialogButton>
+                        <DialogButton color={Colors.primaryColor500} onPress={()=>{
+                          const {checkoutID,checkoutTime,remarks} = this.state
+                    //       checkoutID:item.ID,
+                    // checkoutTime:item.CheckInTime
 
 
-                if (remarks) {
-                  this.setState({ checkoutDialogue: false }, () => {
-                    this.checkOutApiCall(checkoutID, checkoutTime)
-                  })
-                }
-
-              }}>Save</DialogButton>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
-
+                    if(remarks){
+                      this.setState({ checkoutDialogue: false },()=>{
+                        this.checkOutApiCall(checkoutID,checkoutTime)
+                      })
+                    }
+                                             
+                        } }>Save</DialogButton>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+         
       </View>
     );
   }
@@ -473,9 +474,9 @@ class CheckIn extends Component {
 
 
 const mapStateToProps = (state) => ({
-  session: state.session
-});
-
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CheckIn);
+    session: state.session
+  });
+  
+  const mapDispatchToProps = {};
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(CheckIn);

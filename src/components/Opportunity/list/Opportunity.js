@@ -54,13 +54,13 @@ class Opportunity extends Component {
           <Text style={{ fontSize: 15, color: Colors.darkGray, marginTop: 4 }}>{item.OpportunityName}</Text>
         </View>
         </Clickable>
-        {isCheckInPermission &&   
+        {isCheckInPermission?   
    <CheckIn  lableText={item.OpportunityStage} TransactionTypeID={2} HeaderID={item.ID} 
    IsCheckIn={item.IsCheckIn} 
    CheckInID={item.CheckInID} CheckInTime={item.CheckInTime}
    userID={userID}
    updateListAfterCheckInCheckOut={(type,ID,HeaderID)=>{this.updateListAfterCheckInCheckOut(type,ID,HeaderID)}}/>
-   }
+   :null}
       </Card>
     );
   };
@@ -68,6 +68,8 @@ class Opportunity extends Component {
   componentDidMount = () => {
 
     const checkinout =this.props.session.checkinout
+
+    
     const user =this.props.session.user
     this.setState({
       isCheckInPermission:checkinout,

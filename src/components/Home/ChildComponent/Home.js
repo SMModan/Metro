@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, Image } from 'react-native';
+import { View, Text, FlatList, Image, Platform } from 'react-native';
 import {
   MainContainer,
   ScrollContainer,
@@ -68,69 +68,232 @@ constructor(props) {
 }
 
 
+
+
+permissionApi = (userId,connectionString)=>{
+  const params = {
+    UserID: userId,
+    ConnectionString: connectionString,
+  };
+  ProgressDialog.show();
+  
+  loginApi.PermissionApi(
+    params,
+    res => {
+      if (res) {
+        
+        const table = res.Table
+        for (let index = 0; index < table.length; index++) {
+          const permission = table[index];
+          const programName = permission.ProgramName
+          const showIcon = permission.ShowIcon
+          
+          console.log("<============================ programName ============================>", programName)
+
+          if(programName=="Check In/Out"){
+          console.log("<============================ Res ============================>", showIcon)
+
+            store.dispatch(setSessionField("checkinout", showIcon));
+          }else if(programName=="Mark In - Out"){
+            console.log("<============================ Res ============================>", showIcon)
+
+            store.dispatch(setSessionField("markinout", showIcon));
+          }else if(programName=="Trip In - Out"){
+            console.log("<============================ Res ============================>", showIcon)
+
+            store.dispatch(setSessionField("tripinout", showIcon));
+          }else if(programName=="Customer"){
+            console.log("<============================ Res ============================>", showIcon)
+           // customer = showIcon
+            store.dispatch(setSessionField("customer", showIcon));
+          }else if(programName=="Contact"){
+            console.log("<============================ Res ============================>", showIcon)
+           // contact = showIcon
+            store.dispatch(setSessionField("contact", showIcon));
+          }else if(programName=="Opportunity"){
+            console.log("<============================ Res ============================>", showIcon)
+           // opportunity=showIcon
+            store.dispatch(setSessionField("opportunity", showIcon));
+          }else if(programName=="Task Activity"){
+            console.log("<============================ Res ============================>", showIcon)
+          //  task = showIcon
+            store.dispatch(setSessionField("task", showIcon));
+          }else if(programName=="Appointment Activity"){
+            console.log("<============================ Res ============================>", showIcon)
+           // appointment=showIcon
+            store.dispatch(setSessionField("appointment", showIcon));
+          }else if(programName=="HelpDesk"){
+            console.log("<============================ Res ============================>", showIcon)
+           // helpDesk=showIcon
+            store.dispatch(setSessionField("helpDesk", showIcon));
+          }else if(programName=="Quotation"){
+            console.log("<============================ Res ============================>", showIcon)
+            const canExport = permission.CanExport
+           // quotation=showIcon
+            store.dispatch(setSessionField("quotation", showIcon));
+            store.dispatch(setSessionField("quotationCanExport", canExport));
+          }
+        }
+        store.dispatch(setSessionField("isPermissionSet", true));
+        
+
+        let checkinout =this.props.session.checkinout
+        let customer =this.props.session.customer
+        let contact =this.props.session.contact
+        let opportunity =this.props.session.opportunity
+        let task =this.props.session.task
+        let appointment =this.props.session.appointment
+        let helpDesk =this.props.session.helpDesk
+        let quotation =this.props.session.quotation
+    
+        const data = [
+          {
+            icon: Images.ic_Person,
+            title: "Customer",
+            isVisible:customer
+          },
+          {
+            icon: Images.ic_Contacts,
+            title: "Contacts",
+            isVisible:contact
+          },
+          {
+            icon: Images.ic_Opportunities,
+            title: "Opportunities",
+            isVisible:opportunity
+          },
+          {
+            icon: Images.ic_Tasks,
+            title: "Tasks",
+            isVisible:task
+          },
+          {
+            icon: Images.ic_Appointment,
+            title: "Appointment",
+            isVisible:appointment
+          },
+          {
+            icon: Images.ic_HelpDesk,
+            title: "Help Desk",
+            isVisible:helpDesk
+          },
+          {
+            icon: Images.ic_Quotation,
+            title: "Quotation",
+            isVisible:quotation
+          },
+        ];
+    
+    
+        this.setState({
+          data
+        })
+        ProgressDialog.hide();
+
+      } else
+        ProgressDialog.hide();
+     
+    },
+    error => {
+      ProgressDialog.hide();
+      Utils.showToast(error);
+    },
+  );
+}
+
+
+
+
+
+
   componentDidMount = () => {
+const user = this.props.session.user
+const userId = user.ID
+const connectionString = store.getState().session.connectionString;
 
-    const checkinout =this.props.session.checkinout
-    const customer =this.props.session.customer
-    const contact =this.props.session.contact
-    const opportunity =this.props.session.opportunity
-    const task =this.props.session.task
-    const appointment =this.props.session.appointment
-    const helpDesk =this.props.session.helpDesk
-    const quotation =this.props.session.quotation
-
-    const data = [
-      {
-        icon: Images.ic_Person,
-        title: "Customer",
-        isVisible:customer
-      },
-      {
-        icon: Images.ic_Contacts,
-        title: "Contacts",
-        isVisible:contact
-      },
-      {
-        icon: Images.ic_Opportunities,
-        title: "Opportunities",
-        isVisible:opportunity
-      },
-      {
-        icon: Images.ic_Tasks,
-        title: "Tasks",
-        isVisible:task
-      },
-      {
-        icon: Images.ic_Appointment,
-        title: "Appointment",
-        isVisible:appointment
-      },
-      {
-        icon: Images.ic_HelpDesk,
-        title: "Help Desk",
-        isVisible:helpDesk
-      },
-      {
-        icon: Images.ic_Quotation,
-        title: "Quotation",
-        isVisible:quotation
-      },
-    ];
+const deviceTokenFCM = store.getState().session.deviceToken;
 
 
-    this.setState({
-      checkinout,
-      customer,
-      contact,
-      opportunity,
-      task,
-      appointment,
-      helpDesk,
-      quotation,
-      data
-    })
+const isDeviceIdSet = this.props.session.isDeviceIdSet
 
-    console.log("this.props.session.user", this.props.session.user)
+if(!isDeviceIdSet){
+  loginApi.setDeviceToken(
+    { DeviceToken: deviceTokenFCM, DeviceType: Platform.select({ android: "A", ios: "I" }) },
+    res => {
+      if (res) {
+       store.dispatch(setSessionField('isDeviceIdSet', true));
+       
+        ProgressDialog.hide();
+  
+      } else
+        ProgressDialog.hide();
+     
+    },
+    error => {
+      ProgressDialog.hide();
+      Utils.showToast(error);
+    },
+  );
+  
+}
+
+const isPermissionSet = this.props.session.isPermissionSet
+
+    if(!isPermissionSet){
+      this.permissionApi(userId,connectionString)
+    }else{
+      let checkinout =this.props.session.checkinout
+      let customer =this.props.session.customer
+      let contact =this.props.session.contact
+      let opportunity =this.props.session.opportunity
+      let task =this.props.session.task
+      let appointment =this.props.session.appointment
+      let helpDesk =this.props.session.helpDesk
+      let quotation =this.props.session.quotation
+  
+      const data = [
+        {
+          icon: Images.ic_Person,
+          title: "Customer",
+          isVisible:customer
+        },
+        {
+          icon: Images.ic_Contacts,
+          title: "Contacts",
+          isVisible:contact
+        },
+        {
+          icon: Images.ic_Opportunities,
+          title: "Opportunities",
+          isVisible:opportunity
+        },
+        {
+          icon: Images.ic_Tasks,
+          title: "Tasks",
+          isVisible:task
+        },
+        {
+          icon: Images.ic_Appointment,
+          title: "Appointment",
+          isVisible:appointment
+        },
+        {
+          icon: Images.ic_HelpDesk,
+          title: "Help Desk",
+          isVisible:helpDesk
+        },
+        {
+          icon: Images.ic_Quotation,
+          title: "Quotation",
+          isVisible:quotation
+        },
+      ];
+  
+  
+      this.setState({
+        data
+      })
+    }
   }
 
   renderHomeList = ({ index }) => {
@@ -238,25 +401,34 @@ constructor(props) {
 
 
    logoutApiCall = ()=>{
-      const params = {
-        DeviceToken: this.props.session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" })
-      };
-      ProgressDialog.show();
-      loginApi.LogoutApi(
-        params,
-        res => {
-          ProgressDialog.hide();
-          if (res) {
-            store.dispatch(setSessionField('user', {}));
-            store.dispatch(setSessionField('is_logged_in', false));
-            reset("SignIn")
-          } 
-        },
-        error => {
-          ProgressDialog.hide();
-          Utils.showToast(error);
-        },
-      );
+
+    store.dispatch(setSessionField('user', {}));
+    store.dispatch(setSessionField('is_logged_in', false));
+    store.dispatch(setSessionField('isDeviceIdSet', false));
+    store.dispatch(setSessionField('isPermissionSet', false));
+    reset("SignIn")
+
+      // const params = {
+      //   DeviceToken: this.props.session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" })
+      // };
+      // ProgressDialog.show();
+      // loginApi.LogoutApi(
+      //   params,
+      //   res => {
+      //     ProgressDialog.hide();
+      //     if (res) {
+      //       store.dispatch(setSessionField('user', {}));
+      //       store.dispatch(setSessionField('is_logged_in', false));
+      //       store.dispatch(setSessionField('isDeviceIdSet', false));
+      //       store.dispatch(setSessionField('isPermissionSet', false));
+      //       reset("SignIn")
+      //     } 
+      //   },
+      //   error => {
+      //     ProgressDialog.hide();
+      //     Utils.showToast(error);
+      //   },
+      // );
    }
   render() {
     const {data} = this.state

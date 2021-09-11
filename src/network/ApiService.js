@@ -134,7 +134,9 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
 
                                 const { ConnectionString, AuthenticationToken } = jsonResponse.Response
                                 if (AuthenticationToken && ConnectionString) {
-
+                                    console.log("EndPoint", endpoint)
+                                    console.log("AuthenticationToken", AuthenticationToken)
+                                    console.log("ConnectionString", ConnectionString)
                                     store.dispatch(setSessionField("token", AuthenticationToken))
                                     store.dispatch(setSessionField("connectionString", ConnectionString))
                                 }
@@ -142,7 +144,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
                             } else {
                                 if (jsonResponse.Response.ErrorMessage === "UnAuthorized User") {
                                     onFailure('Session expired')
-                                    
+
                                 } else
                                     onFailure(jsonResponse.Response.ErrorMessage || "Something went wrong")
                             }

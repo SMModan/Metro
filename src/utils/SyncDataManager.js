@@ -135,7 +135,7 @@ const offlineData = [
 const syncData = (fromLogin = true) => {
 
     console.log("--------------------------------------------")
-    console.log("index", index)
+    // console.log("index", index)
 
     if (index <= offlineData.length - 1) {
 
@@ -146,15 +146,15 @@ const syncData = (fromLogin = true) => {
 
             const { Table, Table1 } = res
 
-            console.log("Table && typeof (Table) == Array", Table && typeof (Table))
-            console.log("Table1 && typeof (Table1) == Array", Table1 && typeof (Table1))
+            // console.log("Table && typeof (Table) == Array", Table && typeof (Table))
+            // console.log("Table1 && typeof (Table1) == Array", Table1 && typeof (Table1))
             const dropDown = []
             if (Table && Array.isArray(Table)) {
                 await Promise.all(Table.map(async (t) => {
                     const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID, UserName } = t
 
                     // if (ID && Name) {
-                    console.log("Going to insert1")
+                    // console.log("Going to insert1")
                     dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName || UserName })
                     // await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)
                     // }
@@ -164,7 +164,7 @@ const syncData = (fromLogin = true) => {
                     const { ID, Name, TerritoryName, CurrencyName, CountryName, TerritoryID, UserName } = t
 
                     // if (ID && Name) {
-                    console.log("Going to insert1")
+                    // console.log("Going to insert1")
                     dropDown.push({ id: ID || TerritoryID, name: Name || TerritoryName || CurrencyName || CountryName || UserName })
 
                     // await insertDropDowns(ID || TerritoryID, Name || TerritoryName || CurrencyName || CountryName, endPoint)

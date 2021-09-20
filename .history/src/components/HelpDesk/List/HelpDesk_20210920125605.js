@@ -128,7 +128,6 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
 
   renderCell = ({ index }) => {
     const item = this.state.listData[index];
-    console.log(item.IsDigiSign)
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
     let myDate = `${date.getDay()}-${date.getMonth() + 1
@@ -150,19 +149,13 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
           <Text style={{ fontSize: 12, color: Colors.primary, fontWeight: 'bold', marginTop: 8 }}>{item.CustomerName}</Text>
           <Title style={{ fontSize: 16, marginTop: 8 }}>{item.ContactPersonName}</Title>
           <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.AssignedToName}</Text>
-          {
-            item.StatusID === 2 && item.IsDigiSign !=0 ?
               <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }}
                 onPress={() => { 
-                  this.setState({ contactDialogVisible: true, ratings:item.DigiSignRating,
-                    signatureURL:item.DigiSignFilePath,
-                    remarks:item.DigiSignRemarks,
-
-                    selectedItem: item })
+                  this.setState({ contactDialogVisible: true, selectedItem: item })
 
                  }}
                 uppercase={false}> View ratings & digital signature </Button> : null
-          }
+          
         </View>
       </Clickable>
 

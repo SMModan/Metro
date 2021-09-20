@@ -154,9 +154,7 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
             item.StatusID === 2 && item.IsDigiSign !=0 ?
               <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }}
                 onPress={() => { 
-                  this.setState({ contactDialogVisible: true, ratings:item.DigiSignRating,
-                    signatureURL:item.DigiSignFilePath,
-                    remarks:item.DigiSignRemarks,
+                  this.setState({ contactDialogVisible: true, rat
 
                     selectedItem: item })
 

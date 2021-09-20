@@ -48,6 +48,7 @@ const AddOpportunityUi = ({ opportunityId }) => {
                     activeTintColor: 'white',
                     labelStyle: { textTransform: 'none', fontSize: 15, fontFamily: FontName.regular },
                     scrollEnabled: opportunityId ? true : false,
+
                     style: { backgroundColor: Colors.secondary500 },
                     showIcon: true,
                     indicatorStyle: { backgroundColor: Colors.primaryColor500 }

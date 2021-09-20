@@ -26,7 +26,7 @@ class HelpDesk extends Component {
     selectedIndex: 1,
     ratings:0,
     remarks:"",
-    signatureURL:"",
+    signatureURL=""
     page: 0,
     totalPage: 0,
     refreshing: false,
@@ -128,7 +128,6 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
 
   renderCell = ({ index }) => {
     const item = this.state.listData[index];
-    console.log(item.IsDigiSign)
     var date = new Date(item.CreatedDate);
     date.toISOString().substring(0, 10);
     let myDate = `${date.getDay()}-${date.getMonth() + 1
@@ -151,14 +150,10 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
           <Title style={{ fontSize: 16, marginTop: 8 }}>{item.ContactPersonName}</Title>
           <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.AssignedToName}</Text>
           {
-            item.StatusID === 2 && item.IsDigiSign !=0 ?
+            item.StatusID === 2 && item.IsDigiSign == true ?
               <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }}
                 onPress={() => { 
-                  this.setState({ contactDialogVisible: true, ratings:item.DigiSignRating,
-                    signatureURL:item.DigiSignFilePath,
-                    remarks:item.DigiSignRemarks,
-
-                    selectedItem: item })
+                  this.setState({ contactDialogVisible: true, selectedItem: item })
 
                  }}
                 uppercase={false}> View ratings & digital signature </Button> : null
@@ -194,7 +189,7 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
 
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast, contactDialogVisible, showSearch,checkoutDialogue,isRatingRemarks,ratings,remarks,signatureURL } = this.state
+    const { listData, refreshing, loading, loadMore, isLast, contactDialogVisible, showSearch,checkoutDialogue,isRatingRemarks,selectedItem } = this.state
 
     return (
       <MainContainer
@@ -276,7 +271,7 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
                 <Dialog.ScrollArea>
                   <Image source={Images.ic_signature} style={{ width: '100%', height: '30%', resizeMode: 'stretch', alignItems: 'flex-start', marginTop: 25 }} />
                   <AirbnbRating
-                    count={ratings}
+                    count={selectedItem.DigiSignRating}
                     defaultRating={11}
                     size={30}
                     style={{ height: '30%' }}
@@ -284,7 +279,7 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
 
                   <View style={{ width: '100%', backgroundColor: Colors.BlueColor50, borderRadius: 5, marginTop: 20 }}>
                     <Text style={{ textAlign: 'center', fontSize: ResponsivePixels.size16, color: Colors.BlueColor500, margin: 3 }}>
-                     {remarks}</Text>
+                     { selectedItem.DigiSignRemarks}</Text>
                   </View>
 
                 </Dialog.ScrollArea>

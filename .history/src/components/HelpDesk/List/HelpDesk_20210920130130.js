@@ -156,7 +156,7 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
                 onPress={() => { 
                   this.setState({ contactDialogVisible: true, ratings:item.DigiSignRating,
                     signatureURL:item.DigiSignFilePath,
-                    remarks:item.DigiSignRemarks,
+                    remarks
 
                     selectedItem: item })
 

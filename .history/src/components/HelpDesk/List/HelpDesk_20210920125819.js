@@ -151,14 +151,10 @@ updateListAfterCheckInCheckOut=(type,CheckInID,HeaderID)=>{
           <Title style={{ fontSize: 16, marginTop: 8 }}>{item.ContactPersonName}</Title>
           <Text style={{ fontSize: 12, color: Colors.darkGray, marginTop: 8 }}>{item.AssignedToName}</Text>
           {
-            item.StatusID === 2 && item.IsDigiSign !=0 ?
+            item.StatusID === 2 && item.IsDigiSign  ?
               <Button labelStyle={{ fontSize: 12, color: Colors.primary, marginTop: 15, textAlign: 'left', width: '100%' }}
                 onPress={() => { 
-                  this.setState({ contactDialogVisible: true, ratings:item.DigiSignRating,
-                    signatureURL:item.DigiSignFilePath,
-                    remarks:item.DigiSignRemarks,
-
-                    selectedItem: item })
+                  this.setState({ contactDialogVisible: true, selectedItem: item })
 
                  }}
                 uppercase={false}> View ratings & digital signature </Button> : null

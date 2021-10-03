@@ -33,6 +33,7 @@ import NotificationList from '../components/Notification/NotificationList';
 import AddNewTask from '../components/Task/AddNewTask';
 import AddRemarks from '../components/Task/AddRemarks';
 import MyCheckin from '../components/HelpDesk/List/MyCheckin';
+import DrawerHome from '../components/Home/ChildComponent/DrawerHome';
 
 
 const Stack = createStackNavigator();
@@ -56,7 +57,7 @@ export default () => {
       <NavigationContainer ref={navigationRef}>
         <Stack.Navigator headerMode="none" initialRouteName={initialRoue}>
           {/* Skyward  */}
-          <Stack.Screen component={MyBottomTab} name="Home" />
+          <Stack.Screen component={DrawerHome} name="Home" />
           <Stack.Screen component={Splash} name="Splash" />
           <Stack.Screen component={SignIn} name="SignIn" />
           <Stack.Screen component={HelpDesk} name="HelpDesk" />

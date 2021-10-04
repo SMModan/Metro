@@ -1,40 +1,40 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, ScrollView } from 'react-native';
-import {
-  Button, ScrollContainer,
-  MainContainer, ProgressDialog, ProgressView
-} from '../common';
-import { connect } from 'react-redux';
-import styles from '../HomeDetails/styles/HelpDesk.style';
-import { strings } from '../../language/Language';
-import { Images, Utils } from '../../utils';
+import React, {Component} from 'react';
+import {View,ImageBackground,Image} from 'react-native';
+
+import {connect} from 'react-redux';
+import {strings} from '../../language/Language';
+import {goBack} from '../../navigation/Navigator';
+import {Images} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  EventInfo,
-  AppointmentInfo,
-  Remarks
-} from './BaseComponents';
-import AppointmentApi from './Api/AppointmentApi';
-import moment from 'moment';
-import { goBack, push } from '../../navigation/Navigator';
+  Button,
+  ChipViewContainer,
+  CustomDatePicker,
+  CustomPicker,
+  FloatingEditText,
+  MainContainer,
+  ScrollContainer,
+  ViewWithTitle,
+  Clickable
+} from '../common';
+import { RadioButton, Text } from 'react-native-paper';
+import styles from './styles/Attendance.style';
 
-
-export const StartTrip = React.createContext({})
-class AddAppointments extends Component {
-
+import PhotoPicker from '../common/PhotoPicker';
+class StartTrip extends Component {
   state = {
-    Location: "",
+    Location: '',
     IsFullDayEvent: 0,
-    StartTime: "",
-    EndTime: "",
-    Subject: "",
-    OwnerRemarks: "",
-    AssigneeRemarks: "",
-    AssignUserName: "",
+    StartTime: '',
+    EndTime: '',
+    Subject: '',
+    OwnerRemarks: '',
+    AssigneeRemarks: '',
+    AssignUserName: '',
     EntityID: 0,
-    EntityName: "",
+    EntityName: '',
     EntityFieldID: 0,
-    EntityFieldName: "",
+    EntityFieldName: '',
     ReminderAlertID: 0,
     ActivityID: 0,
     AssignUserName: [],
@@ -43,121 +43,29 @@ class AddAppointments extends Component {
     AssignUserID: [],
     ActivityOwnerID: 0,
     user: this.props.session.user,
-    AssignUserRemarks: []
-  }
+    AssignUserRemarks: [],
+    selectedAttachment: '',
+  };
 
-  componentDidMount = () => {
-
-    console.log("this.props.route.params?.item?.ID", this.state.user)
-    if (this.props.route.params?.item?.ID)
-      this.getAppointmentDetails()
-  }
-
-  getAppointmentDetails = async () => {
-
-    this.setState({ ...this.props.route.params?.item, loading: true })
-    const appointment = await AppointmentApi.getAppointmentDetails(this.props.route.params?.item?.ID)
-
-    console.log("appointment ======> in response", appointment)
-    if (appointment.EntityID)
-      this.getRelatedToByEntityID(appointment.EntityID, true)
-    this.setState({ ...appointment, loading: false })
-  }
   onTextChanged = (key, value) => {
-    console.log("key", key, value)
+    console.log('key', key, value);
 
     this.setState({
-      [key]: value
+      [key]: value,
+    });
+
+    if (key == 'EntityID' && value) {
+      this.getRelatedToByEntityID(value);
+    }
+  };
+
+  onTextChanged=(key,value)=>{
+    this.setState({
+      [key]:value
     })
-
-    if (key == "EntityID" && value) {
-
-      this.getRelatedToByEntityID(value)
-    }
-  }
-  onSelectUser = (item) => {
-    // const selectedUser = this.state.selectedUser
-    const { AssignUserName } = this.state
-    AssignUserName.push(item)
-    this.setState({ AssignUserName: [...AssignUserName] })
-
-  }
-  onRemoveUser = (index) => {
-    const { AssignUserName } = this.state
-    AssignUserName.splice(index, 1)
-    this.setState({ AssignUserName: [...AssignUserName] })
-
-  }
-
-  getRelatedToByEntityID = async (EntityID, flag) => {
-    const { ActivityID, EntityFieldID, EntityFieldName } = this.state
-
-    ProgressDialog.show()
-    const list = await AppointmentApi.getRelatedToByEntityID({
-      EntityID,
-      Prefix: ""
-    })
-    ProgressDialog.hide()
-    if (flag)
-      this.setState({ RelatedList: list, })
-    else
-      this.setState({ RelatedList: list, EntityFieldID: "", EntityFieldName: "" })
-  }
-
-  saveAppoinment = () => {
-
-    const { Location, AssignUserName, EntityName, ActivityID, EntityID, ReminderAlertID, EntityFieldID, 
-      EntityFieldName, AssigneeRemarks, IsFullDayEvent, OwnerRemarks, StartDate, StartHr, StartMin, EndDate,
-       EndHr, EndMin, Subject, } = this.state
-    if (Utils.isEmpty(Location)) {
-      Utils.showToast("Please enter Location")
-    }
-    else if (Utils.isEmpty(StartDate) || Utils.isEmpty(StartHr) || Utils.isEmpty(StartMin)) {
-      Utils.showToast("Please select Start Date")
-    }
-    else if (Utils.isEmpty(EndDate) || Utils.isEmpty(EndMin) || Utils.isEmpty(EndHr)) {
-      Utils.showToast("Please select End Date")
-    }
-    else if (Utils.isEmpty(Subject)) {
-      Utils.showToast("Please enter Subject")
-
-    } else {
-      
-      const params = {
-        Location,
-        IsFullDayEvent,
-        Subject,
-        StartDate: moment(StartDate).format("DD-MM-YYYY"),
-        StartTime: `${StartHr}:${StartMin}`,
-        EndDate: EndDate ? moment(EndDate).format("DD-MM-YYYY") : "",
-        EndTime: EndHr && EndMin ? `${EndHr}:${EndMin}` : "",
-        OwnerRemarks,
-        AssigneeRemarks: AssigneeRemarks || "",
-        AssignUserName: AssignUserName.map((item) => item.name).join(","),
-        EntityID,
-        EntityName,
-        ActivityID,
-        ReminderAlertID,
-        EntityFieldID,
-        EntityFieldName,
-      }
-      ProgressDialog.show()
-      AppointmentApi.InsertOrUpdateAppointment(params, (res) => {
-        ProgressDialog.hide()
-        if (this.props.route.params?.item?.ID){
-        Utils.showToast("Appointment updated succesfully.")
-        }else{
-          Utils.showToast("Appointment added succesfully.")
-        }
-
-        goBack()
-      }, (error) => {
-        ProgressDialog.hide()
-        Utils.showDangerToast(error)
-      })
-    }
   }
   render() {
+    const {employeeName, ApplicationDate,circleId,projectId,carDetails,carNumber,riggerName,receivedKM,attendanceTypeId,remarks,selectedAttachment} = this.state;
     return (
       <MainContainer
         header={{
@@ -165,27 +73,149 @@ class AddAppointments extends Component {
             image: Images.ic_BackWhite,
             onPress: () => goBack(),
           },
-          title: this.props.route?.params?.item?.ID?'Update Appointment':"Add Appointment",
+          title: 'Start Trip',
           hideUnderLine: true,
           light: true,
         }}>
-        <AppoinmentContext.Provider value={{ ...this.state, onTextChanged: this.onTextChanged, onRemoveUser: this.onRemoveUser, onSelectUser: this.onSelectUser }}>
-          {this.state.loading ? <ProgressView /> : <ScrollContainer>
-            <View style={styles.mainView}>
-              <EventInfo />
-              <AppointmentInfo />
-              <Remarks />
-              <Button onPress={this.saveAppoinment} title={strings.submit} style={{ margin: ResponsivePixels.size16 }} />
+        <ScrollContainer>
+          <View>
+            <ViewWithTitle title="General Details">
+              <FloatingEditText
+                value={employeeName}
+                onChangeText={text => onTextChanged('employeeName', text)}
+                label={'Admin Admin EMP001'}
+                editable="false"
+              />
+              <CustomDatePicker
+                selectedDate={ApplicationDate || new Date()}
+                minimumDate={ApplicationDate || new Date()}
+                onDateChanged={date => {
+                  onTextChanged('ApplicationDate', date);
+                }}
+                label={'Application Date'}
+                containerStyle={{flex: 1}}
+              />
+
+<CustomPicker list={[{id:"1231",name:"asdasd"},{id:"1231",name:"asdasd"},{id:"1231",name:"asdasd"},]}  selectedItem={{ id: circleId }} label={'Circle'} onSelect={(item) => onTextChanged("circleId", item.id)} /> 
+<CustomPicker list={[{id:"1231",name:"asdasd"},{id:"1231",name:"asdasd"},{id:"1231",name:"asdasd"},]}  selectedItem={{ id: projectId }} label={'Project Name'} onSelect={(item) => onTextChanged("projectId", item.id)} />
+
+            </ViewWithTitle>
+
+
+
+            <ViewWithTitle title="Car Details">
+              <FloatingEditText
+                value={carDetails}
+                onChangeText={text => onTextChanged('carDetails', text)}
+                label={'Car Details  (OLA/UBER)'}
+              />
+
+<FloatingEditText
+                value={carNumber}
+                onChangeText={text => onTextChanged('carNumber', text)}
+                label="Car Number"
+              />
+
+<FloatingEditText
+                value={riggerName}
+                onChangeText={text => onTextChanged('riggerName', text)}
+                label="Rigger Name"
+              />
+
+<FloatingEditText
+                value={riggerName}
+                onChangeText={text => onTextChanged('riggerName', text)}
+                label="Rigger Name"
+              />
+
+<FloatingEditText
+                value={receivedKM}
+                onChangeText={text => onTextChanged('receivedKM', text)}
+                label="Car Received KM"
+              />
+
+<ChipViewContainer 
+            selectedChip={{ id: attendanceTypeId }} onSelect={(item) => {
+                // onTextChanged("attendanceTypeId", item.id)
+            }} title="AttendanceType" chips={[{id:0,name:"OnCallCab"},{id:1,name:"MonthlyCab"}]} />
+
+
+<ChipViewContainer 
+            selectedChip={{ id: attendanceTypeId }} onSelect={(item) => {
+                onTextChanged("attendanceTypeId", item.id)
+            }} title="VehicleType" chips={[{id:0,name:"Big"},{id:1,name:"Small"}]} />
+
+
+<ChipViewContainer 
+            selectedChip={{ id: attendanceTypeId }} onSelect={(item) => {
+                onTextChanged("attendanceTypeId", item.id)
+            }} title="AC/NonAc" chips={[{id:0,name:"AC"},{id:1,name:"NonAC"}]} />
+
+
+<FloatingEditText
+                value={remarks}
+                onChangeText={text => onTextChanged('riggerName', text)}
+                label="Remarks"
+                multiline={true}
+              />
+
+
+<View>
+              <Clickable
+                onPress={() => {
+                  PhotoPicker({
+                    onFileSelect: res => {
+                      this.setState(
+                        {
+                          attachment: res,
+                          selectedAttachment: res.source,
+                          visibleDialog: false,
+                        },
+                        () => {
+                          console.log(
+                            'selectedAttachment0',
+                            this.state.selectedAttachment,
+                          );
+                        },
+                      );
+                    },
+                    noImage: true,
+                  });
+                }}
+                style={{
+                  height: ResponsivePixels.size200,
+                  marginTop: ResponsivePixels.size20,
+                }}>
+                <ImageBackground
+                  imageStyle={{borderRadius: ResponsivePixels.size16}}
+                  source={selectedAttachment}
+                  style={styles.uploadView}>
+                  {!selectedAttachment ? (
+                    <View
+                      style={{justifyContent: 'center', alignItems: 'center'}}>
+                      <Image source={Images.ic_upload} />
+                      <Text style={styles.uploadText}>Upload here</Text>
+                    </View>
+                  ) : null}
+                </ImageBackground>
+              </Clickable>
             </View>
-          </ScrollContainer>}
-        </AppoinmentContext.Provider>
+
+            </ViewWithTitle>
+
+            <Button
+              title={strings.submit}
+              style={{margin: ResponsivePixels.size16}}
+            />
+          </View>
+        </ScrollContainer>
       </MainContainer>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  session: state.session
+const mapStateToProps = state => ({
+  session: state.session,
 });
 
 const mapDispatchToProps = {};

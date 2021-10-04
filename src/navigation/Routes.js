@@ -39,6 +39,9 @@ import LeaveList from '../components/ManageLeave/List/LeaveList';
 import CashAdvance from '../components/ManageCashAdvance/List/CashAdvance';
 import Reimbursement from '../components/ManageReimbursement/List/Reimbursement';
 import StartTrip from '../components/ManageCarAttendance/StartTrip';
+import AddLeaveRequest from '../components/ManageLeave/AddLeaveRequest';
+import AddCashAdvance from '../components/ManageCashAdvance/AddCashAdvance';
+import AddReimbursement from '../components/ManageReimbursement/AddReimbursement';
 
 
 const Stack = createStackNavigator();
@@ -51,7 +54,7 @@ export default () => {
     // openSQLiteDB();
     const session = store.getState().session;
     console.log('session.is_logged_in', session.is_logged_in);
-    setInitialRoute(session.is_logged_in ? 'Home' : 'StartTrip');
+    setInitialRoute(session.is_logged_in ? 'Home' : 'AddReimbursement');
     SplashScreen.hide();
 
     setLoaded(true);
@@ -69,8 +72,11 @@ export default () => {
           <Stack.Screen component={CarAttendance} name="CarAttendanceList" />
           <Stack.Screen component={StartTrip} name="StartTrip" />
           <Stack.Screen component={LeaveList} name="LeaveList" />
+          <Stack.Screen component={AddLeaveRequest} name="AddLeave" />
           <Stack.Screen component={CashAdvance} name="CashAdvanceList" />
+          <Stack.Screen component={AddCashAdvance} name="AddCashAdvance" />
           <Stack.Screen component={Reimbursement} name="ReimbursementList" />
+          <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
 
 
 

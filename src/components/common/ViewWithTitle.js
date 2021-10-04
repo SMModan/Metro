@@ -23,12 +23,13 @@ export default ViewWithTitle
 const styles = StyleSheet.create({
 
     main: {
-        backgroundColor: Colors.secondary50,
+        backgroundColor: Colors.BlackColor300,
+        marginTop:ResponsivePixels.size10
     },
     titleStyle: {
-        color: Colors.blueGray900,
-        fontSize: ResponsivePixels.size15,
-        lineHeight: ResponsivePixels.size22,
+        color: Colors.gray,
+        fontSize: ResponsivePixels.size18,
+        lineHeight: ResponsivePixels.size8,
         fontWeight: "600",
         fontFamily: FontName.medium,
         paddingTop: ResponsivePixels.size24,

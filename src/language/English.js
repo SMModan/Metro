@@ -44,6 +44,7 @@ export default {
   countries:"Countries",
   state:"State",
   customerName:"CustomerName",
+  applyForLeave: "ApplyForLeave"
 
 
 };

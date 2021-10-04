@@ -146,5 +146,6 @@ export default Colors = {
   black: '#000000',
   green: '#6DD0A3',
   yellow: '#ffc247',
+  lightYellow: '#FFF59E',
   borderColor: "#9E9E9E"
 };

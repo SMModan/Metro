@@ -77,9 +77,7 @@ export const AppointmentInfo = () => {
                 onTextChanged("EntityID", item.id)
                 onTextChanged("EntityName", item.name)
                 onTextChanged("EntityFieldID", 0)
-                
-
-            }} disabled={ActivityID != 0 || !isOwner} title="Related to" chips={[{ id: 0, name: "General" }, ...session.GetRelatedTo]} />
+                }} disabled={ActivityID != 0 || !isOwner} title="Related to" chips={[{ id: 0, name: "General" }, ...session.GetRelatedTo]} />
             {EntityID == 0 ? 
             <FloatingEditText onChangeText={(text) => onTextChanged("EntityFieldName", text)} value={EntityFieldName} label={'Related Name'} 
             editable={ActivityID == 0 || isOwner} />

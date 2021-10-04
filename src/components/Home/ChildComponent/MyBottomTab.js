@@ -86,6 +86,7 @@ export default function HomeTabs() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color }) => (
+            
             <Image
               source={Images.ic_BottomTab4}
               style={{ tintColor: color }}

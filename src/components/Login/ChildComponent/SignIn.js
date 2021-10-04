@@ -36,46 +36,7 @@ class SignIn extends Component {
     // createDefaultTables();
   }
 
-  getCompnayNameByUserName = userName => {
-    loginApi.getCompanyNameByUserName(
-      userName,
-      res => {
-        ProgressDialog.hide();
-
-        // console.log("Res", res)
-
-        if (res) {
-          const { Table1 } = res;
-
-          if (Table1) {
-            let results = []
-            if (Array.isArray(Table1)) {
-
-              results = Table1.map((t) => ({
-                id: t.DBName,
-                name: t.CompanyName
-              }))
-            } else {
-              results = [{
-                id: Table1.DBName,
-                name: Table1.CompanyName
-              }]
-            }
-
-            this.setState({
-              companyName: results,
-              selectedCompany: results[0]
-            })
-          }
-        }
-      },
-      () => {
-        ProgressDialog.hide();
-
-        Utils.showToast('Company Not found');
-      },
-    );
-  };
+ 
 
   login = () => {
     const params = {
@@ -115,19 +76,7 @@ class SignIn extends Component {
     );
   };
 
-  searchCompany = text => {
-    console.log('Text', text);
-    this.setState({ userName: text });
-
-    if (Utils.isValidEmail(text)) {
-      // ProgressDialog.show()
-      // Keyboard.dismiss()
-      this.getCompnayNameByUserName(text);
-    }
-  };
-
-  searchDelay = _.debounce(this.searchCompany, 1000);
-
+  
   render() {
     return (
       <MainContainer
@@ -137,20 +86,22 @@ class SignIn extends Component {
         >
         <ScrollContainer>
           {/* <ProgressDialog visible={true} /> */}
+
           <View style={styles.ContainerView}>
+            <Image source={Images.ic_Logo} style={styles.logo}/>
+
             <View style={styles.ContainView}>
-              <View style={styles.topView}>
-                <Image source={Images.ic_LoginLogo} />
-                <Text style={styles.loginTitle}>{strings.LoginTitle}</Text>
-                <Text style={styles.loginDesc}>{strings.loginDescription}</Text>
-              </View>
+
+            <Text style={styles.loginTitle}>{strings.LoginTitle}</Text>
+            
+           
               <FloatingEditText
                 leftIcon={Images.ic_Person}
                 inputType="email-address"
                 style={styles.textEmail}
                 // value={this.state.userName}
-                onChangeText={this.searchDelay}
-                label={strings.txtEmailAddress}
+                onChangeText={text => this.setState({ userName: text })}
+                label={strings.txtUserName}
               />
               <FloatingEditText
                 password
@@ -160,32 +111,23 @@ class SignIn extends Component {
                 onChangeText={text => this.setState({ password: text })}
                 label={strings.txtPassword}
               />
-              <CustomPicker
-                disabled={this.state.companyName <= 1}
-                leftIcon={Images.ic_Company}
-                style={styles.textPassword}
-                selectedItem={this.state.selectedCompany}
-                list={this.state.companyName}
-                onSelect={item => this.setState({ selectedCompany: item })}
-                label={strings.textSelectCompany}
-              />
-              {/* <View style={styles.forgotPasswordView}>
-                <Clickable onPress={() => this.props.navigation.push('ForgotPassword')} style={styles.btnForgotTitle}>
-                  <Text style={styles.forgotTitle}>
-                    {strings.Forgotpassword}
-                  </Text>
-                </Clickable>
-              </View> */}
+            
               <View style={styles.bottomShadowView}>
                 <Button
-                  disabled={!this.state.selectedCompany.name || !this.state.password}
+                  disabled={!this.state.userName || !this.state.password}
                   onPress={this.login}
                   title={strings.btnLogin}
                 />
               </View>
+              
             </View>
           </View>
-        </ScrollContainer>
+
+
+
+
+
+   </ScrollContainer>
       </MainContainer>
     );
   }

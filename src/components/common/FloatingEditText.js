@@ -12,7 +12,7 @@ export default class FloatingEditText extends Component {
 
     state = {
         isFocused: false,
-        underlineColor: Colors.blueGray200,
+        underlineColor: Colors.secondary500,
         text: ''
     };
 
@@ -56,7 +56,7 @@ export default class FloatingEditText extends Component {
                 <View style={{
                     flexDirection: 'row', alignItems: 'center',
                 }}>
-                    {leftIcon ? <ImageButton onPress={onPressLeftIcon} source={leftIcon} imageStyle={{ width: 24, height: 24, marginEnd: 10 }} resizeMode={'contain'} /> : null}
+                    {leftIcon ? <ImageButton onPress={onPressLeftIcon} source={leftIcon} imageStyle={{ width: 24, height: 24, marginEnd: 10,tintColor:Colors.Red900 }} resizeMode={'contain'} /> : null}
 
                     <TouchableOpacity disabled={editable && editable != false} onPress={onPress}
                         style={{

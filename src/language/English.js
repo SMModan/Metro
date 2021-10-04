@@ -1,10 +1,13 @@
 export default {
 
   //Skyward Text
-  LoginTitle: "Let’s get Started.",
-  txtEmailAddress: "Email",
+  
+  countryTitle: "Welcome",
+  countryDescription: "Select Region to continue",
+  LoginTitle: "Welcome!",
+  loginDescription: "Select Region to continue",
+  txtUserName: "UserName",
   txtPassword: "Password",
-  loginDescription: "Simplifying the best business software solutions to accelerate your business",
   textSelectCompany: "Select Company",
   btnLogin: "LOGIN",
   addOpportunity: "Add Opportunity",

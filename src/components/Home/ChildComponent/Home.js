@@ -451,7 +451,8 @@ class Home extends Component {
           left: {
             image: Images.ic_logout,
             onPress: () => {
-              this.handleSignOut()
+              // this.handleSignOut()
+              this.props.navigation.openDrawer()
             },
           },
           title: '',

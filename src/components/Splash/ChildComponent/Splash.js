@@ -9,14 +9,12 @@ class Splash extends Component {
 
   timer = ""
   componentDidMount() {
-
-    this.startTimer('SignIn')
+    this.startTimer('SelectCountry')
   }
 
   startTimer(routeName) {
 
     timer = setInterval(() => {
-
       this.props.navigation.replace(routeName)
     }, 1000)
   }

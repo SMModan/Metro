@@ -1,21 +1,16 @@
 import _ from "lodash";
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, Alert, Image, PermissionsAndroid,
-  Platform, ScrollView, Text, View
+  ActivityIndicator, Image, ScrollView, Text, View
 } from 'react-native';
-import Geocoder from 'react-native-geocoding';
-import Geolocation from 'react-native-geolocation-service';
-import { Button, Button as DialogButton, Card, Chip, Dialog, FAB, Portal, TextInput, Title } from 'react-native-paper';
+import { Button, Button as DialogButton, Card, Chip, Dialog, FAB, Portal, Title } from 'react-native-paper';
 import { AirbnbRating } from 'react-native-ratings';
 import { connect } from 'react-redux';
-import { Colors, Images, Utils } from '../../../utils';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import CheckIn from "../../CheckInOut/CheckIn";
 import {
-  Clickable,
-  FloatingEditText,
-  MainContainer, MyFlatList, ProgressDialog
+  Clickable, MainContainer, MyFlatList
 } from '../../common';
 import HelpDeskApi from '../Api/HelpDeskApi';
 import styles from '../styles/HelpDesk.style';

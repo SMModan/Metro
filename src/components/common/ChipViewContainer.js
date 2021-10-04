@@ -25,7 +25,7 @@ const ChipViewContainer = ({ chips, onSelect, title, selectedChip, disabled }) =
             <Text style={styles.titleStyle}>{title}</Text>
 
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                {finalChips.map((item, index) => <Chip disabled={disabled} key={index} style={{ margin: 5, borderRadius: 4, backgroundColor: selectedIndex === index ? Colors.primaryColor500 : Colors.blueGray200 }} textStyle={{ fontSize: 13, color: selectedIndex === index ? Colors.white : Colors.black }} onPress={() => {
+                {finalChips.map((item, index) => <Chip disabled={disabled} key={index} style={{ margin: 5, borderRadius: 4, backgroundColor: selectedIndex === index ? Colors.Red900 : Colors.blueGray200 }} textStyle={{ fontSize: 13, color: selectedIndex === index ? Colors.white : Colors.black }} onPress={() => {
                     setSelectedIndex(index)
                     if (onSelect)
                         onSelect(finalChips[index])

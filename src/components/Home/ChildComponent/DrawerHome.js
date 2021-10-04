@@ -4,12 +4,14 @@ import { FlatList, Image, Text, View } from 'react-native';
 import { Clickable } from "../../common";
 import { Colors, FontName, Images } from "../../../utils";
 import { createStackNavigator } from '@react-navigation/stack';
+import ResponsivePixels from "../../../utils/ResponsivePixels";
+import HomeTabs from "./MyBottomTab";
 
 const Drawer = createDrawerNavigator();
 
 export default function DrawerHome() {
     return (
-        <Drawer.Navigator drawerContent={(props) => <SideMenu {...props} />} drawerType="slide" drawerStyle={{ width: wp(60) }} initialRouteName="Home">
+        <Drawer.Navigator drawerContent={(props) => <SideMenu {...props} />} drawerType="slide" drawerStyle={{ width: ResponsivePixels.size130 }} initialRouteName="Home">
             <Drawer.Screen name="Home" component={HomeStack} />
         </Drawer.Navigator>
     );

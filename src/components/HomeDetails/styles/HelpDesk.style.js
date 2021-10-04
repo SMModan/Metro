@@ -6,7 +6,7 @@ export default styles = StyleSheet.create({
 
     MainHeaderView: {
         flex: 1,
-        backgroundColor: Colors.secondary50
+        backgroundColor: Colors.Red50
     },
     headerView: {
        marginHorizontal:ResponsivePixels.size10,

@@ -23,7 +23,7 @@ export default ImageName = {
   ic_Call: require('../../res/images/ic_Call.png'),
   ic_Email: require('../../res/images/ic_Email.png'),
   ic_ChevronDown: require('../../res/images/ic_ChevronDown.png'),
-  ic_LoginLogo: require('../../res/images/ic_LoginLogo.png'),
+  ic_Logo: require('../../res/images/ic_Logo.png'),
   ic_add_blue: require('../../res/images/ic_add_blue.png'),
   ic_down: require('../../res/images/ic_down.png'),
   ic_dot_menu: require('../../res/images/ic_dot_menu.png'),
@@ -41,4 +41,13 @@ export default ImageName = {
   ic_logout: require('../../res/images/ic_logout.png'),
   ic_download_arrow: require('../../res/images/ic_download_arrow.png'),
   ic_share: require('../../res/images/ic_share.png'),
+  ic_filter: require('../../res/images/ic_filter.png'),
+  ic_Calendar: require('../../res/images/ic_calendar.png'),
+  ic_kilometers: require('../../res/images/ic_kilometers.png'),
+  ic_typeofleave: require('../../res/images/ic_typeofleave.png'),
+
+  ic_total: require('../../res/images/ic_total.png'),
+  ic_money: require('../../res/images/ic_money.png'),
+  ic_edit: require('../../res/images/edit.png'),
+  ic_right_arrow: require('../../res/images/ic_right_arrow.png'),
 };

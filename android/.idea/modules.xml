@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Skyward.iml" filepath="$PROJECT_DIR$/.idea/modules/Skyward.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Skyward.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Skyward.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1621515190/Skyward.react-native-community_async-storage.iml" filepath="$PROJECT_DIR$/.idea/modules/1621515190/Skyward.react-native-community_async-storage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-758475395/Skyward.react-native-community_datetimepicker.iml" filepath="$PROJECT_DIR$/.idea/modules/-758475395/Skyward.react-native-community_datetimepicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/438513715/Skyward.react-native-community_masked-view.iml" filepath="$PROJECT_DIR$/.idea/modules/438513715/Skyward.react-native-community_masked-view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-689617065/Skyward.react-native-community_netinfo.iml" filepath="$PROJECT_DIR$/.idea/modules/-689617065/Skyward.react-native-community_netinfo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1562544585/Skyward.react-native-community_progress-bar-android.iml" filepath="$PROJECT_DIR$/.idea/modules/1562544585/Skyward.react-native-community_progress-bar-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-910814511/Skyward.react-native-community_progress-view.iml" filepath="$PROJECT_DIR$/.idea/modules/-910814511/Skyward.react-native-community_progress-view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1992365143/Skyward.react-native-community_toolbar-android.iml" filepath="$PROJECT_DIR$/.idea/modules/-1992365143/Skyward.react-native-community_toolbar-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/225945034/Skyward.react-native-community_viewpager.iml" filepath="$PROJECT_DIR$/.idea/modules/225945034/Skyward.react-native-community_viewpager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2062795413/Skyward.react-native-contacts.iml" filepath="$PROJECT_DIR$/.idea/modules/2062795413/Skyward.react-native-contacts.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/65926915/Skyward.react-native-device-info.iml" filepath="$PROJECT_DIR$/.idea/modules/65926915/Skyward.react-native-device-info.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2115260391/Skyward.react-native-firebase_app.iml" filepath="$PROJECT_DIR$/.idea/modules/2115260391/Skyward.react-native-firebase_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1666307402/Skyward.react-native-firebase_messaging.iml" filepath="$PROJECT_DIR$/.idea/modules/1666307402/Skyward.react-native-firebase_messaging.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-956111217/Skyward.react-native-fs.iml" filepath="$PROJECT_DIR$/.idea/modules/-956111217/Skyward.react-native-fs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/361276460/Skyward.react-native-geolocation-service.iml" filepath="$PROJECT_DIR$/.idea/modules/361276460/Skyward.react-native-geolocation-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-950134780/Skyward.react-native-gesture-handler.iml" filepath="$PROJECT_DIR$/.idea/modules/-950134780/Skyward.react-native-gesture-handler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-776797822/Skyward.react-native-image-picker.iml" filepath="$PROJECT_DIR$/.idea/modules/-776797822/Skyward.react-native-image-picker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1706201565/Skyward.react-native-keyevent.iml" filepath="$PROJECT_DIR$/.idea/modules/1706201565/Skyward.react-native-keyevent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-330183658/Skyward.react-native-linear-gradient.iml" filepath="$PROJECT_DIR$/.idea/modules/-330183658/Skyward.react-native-linear-gradient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-186596901/Skyward.react-native-localization.iml" filepath="$PROJECT_DIR$/.idea/modules/-186596901/Skyward.react-native-localization.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1957692624/Skyward.react-native-pdf.iml" filepath="$PROJECT_DIR$/.idea/modules/-1957692624/Skyward.react-native-pdf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1404615292/Skyward.react-native-push-notification.iml" filepath="$PROJECT_DIR$/.idea/modules/1404615292/Skyward.react-native-push-notification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-873426024/Skyward.react-native-reanimated.iml" filepath="$PROJECT_DIR$/.idea/modules/-873426024/Skyward.react-native-reanimated.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1895088275/Skyward.react-native-safe-area-context.iml" filepath="$PROJECT_DIR$/.idea/modules/-1895088275/Skyward.react-native-safe-area-context.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/278762437/Skyward.react-native-screens.iml" filepath="$PROJECT_DIR$/.idea/modules/278762437/Skyward.react-native-screens.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/47816093/Skyward.react-native-share.iml" filepath="$PROJECT_DIR$/.idea/modules/47816093/Skyward.react-native-share.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1117112815/Skyward.react-native-signature-capture.iml" filepath="$PROJECT_DIR$/.idea/modules/1117112815/Skyward.react-native-signature-capture.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1965614797/Skyward.react-native-sound.iml" filepath="$PROJECT_DIR$/.idea/modules/1965614797/Skyward.react-native-sound.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-365855920/Skyward.react-native-splash-screen.iml" filepath="$PROJECT_DIR$/.idea/modules/-365855920/Skyward.react-native-splash-screen.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2130160269/Skyward.react-native-sqlite-storage.iml" filepath="$PROJECT_DIR$/.idea/modules/2130160269/Skyward.react-native-sqlite-storage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/191657634/Skyward.react-native-svg.iml" filepath="$PROJECT_DIR$/.idea/modules/191657634/Skyward.react-native-svg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/848469586/Skyward.react-native-vector-icons.iml" filepath="$PROJECT_DIR$/.idea/modules/848469586/Skyward.react-native-vector-icons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-462294985/Skyward.react-native-webview.iml" filepath="$PROJECT_DIR$/.idea/modules/-462294985/Skyward.react-native-webview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/84233371/Skyward.rn-fetch-blob.iml" filepath="$PROJECT_DIR$/.idea/modules/84233371/Skyward.rn-fetch-blob.iml" />
+    </modules>
+  </component>
+</project>

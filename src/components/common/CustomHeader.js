@@ -61,7 +61,7 @@ class CustomHeader extends Component {
       <Appbar.Header
         style={{
           elevation: 0,
-          backgroundColor: this.props.backgroundColor || Colors.secondary500,
+          backgroundColor: this.props.backgroundColor || Colors.Red900,
           justifyContent: 'center',
           ...this.props.style,
         }}>

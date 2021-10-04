@@ -7,6 +7,7 @@ import { navigationRef } from './Navigator';
 
 /////Skyward
 import Splash from '../components/Splash/ChildComponent/Splash';
+import SelectCountry from '../components/SelectCountry/ChildComponent/SelectCountry';
 import SignIn from '../components/Login/ChildComponent/SignIn';
 import MyBottomTab from '../components/Home/ChildComponent/MyBottomTab';
 import HelpDesk from '../components/HelpDesk/List/HelpDesk';
@@ -18,7 +19,6 @@ import AddContacts from '../components/Contacts/AddContacts';
 import AddCustomer from '../components/Customer/AddCustomer';
 import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
-import SyncData from '../components/Login/ChildComponent/SyncData';
 import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportunity';
 import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/OppAttachment';
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
@@ -34,6 +34,11 @@ import AddNewTask from '../components/Task/AddNewTask';
 import AddRemarks from '../components/Task/AddRemarks';
 import MyCheckin from '../components/HelpDesk/List/MyCheckin';
 import DrawerHome from '../components/Home/ChildComponent/DrawerHome';
+import CarAttendance from '../components/ManageCarAttendance/List/CarAttendance';
+import LeaveList from '../components/ManageLeave/List/LeaveList';
+import CashAdvance from '../components/ManageCashAdvance/List/CashAdvance';
+import Reimbursement from '../components/ManageReimbursement/List/Reimbursement';
+import StartTrip from '../components/ManageCarAttendance/StartTrip';
 
 
 const Stack = createStackNavigator();
@@ -46,7 +51,7 @@ export default () => {
     // openSQLiteDB();
     const session = store.getState().session;
     console.log('session.is_logged_in', session.is_logged_in);
-    setInitialRoute(session.is_logged_in ? 'Home' : 'SignIn');
+    setInitialRoute(session.is_logged_in ? 'Home' : 'StartTrip');
     SplashScreen.hide();
 
     setLoaded(true);
@@ -59,7 +64,21 @@ export default () => {
           {/* Skyward  */}
           <Stack.Screen component={DrawerHome} name="Home" />
           <Stack.Screen component={Splash} name="Splash" />
+          <Stack.Screen component={SelectCountry} name="SelectCountry" />
           <Stack.Screen component={SignIn} name="SignIn" />
+          <Stack.Screen component={CarAttendance} name="CarAttendanceList" />
+          <Stack.Screen component={StartTrip} name="StartTrip" />
+          <Stack.Screen component={LeaveList} name="LeaveList" />
+          <Stack.Screen component={CashAdvance} name="CashAdvanceList" />
+          <Stack.Screen component={Reimbursement} name="ReimbursementList" />
+
+
+
+
+
+
+
+
           <Stack.Screen component={HelpDesk} name="HelpDesk" />
           <Stack.Screen component={AddHelpDesk} name="AddHelpDesk" />
           <Stack.Screen component={UpdateHelpDesk} name="UpdateHelpDesk" />
@@ -76,7 +95,6 @@ export default () => {
           <Stack.Screen component={AddContacts} name="AddContacts" />
           <Stack.Screen component={AddCustomer} name="AddCustomer" />
           <Stack.Screen component={EditCustomer} name="EditCustomer" />
-          <Stack.Screen component={SyncData} name="SyncData" />
           <Stack.Screen component={TaskList} name="Tasks" />
           <Stack.Screen component={QuotationList} name="Quotation" />
           <Stack.Screen component={QuotationView} name="QuotationView" />

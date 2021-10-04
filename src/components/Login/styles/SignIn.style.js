@@ -24,9 +24,10 @@ export default styles = StyleSheet.create({
     },
     loginTitle:{
         fontFamily: FontName.semibold,
-        fontSize: FontSize.fontSize30,
-        color: Colors.secondary500,
-        marginTop:ResponsivePixels.size30
+        fontSize: FontSize.fontSize28,
+        color: Colors.Red900,
+        marginTop:ResponsivePixels.size5,
+        fontWeight:"bold"
     },
     loginDesc:{
         fontFamily: FontName.regular,
@@ -56,5 +57,13 @@ export default styles = StyleSheet.create({
     bottomShadowView: {
         marginTop:ResponsivePixels.size16,
         marginBottom: ResponsivePixels.size20,
+    },
+    logo:{
+        height:'30%',
+        width:"80%",
+        resizeMode:'contain',
+        alignSelf:"center"
+    }, countryRegion:{
+        marginTop:ResponsivePixels.size20
     },
 });

@@ -438,7 +438,9 @@ class Reimbursement extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => goBack(),
+            onPress: () => {
+              this.props.navigation.openDrawer()
+            },
           },
           title: 'Reimbursement',
           hideUnderLine: true,
@@ -513,7 +515,7 @@ class Reimbursement extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAppointments');
+            push('AddReimbursement');
           }}
         />
       </MainContainer>

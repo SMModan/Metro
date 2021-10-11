@@ -3,7 +3,7 @@ import {View, ImageBackground, Image} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack} from '../../navigation/Navigator';
+import {goBack, push} from '../../navigation/Navigator';
 import {Images, Colors} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -253,6 +253,9 @@ class AddLeaveRequest extends Component {
             <Button
               title={strings.applyForLeave}
               style={{margin: ResponsivePixels.size16}}
+              onPress={()=>{goBack()}}
+
+
             />
           </View>
         </ScrollContainer>

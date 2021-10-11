@@ -541,7 +541,7 @@ class CarAttendance extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAppointments');
+            push('StartTrip');
           }}
         />
       </MainContainer>

@@ -3,7 +3,7 @@ import {View,ImageBackground,Image} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack} from '../../navigation/Navigator';
+import {goBack, push} from '../../navigation/Navigator';
 import {Images} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -206,6 +206,7 @@ class StartTrip extends Component {
             <Button
               title={strings.submit}
               style={{margin: ResponsivePixels.size16}}
+              onPress={()=>{goBack()}}
             />
           </View>
         </ScrollContainer>

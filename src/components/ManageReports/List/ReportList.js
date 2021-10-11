@@ -455,9 +455,11 @@ class ReportList extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => goBack(),
+            onPress: () => {
+              this.props.navigation.openDrawer()
+            },
           },
-          title: 'Car Attendance',
+          title: 'Reports List',
           hideUnderLine: true,
           isHome: true,
           light: true,
@@ -532,14 +534,7 @@ class ReportList extends Component {
             />
           </View>
         </View>
-        <FAB
-          style={styles.fab}
-          icon="plus"
-          color={Colors.white}
-          onPress={() => {
-            push('AddAppointments');
-          }}
-        />
+      
       </MainContainer>
     );
   }

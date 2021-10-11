@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import session from 'redux-persist/lib/storage/session';
 import { store } from '../../../App';
 import { strings } from '../../../language/Language';
-import { reset } from '../../../navigation/Navigator';
+import { push, reset } from '../../../navigation/Navigator';
 import { setSessionField } from '../../../reducers/SessionReducer';
 import { Colors, Images } from '../../../utils';
 import Utils from '../../../utils/Utils';
@@ -75,6 +75,7 @@ class SelectCountry extends Component {
                  
               <ChipViewContainer 
                 selectedChip={{ id: countryId }} onSelect={(item) => {
+                  push("SignIn")
                  this.setState({
                   countryId: item.id
                  })

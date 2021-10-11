@@ -215,7 +215,7 @@ class Home extends Component {
 
   componentDidMount = () => {
 
-    setTimeout(() => this.loadPermissions(), 300)
+    // setTimeout(() => this.loadPermissions(), 300)
   }
 
   loadPermissions = () => {
@@ -469,7 +469,7 @@ class Home extends Component {
             <Text style={styles.firstTitle}>Hi {this.props.session.user.FirstName || ""}</Text>
           </View>
           <View style={styles.MainList}>
-            {loading ? <ProgressView /> : data.length != 0 && <FlatList
+            {/* {loading ? <ProgressView /> : data.length != 0 && <FlatList
               horizontal={false}
               scrollEnabled={true}
               numColumns={3}
@@ -479,7 +479,8 @@ class Home extends Component {
               keyExtractor={(item, index) => 'key' + index}
               style={{ flex: 1, margin: 10 }}
               contentContainerStyle={{ paddingVertical: 30 }}
-            />}
+            />} */}
+            <Text style={{justifyContent:"center",textAlignVertical:"center",alignItems:"center",alignSelf:"center"}}>Coming Soon... {this.props.session.user.FirstName || ""}</Text>
 
           </View>
         </View>

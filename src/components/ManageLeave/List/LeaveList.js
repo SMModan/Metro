@@ -417,7 +417,9 @@ class LeaveList extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => goBack(),
+            onPress: () => {
+              this.props.navigation.openDrawer()
+            },
           },
           title: 'Leave List',
           hideUnderLine: true,
@@ -492,7 +494,7 @@ class LeaveList extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAppointments');
+            push('AddLeave');
           }}
         />
       </MainContainer>

@@ -488,7 +488,9 @@ class CashAdvance extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => goBack(),
+            onPress: () => {
+              this.props.navigation.openDrawer()
+            },
           },
           title: 'Cash Advance',
           hideUnderLine: true,
@@ -563,7 +565,7 @@ class CashAdvance extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAppointments');
+            push('AddCashAdvance');
           }}
         />
       </MainContainer>

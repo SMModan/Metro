@@ -69,7 +69,7 @@ class CustomHeader extends Component {
         {this._renderRight()}
         {isHome?(null):this._renderHome()}
         <StatusBar
-          backgroundColor={this.props.backgroundColor || Colors.secondary500}
+          backgroundColor={this.props.backgroundColor || Colors.Red900}
           barStyle={!this.props.light ? 'dark-content' : 'light-content'}
         />
       </Appbar.Header>

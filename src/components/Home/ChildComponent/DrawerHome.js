@@ -6,62 +6,73 @@ import { Colors, FontName, Images } from "../../../utils";
 import { createStackNavigator } from '@react-navigation/stack';
 import ResponsivePixels from "../../../utils/ResponsivePixels";
 import HomeTabs from "./MyBottomTab";
-
+import CarAttendance from "../../ManageCarAttendance/List/CarAttendance";
+import LeaveList from "../../ManageLeave/List/LeaveList";
+import CashAdvance from "../../ManageCashAdvance/List/CashAdvance";
+import Reimbursement from "../../ManageReimbursement/List/Reimbursement";
+import ReportList from "../../ManageReports/List/ReportList";
+import { NavigationContainer } from '@react-navigation/native';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerHome() {
     return (
-        <Drawer.Navigator drawerContent={(props) => <SideMenu {...props} />} drawerType="slide" drawerStyle={{ width: ResponsivePixels.size130 }} initialRouteName="Home">
+        
+        <Drawer.Navigator drawerContent={(props) => <SideMenu {...props} />} drawerType="slide" drawerStyle={{ width: "80%" }}  initialRouteName="Home">
             <Drawer.Screen name="Home" component={HomeStack} />
         </Drawer.Navigator>
+        
     );
 }
 
 const Stack = createStackNavigator();
-
 const HomeStack = () => {
     return <Stack.Navigator headerMode="none" >
         {/* Skyward  
         Add all your routes here
         and use this,props.navigation.openDrawer() to open drawer.
         */}
+
         <Stack.Screen component={HomeTabs} name="Home" />
+          <Stack.Screen component={CarAttendance} name="CarAttendanceList" />
+          <Stack.Screen component={LeaveList} name="LeaveList" />
+          <Stack.Screen component={CashAdvance} name="CashAdvanceList" />
+          <Stack.Screen component={Reimbursement} name="ReimbursementList" />
+          <Stack.Screen component={ReportList} name="Reports" />
+        </Stack.Navigator>
 
-    </Stack.Navigator>
-
-}
+    }
 const SideMenu = ({ navigation }) => {
 
     const [routes, setRoutes] = useState([
         {
             title: "Home",
             icon: Images.ic_home,
-            route: "Home"
+            route: "HelpDesk"
         },
         {
             title: "Car Attendence",
             icon: Images.ic_Appointment,
-            route: ""
+            route: "CarAttendanceList"
         },
         {
             title: "Leave",
-            icon: Images.ic_contact,
-            route: ""
+            icon: Images.ic_HelpDesk,
+            route: "LeaveList"
         },
         {
             title: "Cash Advance",
             icon: Images.ic_Call,
-            route: "WeightInList"
+            route: "CashAdvanceList"
         },
         {
             title: "Reimburshment",
             icon: Images.ic_task,
-            route: ""
+            route: "ReimbursementList"
         },
         {
-            title: "Report",
+            title: "Reports",
             icon: Images.ic_HelpDesk,
-            route: ""
+            route: "Reports"
         }
     ])
     return (
@@ -69,19 +80,21 @@ const SideMenu = ({ navigation }) => {
 
             <View style={{ alignItems: "center", justifyContent: "center" }}>
 
-                <Image style={{ width: 100, height: 1000, backgroundColor: "gray", borderRadius: 50 }} />
-                <Text style={[{ marginTop: 16, fontSize: 20, fontFamily: FontName.bold, color: Colors.yellow }]}>{"User Name"}</Text>
+                <Image style={{ width: 100, height: 100, backgroundColor: "gray", borderRadius: 50 }} />
+                <Text style={[{ marginTop: 16, fontSize: 20, fontFamily: FontName.bold, color: Colors.yellow }]}>{"Admin Admin - EMP001"}</Text>
+                <Text style={[{ marginTop: ResponsivePixels.size2, fontSize: ResponsivePixels.size15, fontFamily: FontName.bold, color: Colors.black, textDecorationLine: "underline"}]}>{"View Profile"}</Text>
 
             </View>
 
 
             <FlatList
-                style={{ flex: 1, marginTop: 16 }}
+                style={{ flex: 1, marginTop: ResponsivePixels.size20 }}
                 data={routes}
                 renderItem={({ item }) => (
                     <Clickable onPress={() => navigation.navigate(item.route)} style={{ flexDirection: "row", paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: Colors.editTextHintColor, alignItems: "center" }}>
-                        <Image source={item.icon} />
-                        <Text style={[{ marginStart: 16, fontSize: 16, fontFamily: FontName.regular, color: Colors.black }]}>{item.title}</Text>
+                        {/* <Image source={item.icon}  style={{width:ResponsivePixels.size20,height:ResponsivePixels.size20, resizeMode: 'contain' }}/> */}
+                        <Text style={[{ marginStart: ResponsivePixels.size20 , fontSize: ResponsivePixels.size20 , fontFamily: FontName.regular, color: Colors.black }]}>
+                            {item.title}</Text>
                     </Clickable>
                 )}
             />
@@ -93,7 +106,7 @@ const SideMenu = ({ navigation }) => {
                         title: "Yes",
                         onPress: () => {
                             AlertDialog.hide()
-                            loginApi.logout()
+                        //    loginApi.logout()
                             // store.dispatch(setSessionField(IS_LOGGED_IN, false))
                         }
                     },
@@ -106,10 +119,9 @@ const SideMenu = ({ navigation }) => {
                     }
                 })
             }} style={{ flexDirection: "row", justifyContent: "center", paddingVertical: 16, }}>
-                <Image source={Images.ic_logout} />
-
+                <Image source={Images.ic_logout}  style={{width:ResponsivePixels.size20,height:ResponsivePixels.size20 ,resizeMode: 'contain' }}/>
                 <Text style={[{ marginStart: 16 }]}>{"Logout"}</Text>
-            </Clickable>
+            </Clickable> 
         </View>
     )
-}
+}                                                                                                   

@@ -19,6 +19,7 @@ import ResponsivePixels from '../../../utils/ResponsivePixels';
 import CheckIn from '../../CheckInOut/CheckIn';
 import {Image} from 'react-native';
 
+import { DrawerActions } from '@react-navigation/native'
 class CarAttendance extends Component {
   state = {
     selectedIndex: 0,
@@ -455,7 +456,10 @@ class CarAttendance extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => goBack(),
+            onPress: () => {
+              console.log("this.props.navigation",this.props.navigation)
+              this.props.navigation.openDrawer()
+            },
           },
           title: 'Car Attendance',
           hideUnderLine: true,

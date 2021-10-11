@@ -449,7 +449,7 @@ class Home extends Component {
       <MainContainer
         header={{
           left: {
-            image: Images.ic_logout,
+            image: Images.ic_Menu,
             onPress: () => {
               // this.handleSignOut()
               this.props.navigation.openDrawer()

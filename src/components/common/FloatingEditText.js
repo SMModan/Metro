@@ -110,7 +110,7 @@ export default class FloatingEditText extends Component {
                                 {value ? value.toString() : value}
                             </Text>}
                     </TouchableOpacity>
-                    {rightIcon ? <ImageButton onPress={onPressRightIcon} source={rightIcon} imageStyle={{ width: 16, height: 16 }} resizeMode={'contain'} /> : null}
+                    {rightIcon ? <ImageButton onPress={onPressRightIcon} source={rightIcon} imageStyle={{ width: ResponsivePixels.size16, height: ResponsivePixels.size16,marginRight:ResponsivePixels.size10,tintColor:Colors.Red900 }} resizeMode={'contain'} /> : null}
 
                 </View>
             </View>

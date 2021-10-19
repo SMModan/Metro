@@ -75,10 +75,10 @@ class SelectCountry extends Component {
                  
               <ChipViewContainer 
                 selectedChip={{ id: countryId }} onSelect={(item) => {
-                  push("SignIn")
-                 this.setState({
-                  countryId: item.id
-                 })
+                store.dispatch(setSessionField('country_id', item.id));
+                 store.dispatch(setSessionField('country_name', item.name));
+                 reset("SignIn")
+                
                 }} title="Choose Region" chips={couontryList||[]} />
 
               </View>

@@ -18,9 +18,10 @@ export const METHOD = {
 
 export default async (endpoint, params = {}, onSuccess, onFailure, method = METHOD.POST, skipToken = false) => {
 
-    const token = store.getState().session.token;
-    const connectionString = store.getState().session.connectionString;
+    const token = store.getState().session.user.AuthenticationToken;
+    // const connectionString = store.getState().session.connectionString;
     const machineCode = store.getState().session.machineCode || "dasmdmasndbasmdbsmadbmnsadbmasbdm";
+    
     //   const connectionString = await getItem(KEY_LANGUAGE_ID, "1")
     // const { company_uuid } = store.getState().common.companyDetails
     // const token = "Token eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1NjkzMjY3NDN9.lYVts0p2gD8RXvyGYcSoabB8qgeZXAaZB1M14wQDnmSEbu9ZV3EtBfJ32QgGMpQvQ-094WfNRcN2HPsgCLaBqg";
@@ -28,7 +29,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
     // params.language = 'en'
     console.log(BASE_URL + endpoint + '\n------------------Params-------------------')
     console.log("Token", token);
-    console.log("connectionString", connectionString);
+    // console.log("connectionString", connectionString);
     console.log("machineCode", machineCode);
 
 
@@ -61,9 +62,9 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
         }
 
 
-        if (!skipToken && token && connectionString) {
+        if (!skipToken && token ) {
             params.Token = token
-            params.ConnectionString = connectionString
+            // params.ConnectionString = connectionString
         }
         params.MachineCode = machineCode
         // let paramsData = new FormData()
@@ -123,7 +124,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
                     //    if (response.data.status == 1 || response.data.success == 1) {
                     try {
                         const jsonResponse = parser.parse(response.data)
-                        console.log(endpoint + '\n JSONResponse', JSON.stringify(jsonResponse));
+                        console.log(endpoint + '\n JSONResponse ===================================', JSON.stringify(jsonResponse));
 
                         // console.log("jsonResponse",jsonResponse.Response.)
                         if (jsonResponse && jsonResponse.Response) {
@@ -142,11 +143,13 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
                                 }
 
                             } else {
+
+                                console.log("jsonResponse in error and want to know error ",jsonResponse.Response.FriendlyMessage)
                                 if (jsonResponse.Response.ErrorMessage === "UnAuthorized User") {
                                     onFailure('Session expired')
 
                                 } else
-                                    onFailure(jsonResponse.Response.ErrorMessage || "Something went wrong")
+                                    onFailure(jsonResponse.Response.FriendlyMessage || jsonResponse.Response.ErrorMessage || "Something went wrong")
                             }
                         } else {
                             onFailure('Something went wrong')

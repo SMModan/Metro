@@ -1,237 +1,74 @@
-import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
-import {Clickable, MainContainer, MyFlatList} from '../../common';
-import {connect} from 'react-redux';
-import styles from '../../HomeDetails/styles/HelpDesk.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors, FontName} from '../../../utils';
-import {Chip, Card, Title, Button, FAB} from 'react-native-paper';
-import AppointmentApi from '../Api/CarAttendanceApi';
 import _ from 'lodash';
-import {goBack, push} from '../../../navigation/Navigator';
+import moment from 'moment';
+import React, { Component } from 'react';
+import {
+  ActivityIndicator, Image, Text, View
+} from 'react-native';
+import { Card, FAB } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { push } from '../../../navigation/Navigator';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
-import CheckIn from '../../CheckInOut/CheckIn';
-import {Image} from 'react-native';
+import { Clickable, MainContainer, MyFlatList, ProgressDialog } from '../../common';
+import styles from '../../HomeDetails/styles/HelpDesk.style';
+import LeaveApi from '../Api/LeaveApi';
 
 class LeaveList extends Component {
   state = {
     selectedIndex: 0,
-    page: 0,
-    totalPage: 0,
     refreshing: false,
     loading: false,
     loadMore: false,
     isLast: false,
     listData: [],
-    dummyListData: [
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      ,
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-    ],
+    dummyListData: [],
     showSearch: false,
     searchQuery: false,
   };
 
+  getAllList = () => {
+    const params = {
+    }
+ 
+    ProgressDialog.show()
+
+    LeaveApi.getAllLeaves(params, (res) => {
+      ProgressDialog.hide()
+      if(res){
+        
+        if(res){
+          const Table = res.Table
+          if (Table) {
+            if (Array.isArray(Table)) {
+              this.setState(
+                { listData:[...Table]}
+                ,()=>console.log("this.state",this.state.listData)
+               );
+            }else{
+              //console.log("table name name",Table.CustomerName)
+            let results = [
+                {...Table}
+              ];
+              this.setState({
+                listData:results
+              },()=>console.log("this.state",this.state.listData))
+            }
+          
+          }
+        }
+      }
+     
+    }, () => {
+      ProgressDialog.hide()
+    })
+  }
+
+
   componentDidMount = () => {
-    const checkinout = this.props.session.checkinout;
-    const user = this.props.session.user;
-
-    this.setState(
-      {
-        isCheckInPermission: checkinout,
-        userID: user.ID,
-      },
-      () => {
-        // this.getAllAppointment();
-      },
-    );
+    this.getAllList();
   };
 
-  updateListAfterCheckInCheckOut = (type, CheckInID, HeaderID) => {
-    console.log('type =====>', type);
-    console.log('CheckInID =====>', CheckInID);
-    console.log('HeaderID =====>', HeaderID);
-    let listData = this.state.listData;
-
-    if (type == 0) {
-      let index = listData.findIndex(el => el.ID == HeaderID);
-      console.log('index ===>', index);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = CheckInID;
-        item.IsCheckIn = 'Yes';
-        listData[index] = item;
-      }
-    } else {
-      let index = listData.findIndex(el => el.CheckInID == CheckInID);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = 0;
-        item.IsCheckIn = 'No';
-        listData[index] = item;
-      }
-    }
-
-    this.setState({
-      listData,
-    });
-  };
-
-  // getAllAppointment = () => {
-  //   const { searchQuery } = this.state;
-
-  //   const params = {
-  //     PageIndex: this.state.page,
-  //     PageSize: 10,
-  //     Filter: searchQuery || '',
-  //   };
-  //   this.setState({
-  //     loading: !this.state.refreshing && !this.state.loadMore,
-  //   });
-  //   AppointmentApi.getAllAppointment(
-  //     params,
-  //     res => {
-  //       if (res) {
-  //         const { Table } = res && res;
-  //         let isLast = true;
-  //         if (Table) {
-  //           if (Array.isArray(Table)) {
-  //             let totalPage = Table[0]?.TotalCount / 10;
-  //             isLast = this.state.page == totalPage;
-  //             this.setState({
-  //               listData:
-  //                 this.state.page > 0
-  //                   ? [...this.state.listData, ...Table]
-  //                   : Table,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           } else {
-  //             let results = [{ ...Table }];
-  //             console.log('<===results  ===>', results);
-  //             this.setState({
-  //               listData: results,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         this.setState({
-  //           loading: false,
-  //           refreshing: false,
-  //           loadMore: false,
-  //           isLast: true,
-  //         });
-  //       }
-  //     },
-  //     () => {
-  //       this.setState({
-  //         loading: !this.state.refreshing && !this.state.loadMore,
-  //       });
-  //     },
-  //   );
-  // };
-
-  createdDateTime = strDate => {
-    let date = '';
-    if (strDate) {
-      const TStartSplit = strDate.split('T');
-      const sTime = TStartSplit[1];
-      const sDate = TStartSplit[0];
-      const StartHr = sTime.substring(0, 2);
-      const StartMin = sTime.substring(3, 5);
-      date = `${sDate} ${StartHr}:${StartMin}`;
-    }
-    return date;
-  };
-
-  createdDate = strDate => {
+  splitDate = strDate => {
     let date = '';
     if (strDate) {
       const TStartSplit = strDate.split('T');
@@ -244,24 +81,27 @@ class LeaveList extends Component {
     const {isCheckInPermission, userID} = this.state;
 
     const item = this.state.listData[index];
-
+    const oneDate = moment(item?.LeaveApplicationDate);
+    const dayName = oneDate?.format('dddd');
+    console.log("dayName====",dayName);
     return (
       <View>
-        {index==0 || index==4?   <Text
+          <Text
                 style={{
                   fontSize: ResponsivePixels.size15,
                   textAlign: 'left',
                   alignSelf: 'stretch',
                   marginLeft:ResponsivePixels.size20,
                   marginTop:ResponsivePixels.size5,
+                  fontWeight:"bold"
                 }}>
-                23rd July 2021 - Friday
-              </Text>:null}
+              {`${item.LeaveApplicationDate} - ${dayName}`}
+              </Text>
       
       <Card style={{margin: ResponsivePixels.size10}} key={index}>
         <Clickable
           onPress={() => {
-            this.props.navigation.push('AddAppointments', {item});
+            // this.props.navigation.push('AddAppointments', {item});
           }}>
           <View style={{margin: ResponsivePixels.size15}}>
          
@@ -311,7 +151,9 @@ class LeaveList extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  23rd July 2021 to Oct 1 2021
+
+                    {`${this.splitDate(item?.LeaveFromDate)} to ${this.splitDate(item?.LeaveToDate)} `}
+                  
                 </Text>
               </View>
          
@@ -364,7 +206,7 @@ class LeaveList extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  Annual Leaves
+                 {item?.LeaveName}
                 </Text>
               </View>
             </View>
@@ -385,7 +227,7 @@ class LeaveList extends Component {
                     paddingLeft:ResponsivePixels.size20,
                     paddingRight:ResponsivePixels.size20,
                   }}>
-                  Approved
+                  {item?.StatusName}
                 </Text>
       </Card>
 
@@ -394,22 +236,8 @@ class LeaveList extends Component {
     );
   };
 
-  searchOpp = async () => {
-    this.setState(
-      {
-        listData: [],
-        page: 0,
-      },
-      () => {
-        // this.getAllAppointment();
-      },
-    );
-  };
-
-  searchOppDelayed = _.debounce(this.searchOpp, 1000);
-
   render() {
-    const {dummyListData, refreshing, loading, loadMore, isLast, showSearch} =
+    const {dummyListData,listData, refreshing, loading, loadMore, isLast, showSearch} =
       this.state;
 
     return (
@@ -425,42 +253,21 @@ class LeaveList extends Component {
           hideUnderLine: true,
           isHome: true,
           light: true,
-          onClickSearch: () => {
-            this.searchOpp();
-          },
-          onChangeSearch: text => {
-            this.setState({searchQuery: text});
-          },
-          onCloseSearch: () => {
-            this.setState(
-              {showSearch: false, searchQuery: '', page: 0, refreshing: true},
-              () => {
-                this.getAllAppointment();
-              },
-            );
-          },
+        
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>
             <MyFlatList
               horizontal={false}
               scrollEnabled={true}
-              data={dummyListData || []}
+              data={listData || []}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
               style={{flex: 1, margin: ResponsivePixels.size5}}
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
-                this.setState(
-                  {
-                    page: 0,
-                    refreshing: true,
-                  },
-                  () => {
-                    // this.getAllAppointment();
-                  },
-                );
+                this.getAllList();
               }}
               footerComponent={() => {
                 return loadMore ? (
@@ -470,21 +277,6 @@ class LeaveList extends Component {
                     style={{margin: 8}}
                   />
                 ) : null;
-              }}
-              onEndReached={() => {
-                console.log('End');
-
-                if (!loadMore && !isLast) {
-                  this.setState(
-                    {
-                      page: this.state.page + 1,
-                      loadMore: true,
-                    },
-                    () => {
-                      // this.getAllAppointment();
-                    },
-                  );
-                }
               }}
             />
           </View>

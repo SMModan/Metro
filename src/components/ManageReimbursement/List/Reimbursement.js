@@ -6,18 +6,21 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {Clickable, MainContainer, MyFlatList} from '../../common';
+import {Clickable, MainContainer, MyFlatList, ProgressDialog} from '../../common';
 import {connect} from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import {strings} from '../../../language/Language';
 import {Images, Colors, FontName} from '../../../utils';
 import {Chip, Card, Title, Button, FAB} from 'react-native-paper';
-import AppointmentApi from '../Api/CarAttendanceApi';
+import AppointmentApi from '../Api/ReimbursementApi';
 import _ from 'lodash';
 import {goBack, push} from '../../../navigation/Navigator';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import CheckIn from '../../CheckInOut/CheckIn';
 import {Image} from 'react-native';
+import ReimbursementApi from '../Api/ReimbursementApi';
+import { store } from '../../../App';
+import moment from 'moment';
 
 class Reimbursement extends Component {
   state = {
@@ -29,209 +32,56 @@ class Reimbursement extends Component {
     loadMore: false,
     isLast: false,
     listData: [],
-    dummyListData: [
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      ,
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-    ],
     showSearch: false,
     searchQuery: false,
   };
 
   componentDidMount = () => {
-    const checkinout = this.props.session.checkinout;
-    const user = this.props.session.user;
-
-    this.setState(
-      {
-        isCheckInPermission: checkinout,
-        userID: user.ID,
-      },
-      () => {
-        // this.getAllAppointment();
-      },
-    );
+    this.getAllList()
   };
 
-  updateListAfterCheckInCheckOut = (type, CheckInID, HeaderID) => {
-    console.log('type =====>', type);
-    console.log('CheckInID =====>', CheckInID);
-    console.log('HeaderID =====>', HeaderID);
-    let listData = this.state.listData;
 
-    if (type == 0) {
-      let index = listData.findIndex(el => el.ID == HeaderID);
-      console.log('index ===>', index);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = CheckInID;
-        item.IsCheckIn = 'Yes';
-        listData[index] = item;
-      }
-    } else {
-      let index = listData.findIndex(el => el.CheckInID == CheckInID);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = 0;
-        item.IsCheckIn = 'No';
-        listData[index] = item;
-      }
+
+  getAllList = () => {
+    const EmployeeID= store.getState().session.user.EmployeeID
+    const params = {
+      EmployeeID
     }
+ 
+    ProgressDialog.show()
 
-    this.setState({
-      listData,
-    });
-  };
+    ReimbursementApi.getAllList(params, (res) => {
+      ProgressDialog.hide()
+      if(res){
+        
+        if(res){
+          const Table = res.Table
+          if (Table) {
+            if (Array.isArray(Table)) {
+              this.setState(
+                { listData:[...Table]}
+                ,()=>console.log("this.state",this.state.listData)
+               );
+            }else{
+              //console.log("table name name",Table.CustomerName)
+            let results = [
+                {...Table}
+              ];
+              this.setState({
+                listData:results
+              },()=>console.log("this.state",this.state.listData))
+            }
+          
+          }
+        }
+      }
+     
+    }, () => {
+      ProgressDialog.hide()
+    })
+  }
 
-  // getAllAppointment = () => {
-  //   const { searchQuery } = this.state;
-
-  //   const params = {
-  //     PageIndex: this.state.page,
-  //     PageSize: 10,
-  //     Filter: searchQuery || '',
-  //   };
-  //   this.setState({
-  //     loading: !this.state.refreshing && !this.state.loadMore,
-  //   });
-  //   AppointmentApi.getAllAppointment(
-  //     params,
-  //     res => {
-  //       if (res) {
-  //         const { Table } = res && res;
-  //         let isLast = true;
-  //         if (Table) {
-  //           if (Array.isArray(Table)) {
-  //             let totalPage = Table[0]?.TotalCount / 10;
-  //             isLast = this.state.page == totalPage;
-  //             this.setState({
-  //               listData:
-  //                 this.state.page > 0
-  //                   ? [...this.state.listData, ...Table]
-  //                   : Table,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           } else {
-  //             let results = [{ ...Table }];
-  //             console.log('<===results  ===>', results);
-  //             this.setState({
-  //               listData: results,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         this.setState({
-  //           loading: false,
-  //           refreshing: false,
-  //           loadMore: false,
-  //           isLast: true,
-  //         });
-  //       }
-  //     },
-  //     () => {
-  //       this.setState({
-  //         loading: !this.state.refreshing && !this.state.loadMore,
-  //       });
-  //     },
-  //   );
-  // };
-
-  createdDateTime = strDate => {
-    let date = '';
-    if (strDate) {
-      const TStartSplit = strDate.split('T');
-      const sTime = TStartSplit[1];
-      const sDate = TStartSplit[0];
-      const StartHr = sTime.substring(0, 2);
-      const StartMin = sTime.substring(3, 5);
-      date = `${sDate} ${StartHr}:${StartMin}`;
-    }
-    return date;
-  };
-
-  createdDate = strDate => {
+  splitDate = strDate => {
     let date = '';
     if (strDate) {
       const TStartSplit = strDate.split('T');
@@ -240,10 +90,15 @@ class Reimbursement extends Component {
     }
     return date;
   };
+
   renderCell = ({index}) => {
     const {isCheckInPermission, userID} = this.state;
 
     const item = this.state.listData[index];
+
+    const oneDate = moment(item?.FromDate);
+    const dayName = oneDate?.format('dddd');
+    console.log("dayName====",dayName);
 
     return (
       <View>
@@ -255,20 +110,21 @@ class Reimbursement extends Component {
               alignSelf: 'stretch',
               marginLeft: ResponsivePixels.size20,
               marginTop: ResponsivePixels.size5,
+              fontWeight:"bold"
             }}>
-            23rd July 2021 - Friday
+               {`${this.splitDate(item?.FromDate)} - ${dayName}`}
           </Text>
         ) : null}
 
         <Card style={{margin: ResponsivePixels.size10}} key={index}>
           <Clickable
             onPress={() => {
-              this.props.navigation.push('AddAppointments', {item});
+              // this.props.navigation.push('AddAppointments', {item});
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
               <View style={{flexDirection: 'column'}}>
                 <Text style={{fontSize: ResponsivePixels.size18}}>
-                  ERP - Ahmedabad
+                 {item?.ProjectName}
                 </Text>
                 <Text
                   style={{
@@ -276,7 +132,7 @@ class Reimbursement extends Component {
                     color: Colors.yellow,
                     fontWeight: 'bold',
                   }}>
-                  REM-HAR-00003536
+                  {item?.ReimbursementCode}
                 </Text>
               </View>
 
@@ -325,7 +181,8 @@ class Reimbursement extends Component {
                       color: Colors.black,
                       fontWeight: 'bold',
                     }}>
-                    01-July-2021 To 07-July-2021
+                  {`${this.splitDate(item?.FromDate)} to ${this.splitDate(item?.ToDate)} `}
+
                   </Text>
                 </View>
               </View>
@@ -375,7 +232,7 @@ class Reimbursement extends Component {
                       color: Colors.black,
                       fontWeight: 'bold',
                     }}>
-                  SHIVAM-JAISWAL-MT-W-1758
+                  {item?.Pending}
                   </Text>
                 </View>
               </View>
@@ -395,7 +252,7 @@ class Reimbursement extends Component {
               paddingLeft: ResponsivePixels.size20,
               paddingRight: ResponsivePixels.size20,
             }}>
-            Awiating Approval
+            {item?.ApprovalStatus}
           </Text>
 
           <Image
@@ -430,7 +287,7 @@ class Reimbursement extends Component {
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
-    const {dummyListData, refreshing, loading, loadMore, isLast, showSearch} =
+    const {listData, refreshing, loading, loadMore, isLast, showSearch} =
       this.state;
 
     return (
@@ -466,22 +323,14 @@ class Reimbursement extends Component {
             <MyFlatList
               horizontal={false}
               scrollEnabled={true}
-              data={dummyListData || []}
+              data={listData || []}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
               style={{flex: 1, margin: ResponsivePixels.size5}}
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
-                this.setState(
-                  {
-                    page: 0,
-                    refreshing: true,
-                  },
-                  () => {
-                    // this.getAllAppointment();
-                  },
-                );
+                this.getAllList()
               }}
               footerComponent={() => {
                 return loadMore ? (
@@ -492,21 +341,7 @@ class Reimbursement extends Component {
                   />
                 ) : null;
               }}
-              onEndReached={() => {
-                console.log('End');
-
-                if (!loadMore && !isLast) {
-                  this.setState(
-                    {
-                      page: this.state.page + 1,
-                      loadMore: true,
-                    },
-                    () => {
-                      // this.getAllAppointment();
-                    },
-                  );
-                }
-              }}
+             
             />
           </View>
         </View>

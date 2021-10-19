@@ -249,7 +249,7 @@ class ReportList extends Component {
       <Card style={{margin: ResponsivePixels.size10}} key={index}>
         <Clickable
           onPress={() => {
-            this.props.navigation.push('AddAppointments', {item});
+            // this.props.navigation.push('AddAppointments', {item});
           }}>
           <View style={{margin: ResponsivePixels.size15}}>
             <View style={{flexDirection: 'row', width: '100%'}}>

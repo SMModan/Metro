@@ -40,34 +40,21 @@ class SignIn extends Component {
 
   login = () => {
     const params = {
-      UserName: this.state.userName,
-      CompanyName: this.state.selectedCompany.name,
+      Username: this.state.userName,
       Password: this.state.password,
     };
     ProgressDialog.show();
     loginApi.login(
       params,
       res => {
-        // console.log("Res", res)
 
         if (res) {
-          const { Table } = res;
-
-          store.dispatch(setSessionField('user', Table));
+          store.dispatch(setSessionField('user', res));
           store.dispatch(setSessionField('is_logged_in', true));
-          
-          
-          if (!this.props.session.isSync){
-             syncAllData()
-          }
-          else {
-            ProgressDialog.hide();
-
-            reset('Home');
-          }
+          reset('Home');
+          ProgressDialog.hide();
         } else
           ProgressDialog.hide();
-
       },
       error => {
         ProgressDialog.hide();
@@ -114,9 +101,9 @@ class SignIn extends Component {
             
               <View style={styles.bottomShadowView}>
                 <Button
-                  // disabled={!this.state.userName || !this.state.password}
+                   disabled={!this.state.userName || !this.state.password}
                   onPress={()=>{
-                    push("Home")
+     this.login()
                   }}
                   title={strings.btnLogin}
                 />

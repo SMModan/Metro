@@ -43,6 +43,8 @@ import AddLeaveRequest from '../components/ManageLeave/AddLeaveRequest';
 import AddCashAdvance from '../components/ManageCashAdvance/AddCashAdvance';
 import AddReimbursement from '../components/ManageReimbursement/AddReimbursement';
 import ReportList from '../components/ManageReports/List/ReportList';
+import EditCashAdvance from '../components/ManageCashAdvance/EditCashAdvance';
+import AddNotes from '../components/Home/ChildComponent/AddNotes';
 
 
 const Stack = createStackNavigator();
@@ -54,8 +56,9 @@ export default () => {
   useEffect(() => {
     // openSQLiteDB();
     const session = store.getState().session;
-    console.log('session.is_logged_in', session.is_logged_in);
-    setInitialRoute(session.is_logged_in ? 'SelectCountry' : 'SelectCountry');
+    console.log('session.is_logged_in', session.country_id);
+    
+    setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
     SplashScreen.hide();
 
     setLoaded(true);
@@ -76,9 +79,11 @@ export default () => {
           <Stack.Screen component={AddLeaveRequest} name="AddLeave" />
           <Stack.Screen component={CashAdvance} name="CashAdvanceList" />
           <Stack.Screen component={AddCashAdvance} name="AddCashAdvance" />
+          <Stack.Screen component={EditCashAdvance} name="EditCashAdvance" />
           <Stack.Screen component={Reimbursement} name="ReimbursementList" />
           <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
           <Stack.Screen component={ReportList} name="Reports" />
+          <Stack.Screen component={AddNotes} name="AddNotes" />
 
 
 
@@ -97,7 +102,6 @@ export default () => {
           <Stack.Screen component={AddAppointments} name="AddAppointments" />
           <Stack.Screen component={OppAttachment} name="OppAttachment" />
           <Stack.Screen component={TaskAttachment} name="TaskAttachment" />
-
           <Stack.Screen component={Customer} name="Customer" />
           <Stack.Screen component={Contacts} name="Contacts" />
           <Stack.Screen component={AddContacts} name="AddContacts" />
@@ -107,7 +111,6 @@ export default () => {
           <Stack.Screen component={QuotationList} name="Quotation" />
           <Stack.Screen component={QuotationView} name="QuotationView" />
           <Stack.Screen component={MainAddTask} name="MainAddTask" />
-          {/* <Stack.Screen component={NotificationList} name="Notifications" /> */}
           <Stack.Screen component={AddNewTask} name="AddNewTask" />
           <Stack.Screen component={AddRemarks} name="AddRemarks" />
           <Stack.Screen component={MyCheckin} name="MyCheckInOut" />

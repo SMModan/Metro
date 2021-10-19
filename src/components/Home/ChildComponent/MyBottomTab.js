@@ -22,7 +22,7 @@ export default function HomeTabs() {
       shifting
       initialRouteName="Dashboard"
       tabBarOptions={{
-        activeTintColor: Colors.primaryColor500,
+        activeTintColor: Colors.Red900,
         inactiveTintColor: Colors.blueGray500,
         style: {
           backgroundColor: Colors.white,
@@ -55,12 +55,12 @@ export default function HomeTabs() {
 
       <Tab.Screen
         options={{
-          title: "Analytics",
+          title: "Leaves Balance",
 
           tabBarIcon: ({ color }) => (
             <Image
-              source={Images.ic_BottomTab2}
-              style={{ tintColor: color }}
+              source={Images.ic_leave_balance}
+              style={{ tintColor: color,width:ResponsivePixels.size25,height:ResponsivePixels.size25}}
             />
           ),
         }}
@@ -70,11 +70,12 @@ export default function HomeTabs() {
 
       <Tab.Screen
         options={{
-          title: "Notifications",
+          title: "Leave Approvals",
           tabBarIcon: ({ color }) => (
             <Image
-              source={Images.ic_BottomTab3}
-              style={{ tintColor: color }}
+              source={Images.ic_leave_approval}
+              style={{ tintColor: color,width:ResponsivePixels.size25,height:ResponsivePixels.size25 }}
+
             />
           ),
         }}
@@ -84,16 +85,16 @@ export default function HomeTabs() {
 
       <Tab.Screen
         options={{
-          title: "Profile",
+          title: "Show Me Route",
           tabBarIcon: ({ color }) => (
             
             <Image
-              source={Images.ic_BottomTab4}
-              style={{ tintColor: color }}
+              source={Images.ic_location}
+              style={{ tintColor: color,width:ResponsivePixels.size25,height:ResponsivePixels.size25 }}
             />
           ),
         }}
-        name="Profile"
+        name="Route"
         component={DummyView}
       />
 

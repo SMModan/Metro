@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, Image, Platform } from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, FlatList, Image, Platform} from 'react-native';
 import {
   MainContainer,
   ScrollContainer,
@@ -8,443 +8,367 @@ import {
   EditText,
   ProgressDialog,
   ProgressView,
+  MyFlatList,
 } from '../../common';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import styles from '../styles/Home.style';
-import { strings } from '../../../language/Language';
-import { Images, Colors, Utils } from '../../../utils';
-import { syncAllData } from '../../../utils/SyncDataManager';
-import { reset } from '../../../navigation/Navigator';
-import { Alert } from 'react-native';
-import { store } from '../../../App';
-import { setSessionField } from '../../../reducers/SessionReducer';
+import {strings} from '../../../language/Language';
+import {Images, Colors, Utils} from '../../../utils';
+import {syncAllData} from '../../../utils/SyncDataManager';
+import {push, reset} from '../../../navigation/Navigator';
+import {Alert} from 'react-native';
+import {store} from '../../../App';
+import {setSessionField} from '../../../reducers/SessionReducer';
 import loginApi from '../../Login/apis/LoginApis';
 
+import {TouchableOpacity, Animated, ScrollView, Dimensions} from 'react-native';
+import ResponsivePixels from '../../../utils/ResponsivePixels';
+import {Card} from 'react-native-paper';
+import HomeApis from '../apis/HomeApis';
 
-const data = [
-  {
-    icon: Images.ic_Person,
-    title: "Customer"
-  },
-  {
-    icon: Images.ic_Contacts,
-    title: "Contacts"
-  },
-  {
-    icon: Images.ic_Opportunities,
-    title: "Opportunities"
-  },
-  {
-    icon: Images.ic_Tasks,
-    title: "Tasks"
-  },
-  {
-    icon: Images.ic_Appointment,
-    title: "Appointment"
-  },
-  {
-    icon: Images.ic_HelpDesk,
-    title: "Help Desk"
-  },
-  {
-    icon: Images.ic_Quotation,
-    title: "Quotation"
-  },
-];
+const {width} = Dimensions.get('window');
 
 class Home extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      checkinout: true,
-      customer: true,
-      contact: true,
-      opportunity: true,
-      task: true,
-      helpDesk: true,
-      quotation: true,
+      active: 1,
+      xTabOne: 0,
+      xTabTwo: 0,
+      xTabThree: 0,
+      animatedWidth: '50%',
+      announcementType: 1,
+      translateX: new Animated.Value(80),
+      translateXTabOne: new Animated.Value(width),
+      translateXTabTwo: new Animated.Value(0),
+      translateXTabThree: new Animated.Value(width),
+      translateY: -1000,
       data: [],
-      loading: true
-    }
-  }
-
-
-
-
-  permissionApi = (userId) => {
-    const params = {
-      UserID: userId,
+      refreshing: false,
+      loading: false,
+      listData: [],
+      holidayList: [],
     };
-    // ProgressDialog.show();
-
-    loginApi.PermissionApi(
-      params,
-      res => {
-        if (res) {
-
-          const table = res.Table
-          for (let index = 0; index < table.length; index++) {
-            const permission = table[index];
-            const programName = permission.ProgramName
-            const showIcon = permission.ShowIcon
-
-            console.log("<============================ programName ============================>", programName)
-
-            if (programName == "Check In/Out") {
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("checkinout", showIcon));
-            } else if (programName == "Mark In - Out") {
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("markinout", showIcon));
-            } else if (programName == "Trip In - Out") {
-              console.log("<============================ Res ============================>", showIcon)
-
-              store.dispatch(setSessionField("tripinout", showIcon));
-            } else if (programName == "Customer") {
-              console.log("<============================ Res ============================>", showIcon)
-              // customer = showIcon
-              store.dispatch(setSessionField("customer", showIcon));
-            } else if (programName == "Contact") {
-              console.log("<============================ Res ============================>", showIcon)
-              // contact = showIcon
-              store.dispatch(setSessionField("contact", showIcon));
-            } else if (programName == "Opportunity") {
-              console.log("<============================ Res ============================>", showIcon)
-              // opportunity=showIcon
-              store.dispatch(setSessionField("opportunity", showIcon));
-            } else if (programName == "Task Activity") {
-              console.log("<============================ Res ============================>", showIcon)
-              //  task = showIcon
-              store.dispatch(setSessionField("task", showIcon));
-            } else if (programName == "Appointment Activity") {
-              console.log("<============================ Res ============================>", showIcon)
-              // appointment=showIcon
-              store.dispatch(setSessionField("appointment", showIcon));
-            } else if (programName == "HelpDesk") {
-              console.log("<============================ Res ============================>", showIcon)
-              // helpDesk=showIcon
-              store.dispatch(setSessionField("helpDesk", showIcon));
-            } else if (programName == "Quotation") {
-              console.log("<============================ Res ============================>", showIcon)
-              const canExport = permission.CanExport
-              // quotation=showIcon
-              store.dispatch(setSessionField("quotation", showIcon));
-              store.dispatch(setSessionField("quotationCanExport", canExport));
-            }
-          }
-          store.dispatch(setSessionField("isPermissionSet", true));
-
-
-          let checkinout = this.props.session.checkinout
-          let customer = this.props.session.customer
-          let contact = this.props.session.contact
-          let opportunity = this.props.session.opportunity
-          let task = this.props.session.task
-          let appointment = this.props.session.appointment
-          let helpDesk = this.props.session.helpDesk
-          let quotation = this.props.session.quotation
-
-          const data = [
-            {
-              icon: Images.ic_Person,
-              title: "Customer",
-              isVisible: customer
-            },
-            {
-              icon: Images.ic_Contacts,
-              title: "Contacts",
-              isVisible: contact
-            },
-            {
-              icon: Images.ic_Opportunities,
-              title: "Opportunities",
-              isVisible: opportunity
-            },
-            {
-              icon: Images.ic_Tasks,
-              title: "Tasks",
-              isVisible: task
-            },
-            {
-              icon: Images.ic_Appointment,
-              title: "Appointment",
-              isVisible: appointment
-            },
-            {
-              icon: Images.ic_HelpDesk,
-              title: "Help Desk",
-              isVisible: helpDesk
-            },
-            {
-              icon: Images.ic_Quotation,
-              title: "Quotation",
-              isVisible: quotation
-            },
-          ];
-
-
-          this.setState({
-            data
-          })
-          // ProgressDialog.hide();
-
-        }
-
-        this.setState({
-          loading: false
-        })
-
-      },
-      error => {
-        // ProgressDialog.hide();
-        this.setState({
-          loading: false
-        })
-        Utils.showToast(error);
-      },
-    );
   }
 
-
-
-
-
+  handleSlide = type => {
+    let {
+      active,
+      xTabOne,
+      xTabTwo,
+      xTabThree,
+      translateX,
+      translateXTabOne,
+      translateXTabTwo,
+      translateXTabThree,
+    } = this.state;
+    Animated.spring(translateX, {
+      toValue: type,
+      duration: 20,
+    }).start();
+    if (active === 0) {
+      Animated.parallel([
+        Animated.spring(translateXTabOne, {
+          toValue: 0,
+          duration: 20,
+        }).start(),
+        Animated.spring(translateXTabTwo, {
+          toValue: width,
+          duration: 20,
+        }).start(),
+        Animated.spring(translateXTabThree, {
+          toValue: width,
+          duration: 20,
+        }).start(),
+      ]);
+    } else if (active === 1) {
+      Animated.parallel([
+        Animated.spring(translateXTabOne, {
+          toValue: width,
+          duration: 20,
+        }).start(),
+        Animated.spring(translateXTabTwo, {
+          toValue: 0,
+          duration: 20,
+        }).start(),
+        Animated.spring(translateXTabThree, {
+          toValue: width,
+          duration: 20,
+        }).start(),
+      ]);
+    } else {
+      Animated.parallel([
+        Animated.spring(translateXTabOne, {
+          toValue: width,
+          duration: 20,
+        }).start(),
+        Animated.spring(translateXTabTwo, {
+          toValue: width,
+          duration: 20,
+        }).start(),
+        Animated.spring(translateXTabThree, {
+          toValue: 0,
+          duration: 20,
+        }).start(),
+      ]);
+    }
+  };
 
   componentDidMount = () => {
-
+    //console.log("this.props.session.user.EmployeeName",this.props.session.user)
     // setTimeout(() => this.loadPermissions(), 300)
-  }
 
-  loadPermissions = () => {
-    const user = this.props.session.user
-    const userId = user.ID
-
-    const deviceTokenFCM = store.getState().session.deviceToken;
-
-
-    const isDeviceIdSet = this.props.session.isDeviceIdSet
-
-    if (!isDeviceIdSet) {
-      loginApi.setDeviceToken(
-        { DeviceToken: deviceTokenFCM, DeviceType: Platform.select({ android: "A", ios: "I" }) },
-        res => {
-          if (res) {
-            store.dispatch(setSessionField('isDeviceIdSet', true));
-
-            ProgressDialog.hide();
-
-          } else
-            ProgressDialog.hide();
-
-        },
-        error => {
-          ProgressDialog.hide();
-          Utils.showToast(error);
-        },
-      );
-
-    }
-
-    const isPermissionSet = this.props.session.isPermissionSet
-
-    if (!isPermissionSet) {
-      this.permissionApi(userId)
-    } else {
-      let checkinout = this.props.session.checkinout
-      let customer = this.props.session.customer
-      let contact = this.props.session.contact
-      let opportunity = this.props.session.opportunity
-      let task = this.props.session.task
-      let appointment = this.props.session.appointment
-      let helpDesk = this.props.session.helpDesk
-      let quotation = this.props.session.quotation
-
-      const data = [
-        {
-          icon: Images.ic_Person,
-          title: "Customer",
-          isVisible: customer
-        },
-        {
-          icon: Images.ic_Contacts,
-          title: "Contacts",
-          isVisible: contact
-        },
-        {
-          icon: Images.ic_Opportunities,
-          title: "Opportunities",
-          isVisible: opportunity
-        },
-        {
-          icon: Images.ic_Tasks,
-          title: "Tasks",
-          isVisible: task
-        },
-        {
-          icon: Images.ic_Appointment,
-          title: "Appointment",
-          isVisible: appointment
-        },
-        {
-          icon: Images.ic_HelpDesk,
-          title: "Help Desk",
-          isVisible: helpDesk
-        },
-        {
-          icon: Images.ic_Quotation,
-          title: "Quotation",
-          isVisible: quotation
-        },
-      ];
-
-
-      this.setState({
-        data, loading: false
-      })
-    }
-  }
-
-  renderHomeList = ({ index }) => {
-    return (
-      <View style={styles.listMain}>
-        <Clickable onPress={() => this.props.navigation.push('HomeDetail')} style={styles.btnMain}>
-          <View style={styles.ContainView}>
-            <View style={styles.ImageView}>
-              <Image style={{ resizeMode: 'contain', width: "100%" }} source={Images.ListImage} />
-            </View>
-            <View style={styles.infoView}>
-              <View style={styles.dateView}>
-                <Text style={styles.dateValue}>{strings.DateText}</Text>
-                <Text style={styles.monthValue}>{strings.DateMonth}</Text>
-              </View>
-              <View style={styles.titleView}>
-                <Text style={styles.mainText}>{strings.MainListTitle}</Text>
-                <Text style={styles.AddressTextValue}>
-                  {strings.AddressText}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.btnView}>
-              <Clickable style={styles.btnLeft}>
-                <Image source={Images.ic_MapPInBlackIcon} />
-                <Text style={styles.leftText}>{strings.ChechIn}</Text>
-              </Clickable>
-              <Clickable onPress={() => this.props.navigation.push('TeamList')} style={styles.btnRight}>
-                <Image source={Images.ic_GroupBlackIcon} />
-                <Text style={styles.leftText}>{strings.TeamText}</Text>
-              </Clickable>
-            </View>
-          </View>
-        </Clickable>
-      </View>
-    );
+    const CountryName= store.getState().session.country_name
+    this.setState({
+        CountryName
+    })
+    this.getAllAnnouncement();
+    this.getAllNews();
+    this.getHolidayDetailsByToken();
   };
 
-
-
-  renderHomeCell = ({ index }) => {
-    const { data } = this.state
-    // console.log("data ======>", data)
-    let isVisible
-    if (index != 0) {
-      isVisible = data[index - 1].isVisible
-    }
-    return (
-      index === 0 ? <View style={styles.cellStyle} key={index} /> : isVisible ?
-        <View style={styles.cellStyle} key={index}>
-          <Clickable onPress={() => {
-            switch (index) {
-              case 1:
-                this.props.navigation.push('Customer')
-                break;
-              case 2:
-                this.props.navigation.push('Contacts')
-                break;
-
-              case 3:
-                this.props.navigation.push('Opportunity')
-                break;
-              case 4:
-                this.props.navigation.push('Tasks')
-                break;
-              case 5:
-                this.props.navigation.push('Appointments')
-                break;
-
-              case 6:
-                this.props.navigation.push('HelpDesk')
-                break;
-              case 7:
-                this.props.navigation.push('Quotation')
-                break;
-              default:
-                break;
-            }
-          }} style={styles.btnMain}>
-            <Image source={data[index - 1].icon} style={{ marginTop: 30 }} />
-            <Text style={styles.leftText}>{data[index - 1].title}</Text>
-          </Clickable>
-        </View> : null
-    );
-  };
-
-  handleSignOut = () => {
-    Alert.alert(
-      'Skyward CRM',
-      'Are you sure you want to logout?', [{
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel'
-      }, {
-        text: 'Yes',
-        onPress: () => {
-          this.logoutApiCall()
-        }
-      },], {
-      cancelable: false
-    }
-    )
-    return true;
-  }
-
-
-  logoutApiCall = () => {
-
-    // store.dispatch(setSessionField('user', {}));
-    // store.dispatch(setSessionField('is_logged_in', false));
-    // store.dispatch(setSessionField('isDeviceIdSet', false));
-    // store.dispatch(setSessionField('isPermissionSet', false));
-    // reset("SignIn")
+  getAllAnnouncement = () => {
+    
 
     const params = {
-      DeviceToken: this.props.session.deviceToken, DeviceType: Platform.select({ android: "A", ios: "I" })
+      AnnouncementType: 1,
     };
+
     ProgressDialog.show();
-    loginApi.LogoutApi(
+    HomeApis.GetAnnouncement(
       params,
       res => {
         ProgressDialog.hide();
         if (res) {
-          store.dispatch(setSessionField('user', {}));
-          store.dispatch(setSessionField('is_logged_in', false));
-          store.dispatch(setSessionField('isDeviceIdSet', false));
-          store.dispatch(setSessionField('isPermissionSet', false));
-          store.dispatch(setSessionField('connectionString', ""));
-          store.dispatch(setSessionField('token', ""));
-          reset("SignIn")
+          const {Table} = res;
+          console.log('Table', Table);
+
+          if (Table) {
+            if (Array.isArray(Table)) {
+              this.setState({
+                listDataAnnouncement: [...Table],
+                loading: false,
+                refreshing: false,
+              });
+            } else {
+              //console.log("table name name",Table.CustomerName)
+              let results = [{...Table}];
+
+              this.setState({
+                listDataAnnouncement: results,
+                loading: false,
+                refreshing: false,
+              });
+            }
+          }
         }
       },
-      error => {
+      () => {
         ProgressDialog.hide();
-        Utils.showToast(error);
       },
     );
-  }
+  };
+
+
+  
+  getAllNews = () => {
+    // const {announcementType} = this.state;
+
+    const params = {
+      AnnouncementType: 2,
+    };
+
+    ProgressDialog.show();
+    HomeApis.GetAnnouncement(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const {Table} = res;
+          console.log('Table', Table);
+
+          if (Table) {
+            if (Array.isArray(Table)) {
+              this.setState({
+                listDataNews: [...Table],
+                loading: false,
+                refreshing: false,
+              });
+            } else {
+              //console.log("table name name",Table.CustomerName)
+              let results = [{...Table}];
+
+              this.setState({
+                listDataNews: results,
+                loading: false,
+                refreshing: false,
+              });
+            }
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
+
+  getHolidayDetailsByToken = () => {
+    const params = {};
+
+    ProgressDialog.show();
+    HomeApis.GetHolidayDetailsByToken(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const {Table} = res;
+          console.log('Table', Table);
+
+          if (Table) {
+            if (Array.isArray(Table)) {
+              this.setState({
+                holidayList: [...Table],
+                loading: false,
+                refreshing: false,
+              });
+            } else {
+              //console.log("table name name",Table.CustomerName)
+              let results = [{...Table}];
+
+              this.setState({
+                holidayList: results,
+                loading: false,
+                refreshing: false,
+              });
+            }
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
+
+  splitDate = strDate => {
+    let date = '';
+    if (strDate) {
+      const TStartSplit = strDate.split('T');
+      const sDate = TStartSplit[0];
+      date = `${sDate}`;
+    }
+    return date;
+  };
+
+  renderHolidayCell = ({index}) => {
+    const item = this.state.holidayList[index];
+
+    // var date = new Date(item.CreatedDate);
+    // date.toISOString().substring(0, 10);
+
+    // let myDate = `${date.getDate()}-${date.getMonth() + 1
+    //   }-${date.getFullYear()}`;
+    const myDate = this.splitDate(item?.Date);
+    return (
+      <Card
+        style={{margin: ResponsivePixels.size5}}
+        key={item?.index}
+        onPress={() => {}}>
+        <View style={{margin: ResponsivePixels.size5, flexDirection: 'row'}}>
+          <View
+            style={{flexDirection: 'row', width: '100%', color: '#485780',alignSelf:"center",padding:ResponsivePixels.size10}}>
+            <Text
+              style={{
+                fontSize: ResponsivePixels.size17,
+                fontWeight: 'bold',
+                width:"50%",
+              }}>
+              {myDate}
+            </Text>
+            <Text style={{fontSize: ResponsivePixels.size17,
+                width:"50%", color: '#1B2655'}}>
+              {item?.Description}
+            </Text>
+          </View>
+        </View>
+      </Card>
+    );
+  };
+
+  renderCellAnnouncement = ({index}) => {
+    const item = this.state.listDataAnnouncement[index];
+
+    // var date = new Date(item.CreatedDate);
+    // date.toISOString().substring(0, 10);
+
+    // let myDate = `${date.getDate()}-${date.getMonth() + 1
+    //   }-${date.getFullYear()}`;
+    return (
+      <Card
+        style={{margin: ResponsivePixels.size5}}
+        key={item?.index}
+        onPress={() => {}}>
+        <View style={{margin: ResponsivePixels.size5, flexDirection: 'row'}}>
+          <View
+            style={{flexDirection: 'column', width: '100%', color: '#485780'}}>
+            {/* <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: ResponsivePixels.size10 }}>{"12-12-2200"}</Text> */}
+            <Text style={{fontSize: ResponsivePixels.size17, color: '#1B2655'}}>
+              {item?.ShortTitle}
+            </Text>
+          </View>
+        </View>
+      </Card>
+    );
+  };
+
+  
+  renderCellNews = ({index}) => {
+    const item = this.state.listDataNews[index];
+
+    // var date = new Date(item.CreatedDate);
+    // date.toISOString().substring(0, 10);
+
+    // let myDate = `${date.getDate()}-${date.getMonth() + 1
+    //   }-${date.getFullYear()}`;
+    return (
+      <Card
+        style={{margin: ResponsivePixels.size5}}
+        key={item?.index}
+        onPress={() => {}}>
+        <View style={{margin: ResponsivePixels.size5, flexDirection: 'row'}}>
+          <View
+            style={{flexDirection: 'column', width: '100%', color: '#485780'}}>
+            {/* <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: ResponsivePixels.size10 }}>{"12-12-2200"}</Text> */}
+            <Text style={{fontSize: ResponsivePixels.size17, color: '#1B2655'}}>
+              {item?.ShortTitle}
+            </Text>
+          </View>
+        </View>
+      </Card>
+    );
+  };
+
   render() {
-    const { data, loading } = this.state
+    const {data, refreshing, loading} = this.state;
+
+    let {
+      xTabOne,
+      xTabTwo,
+      xTabThree,
+      translateX,
+      active,
+      translateXTabOne,
+      translateXTabTwo,
+      translateXTabThree,
+      translateY,
+      animatedWidth,
+      listDataAnnouncement,
+      listDataNews,
+      holidayList,
+      CountryName
+    } = this.state;
     return (
       <MainContainer
         header={{
@@ -452,36 +376,253 @@ class Home extends Component {
             image: Images.ic_Menu,
             onPress: () => {
               // this.handleSignOut()
-              this.props.navigation.openDrawer()
+              this.props.navigation.openDrawer();
             },
           },
-          title: '',
+          title: `Metro HRMS ${CountryName}`,
           hideUnderLine: true,
           light: true,
           isHome: true,
-          right: [{
-            image: Images.ic_Refresh, onPress: () => syncAllData(false)
-            ,
-          }],
+          right: [
+            {
+              image: Images.ic_edit,
+              onPress: () => {push("AddNotes")},
+            },
+          ],
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.headerView}>
-            <Text style={styles.firstTitle}>Hi {this.props.session.user.FirstName || ""}</Text>
+            <Text style={styles.firstTitle}>
+              Hi {this.props.session?.user?.EmployeeName || ''}
+            </Text>
           </View>
           <View style={styles.MainList}>
-            {/* {loading ? <ProgressView /> : data.length != 0 && <FlatList
-              horizontal={false}
-              scrollEnabled={true}
-              numColumns={3}
-              data={[1, 2, 3, 4, 5, 6, 7, 8]}
-              showsHorizontalScrollIndicator={false}
-              renderItem={(item) => this.renderHomeCell(item)}
-              keyExtractor={(item, index) => 'key' + index}
-              style={{ flex: 1, margin: 10 }}
-              contentContainerStyle={{ paddingVertical: 30 }}
-            />} */}
-            <Text style={{justifyContent:"center",textAlignVertical:"center",alignItems:"center",alignSelf:"center"}}>Coming Soon... {this.props.session.user.FirstName || ""}</Text>
+            <View style={{flex: 1}}>
+              <View
+                style={{
+                  width: '90%',
+                  height:"100%",
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: ResponsivePixels.size15,
+                    marginBottom: 20,
+                    height: ResponsivePixels.size40,
+                    position: 'relative',
+                  }}>
+                  <Animated.View
+                    style={{
+                      position: 'absolute',
+                      width: animatedWidth || '50%',
+                      height: '100%',
+                      top: 0,
+                      left: 0,
+                      backgroundColor: Colors.Red900,
+                      borderRadius: 50,
+                      transform: [
+                        {
+                          translateX,
+                        },
+                      ],
+                    }}
+                  />
 
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.Red900,
+                      borderRadius: 50,
+                      borderRightWidth: 0,
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                    }}
+                    onLayout={event =>
+                      this.setState({
+                        xTabOne: event.nativeEvent.layout.x,
+                      })
+                    }
+                    onPress={() =>
+                      this.setState(
+                        {
+                          active: 0,
+                          animatedWidth: '25%',
+                          announcementType: 2,
+                          listData: [],
+                        },
+                        () => {
+                        //  this.getAllAnnouncementNews();
+                          this.handleSlide(xTabOne);
+                        },
+                      )
+                    }>
+                    <Text
+                      style={{
+                        color: active === 0 ? '#fff' : Colors.secondary500,
+                      }}>
+                      NEWS
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{
+                      flex: 2,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.Red900,
+                      borderRadius: 1,
+                      borderLeftWidth: 0,
+                      borderRightWidth: 0,
+                      borderTopLeftRadius: 0,
+                      borderBottomLeftRadius: 0,
+                    }}
+                    onLayout={event =>
+                      this.setState({
+                        xTabTwo: event.nativeEvent.layout.x,
+                      })
+                    }
+                    onPress={() =>
+                      this.setState(
+                        {
+                          active: 1,
+                          animatedWidth: '50%',
+                          announcementType: 1,
+                          listData: [],
+                        },
+                        () => {
+                       //   this.getAllAnnouncementNews();
+                          this.handleSlide(xTabTwo);
+                        },
+                      )
+                    }>
+                    <Text
+                      style={{
+                        color: active === 1 ? '#fff' : Colors.secondary500,
+                      }}>
+                      ANNOUNCEMENTS
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderWidth: 1,
+                      borderColor: Colors.Red900,
+                      borderRadius: 50,
+                      borderLeftWidth: 0,
+                      borderTopLeftRadius: 0,
+                      borderBottomLeftRadius: 0,
+                    }}
+                    onLayout={event =>
+                      this.setState({
+                        xTabThree: event.nativeEvent.layout.x,
+                      })
+                    }
+                    onPress={() =>
+                      this.setState({active: 2, animatedWidth: '25%'}, () =>
+                        this.handleSlide(xTabThree),
+                      )
+                    }>
+                    <Text
+                      style={{
+                        color: active === 2 ? '#fff' : Colors.secondary500,
+                      }}>
+                      HOLIDAYS
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                    
+                 {active===0 && <MyFlatList
+                      data={listDataNews || []}
+                      renderItem={item => this.renderCellNews(item)}
+                      style={{flex: 1}}
+                      refreshing={refreshing}
+                      loading={loading}
+                      onRefresh={() => {
+                        this.setState(
+                          {
+                            refreshing: true,
+                            listDataNews: [],
+                          },
+                          () => {
+                            this.getAllNews();
+                            //   this.getAllNotification();
+                          },
+                        );
+                      }}
+                      horizontal={false}
+                      scrollEnabled={true}
+                      showsVerticalScrollIndicator={false}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, index) => 'key' + index}
+                    />
+}
+                    
+                    {active===1 &&  <MyFlatList
+                      data={listDataAnnouncement || []}
+                      renderItem={item => this.renderCellAnnouncement(item)}
+                      style={{flex: 1}}
+                      refreshing={refreshing}
+                      loading={loading}
+                      onRefresh={() => {
+                        this.setState(
+                          {
+                            refreshing: true,
+                            listDataAnnouncement: [],
+                          },
+                          () => {
+                            this.getAllAnnouncement();
+                            //   this.getAllNotification();
+                          },
+                        );
+                      }}
+                      horizontal={false}
+                      scrollEnabled={true}
+                      showsVerticalScrollIndicator={false}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, index) => 'key' + index}
+                    />}
+                   
+
+               
+               {active===2 &&  <MyFlatList
+                      data={holidayList || []}
+                      renderItem={item => this.renderHolidayCell(item)}
+                      style={{flex: 1}}
+                      refreshing={refreshing}
+                      loading={loading}
+                      onRefresh={() => {
+                        this.setState(
+                          {
+                            refreshing: true,
+                            holidayList: [],
+                          },
+                          () => {
+                            this.getHolidayDetailsByToken();
+                            //   this.getAllNotification();
+                          },
+                        );
+                      }}
+                      horizontal={false}
+                      scrollEnabled={true}
+                      showsVerticalScrollIndicator={false}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, index) => 'key' + index}
+                    />}
+                   
+
+
+              </View>
+            </View>
           </View>
         </View>
       </MainContainer>
@@ -489,8 +630,8 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  session: state.session
+const mapStateToProps = state => ({
+  session: state.session,
 });
 
 const mapDispatchToProps = {};

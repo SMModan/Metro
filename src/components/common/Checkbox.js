@@ -4,9 +4,14 @@ import { Checkbox as CheckBox } from 'react-native-paper';
 import { Colors, FontSize } from '../../utils';
 
 export default class Checkbox extends Component {
+
+    componentDidMount() {
+        console.log("this.props.onPress",this.props.onPress)
+    }
+    
     render() {
         return (
-            <TouchableOpacity disabled={this.props.disabled} style={{ flexDirection: 'row', alignItems: "center", margin: 5, ...this.props.style }} onPress={this.props.onPress}>
+            <TouchableOpacity disabled={false} style={{ flexDirection: 'row', alignItems: "center", margin: 5, ...this.props.style }} onPress={this.props.onPress}>
                 <CheckBox
                     disabled={this.props.disabled}
                     color={this.props.color}
@@ -14,6 +19,7 @@ export default class Checkbox extends Component {
                     onPress={this.props.onPress}
                 />
                 <Text style={{ fontSize: FontSize.fontSize15, fontFamily: FontName.regular, color: this.props.labelColor || Colors.blueGray900, }}>{this.props.label}</Text>
+                
             </TouchableOpacity>
         )
     }

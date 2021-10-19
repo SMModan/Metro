@@ -28,8 +28,8 @@ export default styles = StyleSheet.create({
     MainList:{
         flex:1,
         backgroundColor: Colors.white,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5
     },
     //List
     listMain:{

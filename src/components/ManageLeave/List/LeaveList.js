@@ -34,7 +34,6 @@ class LeaveList extends Component {
 
     LeaveApi.getAllLeaves(params, (res) => {
       ProgressDialog.hide()
-      if(res){
         
         if(res){
           const Table = res.Table
@@ -56,7 +55,6 @@ class LeaveList extends Component {
           
           }
         }
-      }
      
     }, () => {
       ProgressDialog.hide()

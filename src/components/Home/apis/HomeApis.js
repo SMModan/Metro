@@ -1,5 +1,5 @@
 import {
-  GetAnnouncement, GetHolidayDetailsByToken
+  GetAnnouncement, GetHolidayDetailsByToken, GetLeaveBalanceByEmployeeID, GetPendingleaveApprovalCount
 } from '../../../network/ApiConstants';
 import apiCall, { METHOD } from '../../../network/ApiService';
 
@@ -25,6 +25,40 @@ const HomeApis = {
 
     apiCall(
       GetHolidayDetailsByToken,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },
+  GetLeaveBalanceByEmployeeID(params, onDone, onError) {
+
+    apiCall(
+      GetLeaveBalanceByEmployeeID,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },
+  GetPendingleaveApprovalCount(params, onDone, onError) {
+
+    apiCall(
+      GetPendingleaveApprovalCount,
       params,
       res => {
         if (onDone) {

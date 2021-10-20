@@ -19,6 +19,7 @@ export const GET_LEAVE_TYPE = "GetLeaveType"
 export const GET_LEAVE_BALANCE = "GetLeaveBalance"
 export const GET_LEAVE_DAYS_BY_DATE = "GetLeaveDaysByDate"
 export const INSERT_LEAVE_APPLICATION = "InsertLeaveApplication"
+export const GetLeaveApproval = "GetLeaveApproval"
 
 // Cash Advance end points
 export const Get_ExpenseHeads = "GetExpenseHeads"
@@ -37,6 +38,8 @@ export const InsertReimbursement = "InsertReimbursement"
 //Home api end points
 export const GetAnnouncement = "GetAnnouncement"
 export const GetHolidayDetailsByToken = "GetHolidayDetailsByToken"
+export const GetLeaveBalanceByEmployeeID = "GetLeaveBalanceByEmployeeID"
+export const GetPendingleaveApprovalCount = "GetPendingleaveApprovalCount"
 
 
 

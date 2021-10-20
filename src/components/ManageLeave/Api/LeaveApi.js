@@ -14,7 +14,7 @@ import {
   GET_LEAVE_TYPE,
   GET_LEAVE_BALANCE,
   GET_LEAVE_DAYS_BY_DATE,
-  INSERT_LEAVE_APPLICATION
+  INSERT_LEAVE_APPLICATION,GetLeaveApproval
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
@@ -23,6 +23,23 @@ const LeaveApi = {
 
     apiCall(
       GET_LEAVE_FOR_EMPLOYEE,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },
+  GetLeaveApproval(params, onDone, onError) {
+
+    apiCall(
+      GetLeaveApproval,
       params,
       res => {
         if (onDone) {

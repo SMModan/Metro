@@ -45,6 +45,8 @@ import AddReimbursement from '../components/ManageReimbursement/AddReimbursement
 import ReportList from '../components/ManageReports/List/ReportList';
 import EditCashAdvance from '../components/ManageCashAdvance/EditCashAdvance';
 import AddNotes from '../components/Home/ChildComponent/AddNotes';
+import MyLeaveCount from '../components/Home/ChildComponent/MyLeaveCount';
+import LeaveApprovalList from '../components/ManageLeave/List/LeaveApprovalList';
 
 
 const Stack = createStackNavigator();
@@ -84,6 +86,8 @@ export default () => {
           <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
           <Stack.Screen component={ReportList} name="Reports" />
           <Stack.Screen component={AddNotes} name="AddNotes" />
+          <Stack.Screen component={MyLeaveCount} name="MyLeaveCount" />
+          <Stack.Screen component={LeaveApprovalList} name="LeaveApprovalList" />
 
 
 

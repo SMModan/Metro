@@ -12,6 +12,8 @@ import {
   Button
 } from 'react-native';
 import { Card } from 'react-native-paper';
+import { store } from '../../../App';
+import { setSessionField } from '../../../reducers/SessionReducer';
 import { Images,Colors } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import { Clickable, ImageButton, MainContainer,ProgressDialog } from '../../common';
@@ -30,6 +32,17 @@ export default class AddNotes extends Component {
 
   componentDidMount() {
     // this.getAllActivityList()
+
+    const note= store.getState().session.note
+
+    if(note){
+      let _todo = JSON.parse(note)
+      this.setState({
+        remarksArray:_todo
+      })
+  
+    }
+    
   }
 
 
@@ -147,7 +160,8 @@ export default class AddNotes extends Component {
                 id:_todo.length+1,
                 todo:this.state.remarks
               })
-
+              const stringifyData = JSON.stringify(_todo)
+              store.dispatch(setSessionField('note', stringifyData));
               this.setState({
                 remarksArray:_todo,
                 remarks:""

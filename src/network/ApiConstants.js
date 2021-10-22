@@ -42,6 +42,17 @@ export const GetLeaveBalanceByEmployeeID = "GetLeaveBalanceByEmployeeID"
 export const GetPendingleaveApprovalCount = "GetPendingleaveApprovalCount"
 
 
+// Attendance List
+export const GetDailyAttendanceDetails = "GetDailyAttendanceDetails"
+
+
+
+// Daily CarAttendance List
+export const GetWorkLocation = "GetWorkLocation"
+export const GetProjectByLocationId = "GetProjectByLocationId"
+export const GetMarkinForSelectedDate = "GetMarkinForSelectedDate"
+export const InsertDailyAttendanceForLocation = "InsertDailyAttendanceForLocation"
+export const InsertDailyAttendanceForVehicle = "InsertDailyAttendanceForVehicle"
 
 
 

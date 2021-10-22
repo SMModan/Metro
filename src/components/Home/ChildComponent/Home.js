@@ -386,7 +386,7 @@ class Home extends Component {
           right: [
             {
               image: Images.ic_edit,
-              onPress: () => {push("AddNotes")},
+              onPress: () => {push("atttttt")},
             },
           ],
         }}>

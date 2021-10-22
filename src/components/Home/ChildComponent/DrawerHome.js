@@ -65,6 +65,11 @@ const SideMenu = ({navigation}) => {
       route: 'CarAttendanceList',
     },
     {
+      title: 'Markin - Markout',
+      icon: Images.ic_Appointment,
+      route: 'MarkInOutList',
+    },
+    {
       title: 'Leave',
       icon: Images.ic_HelpDesk,
       route: 'LeaveList',
@@ -87,12 +92,12 @@ const SideMenu = ({navigation}) => {
   ]);
   return (
     <View
-      style={{flex: 1, backgroundColor: 'white', padding: 16, paddingTop: 64}}>
+      style={{flex: 1, backgroundColor: 'white', padding: 16, paddingTop: ResponsivePixels.size50}}>
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
         <Image
           style={{
-            width: 100,
-            height: 100,
+            width: ResponsivePixels.size80,
+            height: ResponsivePixels.size80,
             backgroundColor: 'gray',
             borderRadius: 50,
           }}

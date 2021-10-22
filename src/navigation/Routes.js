@@ -47,6 +47,8 @@ import EditCashAdvance from '../components/ManageCashAdvance/EditCashAdvance';
 import AddNotes from '../components/Home/ChildComponent/AddNotes';
 import MyLeaveCount from '../components/Home/ChildComponent/MyLeaveCount';
 import LeaveApprovalList from '../components/ManageLeave/List/LeaveApprovalList';
+ import MyAttendanceList from '../components/MarkInOut/List/MyAttendanceList';
+import AttendanceList from '../components/MarkInOut/List/AttendanceList';
 
 
 const Stack = createStackNavigator();
@@ -88,6 +90,7 @@ export default () => {
           <Stack.Screen component={AddNotes} name="AddNotes" />
           <Stack.Screen component={MyLeaveCount} name="MyLeaveCount" />
           <Stack.Screen component={LeaveApprovalList} name="LeaveApprovalList" />
+          <Stack.Screen component={MyAttendanceList} name="atttttt" />
 
 
 

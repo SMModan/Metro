@@ -44,7 +44,6 @@ class CashAdvance extends Component {
 
     CashAdvanceApi.getAllList(params, (res) => {
       ProgressDialog.hide()
-      if(res){
         
         if(res){
           const Table = res.Table
@@ -66,7 +65,6 @@ class CashAdvance extends Component {
           
           }
         }
-      }
      
     }, () => {
       ProgressDialog.hide()

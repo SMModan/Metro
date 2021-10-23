@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
 import {
@@ -6,12 +5,12 @@ import {
 } from 'react-native';
 import { Card, FAB } from 'react-native-paper';
 import { connect } from 'react-redux';
+import { store } from '../../../App';
 import { push } from '../../../navigation/Navigator';
-import { Colors, Images } from '../../../utils';
+import { Colors, Images, Utils } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import { Clickable, CustomDatePicker, MainContainer, MyFlatList, ProgressDialog } from '../../common';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
-import CarAttendanceApi from '../../ManageCarAttendance/Api/CarAttendanceApi';
 import AttendanceApi from '../Api/AttendanceApi';
 
 class AttendanceList extends Component {
@@ -26,14 +25,21 @@ class AttendanceList extends Component {
     toDate: new Date()
   };
 
+
   getAllList = () => {
-     const EmployeeID = store.getState().session.user.EmployeeID;
+     const EmployeeId = store.getState().session.user.EmployeeID;
     const {fromDate,toDate} = this.state
 
+
+    
+    const _fromDate = Utils.formatDate(fromDate, 'MM/DD/YYYY');
+    const _toDate = Utils.formatDate(toDate, 'MM/DD/YYYY');
+
+
     const params = {
-       EmployeeId,
-       fromdate,
-      todate
+      EmployeeId,
+      fromdate:_fromDate,
+      todate:_toDate.toString()
     }
  
     ProgressDialog.show()
@@ -82,11 +88,12 @@ class AttendanceList extends Component {
     return date;
   };
   renderCell = ({index}) => {
-    const {isCheckInPermission, userID} = this.state;
 
     const item = this.state.listData[index];
-    const oneDate = moment(item?.LeaveApplicationDate);
+    const oneDate = moment(item?.attDate);
     const dayName = oneDate?.format('dddd');
+    const day= oneDate?.format('DD');
+    const Month= oneDate?.format('MMM');
     console.log("dayName====",dayName);
     return (
       <View>
@@ -107,7 +114,7 @@ class AttendanceList extends Component {
           onPress={() => {
             // this.props.navigation.push('AddAppointments', {item});
           }}>
-          <View style={{margin: ResponsivePixels.size15}}>
+          <View style={{margin: ResponsivePixels.size15, padding:ResponsivePixels.size5}}>
          
      
 
@@ -116,51 +123,97 @@ class AttendanceList extends Component {
                 flexDirection: 'row',
                 width: '100%',
                 alignItems: 'center',
+                height:ResponsivePixels.size80
               }}>
-              <View
-                style={{
-                  width: ResponsivePixels.size35,
-                  height: ResponsivePixels.size35,
-                  borderRadius: 100 / 2,
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: Colors.BlackColor100,
-                }}>
-                <Image
-                  source={Images.ic_Calendar}
+
+              <View style={{width:"20%",height:"100%",backgroundColor:Colors.blueGray500, borderRadius:10,flexDirection:"column"}}>
+              <Text
                   style={{
-                    width: ResponsivePixels.size20,
-                    height: ResponsivePixels.size20,
-                  }}
-                  resizeMode={'cover'}
-                />
+                    fontSize: ResponsivePixels.size20,
+                    color: Colors.black,
+                    fontWeight: 'bold',
+                    textAlign:"center",
+                    marginTop:ResponsivePixels.size8
+
+                  }}>
+
+                   23
+                  
+                </Text>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size18,
+                    color: Colors.black,
+                    fontWeight: 'bold',
+                    textAlign:"center",
+                    marginTop:ResponsivePixels.size8
+
+                  }}>
+
+                 Oct
+                  
+                </Text>
               </View>
+
+
+<View style={{flexDirection:"row",width:"80%"}}>
 
               <View
                 style={{
                   flexDirection: 'column',
                   marginLeft: ResponsivePixels.size20,
+                  width:"39%",
+                  justifyContent:"center",
+                  alignItems:"center"
                 }}>
                 <Text
                   style={{
-                    fontSize: ResponsivePixels.size13,
+                    fontSize: ResponsivePixels.size15,
                     color: Colors.grayColor,
+                    textAlign:"center"
                   }}>
-                  Applied Duration
+                  Mark-In
                 </Text>
                 <Text
                   style={{
-                    fontSize: ResponsivePixels.size15,
+                    fontSize: ResponsivePixels.size20,
                     color: Colors.black,
-                    fontWeight: 'bold',
                   }}>
 
-                    {`${this.splitDate(item?.LeaveFromDate)} to ${this.splitDate(item?.LeaveToDate)} `}
+                      02:44 PM                  
+                </Text>
+              </View>
+                <View style={{height:"100%", backgroundColor:Colors.Red900,width:ResponsivePixels.size10, widht:"1%"}} />
+
+              <View
+                style={{
+                  flexDirection: 'column',
+                  marginLeft: ResponsivePixels.size20,
+                  width:"39%",
+                  justifyContent:"center",
+                  alignItems:"center"
+                }}>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size15,
+                    color: Colors.grayColor,
+                    textAlign:"center"
+                  }}>
+                  Mark-Out
+                </Text>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size20,
+                    color: Colors.black,
+                    textAlign:"center"
+
+                  }}>
+
+02:44 PM
                   
                 </Text>
               </View>
-         
+              </View>
 
          
             </View>
@@ -261,14 +314,7 @@ class AttendanceList extends Component {
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>
-          <CustomDatePicker
-                selectedDate={applicationDate || new Date()}
-                minimumDate={applicationDate || new Date()}
-                label={'Application Date'}
-                containerStyle={{flex: 1}}
-                disabled={true}
-                rightIcon={Images.ic_Calendar}
-              />
+         
 
 
             <MyFlatList

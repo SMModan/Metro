@@ -12,6 +12,7 @@ import MyLeaveCount from './MyLeaveCount';
 import HomeApis from '../apis/HomeApis';
 import {ProgressDialog} from '../../common';
 import {Badge} from 'react-native-paper';
+import LeaveApprovalList from '../../ManageLeave/List/LeaveApprovalList';
 // import ReportsMain from '../../Reports/ChildComponent/ReportsMain';
 // import MonieMattersMain from '../../MonieMatters/ChildComponent/MonieMattersMain';
 // import PaymentMain from '../../Payments/ChildComponent/PaymentMain';
@@ -120,15 +121,15 @@ export default function HomeTabs() {
               />
 
               {PendingCount === 0 ? (
-                <Badge style={{position: 'absolute', top: 0, right: ResponsivePixels.size15}}>
-                  <Text>{PendingCount}</Text>
+                <Badge style={{position: 'absolute', top: 0, right: ResponsivePixels.size15,backgroundColor:Colors.Red900}}>
+                  <Text>{PendingCount||0}</Text>
                 </Badge>
               ) : null}
             </>
           ),
         }}
-        name="Notifications"
-        component={NotificationList}
+        name="LeaveApprovalList"
+        component={LeaveApprovalList}
       />
 
       <Tab.Screen

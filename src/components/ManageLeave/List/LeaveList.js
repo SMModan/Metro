@@ -49,7 +49,8 @@ class LeaveList extends Component {
                 {...Table}
               ];
               this.setState({
-                listData:results
+                listData:results,
+                refreshing:false
               },()=>console.log("this.state",this.state.listData))
             }
           
@@ -102,9 +103,6 @@ class LeaveList extends Component {
             // this.props.navigation.push('AddAppointments', {item});
           }}>
           <View style={{margin: ResponsivePixels.size15}}>
-         
-     
-
             <View
               style={{
                 flexDirection: 'row',
@@ -265,17 +263,13 @@ class LeaveList extends Component {
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
-                this.getAllList();
+                this.setState({
+                  listData:[]
+                },()=>{
+                  this.getAllList();
+                })
               }}
-              footerComponent={() => {
-                return loadMore ? (
-                  <ActivityIndicator
-                    size={'large'}
-                    color={Colors.blueGray900}
-                    style={{margin: 8}}
-                  />
-                ) : null;
-              }}
+        
             />
           </View>
         </View>

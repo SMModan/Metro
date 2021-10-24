@@ -78,6 +78,7 @@ export default class AddNotes extends Component {
           title: 'Add Todo',
           hideUnderLine: true,
           light: true,
+          isHome:true
         }}>
 
       <View style={styles.container}>
@@ -122,24 +123,6 @@ export default class AddNotes extends Component {
           </View>
         </View>
 
-{/* <Clickable onPress={()=>{
-  alert("testing")
- 
-
-}}>
-        <Image
-                    source={Images.ic_close}
-                    style={{
-                      width: ResponsivePixels.size15,
-                      height: ResponsivePixels.size15,
-                      position: 'absolute',
-                      bottom: 5,
-                      right: 10,
-                      tintColor:Colors.Red900
-                    }}
-                    resizeMode={'cover'}
-                  />
-                  </Clickable> */}
       </Card>
            
             )

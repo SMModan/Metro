@@ -295,22 +295,6 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
 
 
   handleSubmit = () => {
-
-    // loading: false,
-    // user: this.props.session.user,
-    // empList:[],
-    // EmployeeID:0,
-    // cashAdvanceDate : undefined,
-    // supervisor: "",
-    // supervisorId:0,
-    // projectList:[],
-    // headList:[],
-    // headId:0,
-    // remainingCredit:"0",
-    // adhocAmount:"0"
-
-
-
     const {
       EmployeeID,
       cashAdvanceDate,
@@ -364,7 +348,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request submitted successfully');
-            reset('CashAdvanceList');
+            goBack()
           }
         },
         (error) => {

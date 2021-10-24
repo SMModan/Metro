@@ -21,8 +21,6 @@ class CashAdvance extends Component {
     totalPage: 0,
     refreshing: false,
     loading: false,
-    loadMore: false,
-    isLast: false,
     listData: [],
     showSearch: false,
     searchQuery: false,
@@ -59,7 +57,9 @@ class CashAdvance extends Component {
                 {...Table}
               ];
               this.setState({
-                listData:results
+                listData:results,
+                refreshing:false,
+                loading:false
               },()=>console.log("this.state",this.state.listData))
             }
           
@@ -352,6 +352,7 @@ class CashAdvance extends Component {
               scrollEnabled={true}
               data={listData || []}
               showsHorizontalScrollIndicator={false}
+              
               renderItem={item => this.renderCell(item)}
               style={{flex: 1, margin: ResponsivePixels.size5}}
               loading={loading}
@@ -359,38 +360,16 @@ class CashAdvance extends Component {
               onRefresh={() => {
                 this.setState(
                   {
-                    page: 0,
-                    refreshing: true,
+                    refreshing: false,
+                    loading:false,
+                    listData:[]
                   },
                   () => {
-                    // this.getAllAppointment();
+                     this.getAllList();
                   },
                 );
               }}
-              footerComponent={() => {
-                return loadMore ? (
-                  <ActivityIndicator
-                    size={'large'}
-                    color={Colors.blueGray900}
-                    style={{margin: 8}}
-                  />
-                ) : null;
-              }}
-              onEndReached={() => {
-                console.log('End');
-
-                if (!loadMore && !isLast) {
-                  this.setState(
-                    {
-                      page: this.state.page + 1,
-                      loadMore: true,
-                    },
-                    () => {
-                      // this.getAllAppointment();
-                    },
-                  );
-                }
-              }}
+           
             />
           </View>
         </View>

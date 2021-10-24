@@ -348,7 +348,9 @@ componentDidMount() {
                 const Table = res.Table;
                 if (Table) {
                   console.log('===========> getLeaveBalanceByDate ===========>', "res");
-                
+                  Utils.showToast('Reimbursement request submitted successfully');
+            // reset('LeaveList');
+            goBack()
                 }
               }
             },
@@ -451,7 +453,7 @@ componentDidMount() {
                       selectedDate={fromDate || new Date()}
                       minimumDate={ new Date()}
                       onDateChanged={date => {
-                        onTextChanged('fromDate', date);
+                        this.onTextChanged('fromDate', date);
                       }}
                       label={'From Date'}
                       containerStyle={{flex: 1, width: '50%',marginRight:ResponsivePixels.size20}}
@@ -464,7 +466,7 @@ componentDidMount() {
                       selectedDate={toDate || new Date()}
                       minimumDate={fromDate || new Date()}
                       onDateChanged={date => {
-                        onTextChanged('toDate', date);
+                        this.onTextChanged('toDate', date);
                       }}
                       label={'To Date'}
                       containerStyle={{flex: 1, width: '50%'}}

@@ -1044,8 +1044,8 @@ com/facebook/fresco/flipper/R.java
  com.facebook.fresco.flipper.R$string
  com.facebook.fresco.flipper.R$style
  com.facebook.fresco.flipper.R$styleable
-com/facebook/react/PackageList.java
- com.facebook.react.PackageList
+com/google/android/gms/tasks/R.java
+ com.google.android.gms.tasks.R
 pl/droidsonroids/gif/R.java
  pl.droidsonroids.gif.R
  pl.droidsonroids.gif.R$attr
@@ -1143,5 +1143,5 @@ com/google/firebase/datatransport/R.java
  com.google.firebase.datatransport.R$styleable
 com/google/android/gms/location/R.java
  com.google.android.gms.location.R
-com/google/android/gms/tasks/R.java
- com.google.android.gms.tasks.R
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList

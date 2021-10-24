@@ -20,6 +20,7 @@ export const GET_LEAVE_BALANCE = "GetLeaveBalance"
 export const GET_LEAVE_DAYS_BY_DATE = "GetLeaveDaysByDate"
 export const INSERT_LEAVE_APPLICATION = "InsertLeaveApplication"
 export const GetLeaveApproval = "GetLeaveApproval"
+export const UpdateApprovalStatus = "UpdateApprovalStatus"
 
 // Cash Advance end points
 export const Get_ExpenseHeads = "GetExpenseHeads"

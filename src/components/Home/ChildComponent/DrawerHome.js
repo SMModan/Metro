@@ -12,11 +12,14 @@ import CashAdvance from '../../ManageCashAdvance/List/CashAdvance';
 import Reimbursement from '../../ManageReimbursement/List/Reimbursement';
 import ReportList from '../../ManageReports/List/ReportList';
 import {NavigationContainer} from '@react-navigation/native';
-import {push} from '../../../navigation/Navigator';
+import {push, reset} from '../../../navigation/Navigator';
 import StartTrip from '../../ManageCarAttendance/StartTrip';
 import AddLeaveRequest from '../../ManageLeave/AddLeaveRequest';
 import AddCashAdvance from '../../ManageCashAdvance/AddCashAdvance';
 import AddReimbursement from '../../ManageReimbursement/AddReimbursement';
+import { store } from '../../../App';
+import { IS_LOGGED_IN } from '../../../data/PrefKeys';
+import { setSessionField } from '../../../reducers/SessionReducer';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerHome() {
@@ -166,7 +169,11 @@ const SideMenu = ({navigation}) => {
                 AlertDialog.hide();
                 push('SignIn');
                 //    loginApi.logout()
-                // store.dispatch(setSessionField(IS_LOGGED_IN, false))
+                 store.dispatch(setSessionField("is_logged_in", false))
+                 store.dispatch(setSessionField("user", {}))
+                 store.dispatch(setSessionField('country_id', undefined));
+                 store.dispatch(setSessionField('country_name', undefined));
+                 reset("SelectCountry")
               },
             },
             negativeButton: {

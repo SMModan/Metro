@@ -257,7 +257,7 @@ class EditCashAdvance extends Component {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request updated successfully');
-            reset('CashAdvanceList');
+            goBack()
           }
         },
         (error) => {

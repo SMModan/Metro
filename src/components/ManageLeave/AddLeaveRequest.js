@@ -24,7 +24,8 @@ import {RadioButton, Text} from 'react-native-paper';
 import PhotoPicker from '../common/PhotoPicker';
 import LeaveApi from './Api/LeaveApi';
 import {store} from '../../App';
-import {CheckBox} from 'native-base';
+import styles from './styles/Leave.style';
+
 import moment from 'moment';
 class AddLeaveRequest extends Component {
   state = {
@@ -341,7 +342,8 @@ class AddLeaveRequest extends Component {
           const isSucceed = jsonResponse.IsSucceed;
           if (isSucceed) {
             Utils.showToast('Leave request submitted successfully');
-            reset('LeaveList');
+            // reset('LeaveList');
+            goBack()
           } else {
             const message = jsonResponse.Massage;
             alert(message);

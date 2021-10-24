@@ -52,7 +52,6 @@ class Reimbursement extends Component {
 
     ReimbursementApi.getAllList(params, (res) => {
       ProgressDialog.hide()
-      if(res){
         
         if(res){
           const Table = res.Table
@@ -73,7 +72,6 @@ class Reimbursement extends Component {
             }
           
           }
-        }
       }
      
     }, () => {
@@ -330,18 +328,13 @@ class Reimbursement extends Component {
               loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
-                this.getAllList()
+                this.setState({
+                  listData:[],
+                  refreshing:false
+                },()=>{
+                  this.getAllList()
+                })
               }}
-              footerComponent={() => {
-                return loadMore ? (
-                  <ActivityIndicator
-                    size={'large'}
-                    color={Colors.blueGray900}
-                    style={{margin: 8}}
-                  />
-                ) : null;
-              }}
-             
             />
           </View>
         </View>

@@ -19,7 +19,6 @@ class MyLeaveCount extends Component {
   state = {
     LeaveName: "",
     Balance: 0,
-   
   };
 
 
@@ -35,7 +34,7 @@ GetLeaveBalanceByEmployeeID = () => {
 
   ProgressDialog.show();
   HomeApis.GetLeaveBalanceByEmployeeID(
-    params,
+    {},
     res => {
       ProgressDialog.hide();
       if (res) {
@@ -70,6 +69,7 @@ GetLeaveBalanceByEmployeeID = () => {
           title: '',
           hideUnderLine: true,
           light: true,
+          isHome:true
         }}>
         <View style={styles.MainHeaderView}>
           <View style={{alignItems:'center', marginTop: '50%'}}>

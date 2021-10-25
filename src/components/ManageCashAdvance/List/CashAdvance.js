@@ -1,23 +1,18 @@
-import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-} from 'react-native';
-import {Clickable, MainContainer, MyFlatList} from '../../common';
-import {connect} from 'react-redux';
-import styles from '../../HomeDetails/styles/HelpDesk.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors, FontName} from '../../../utils';
-import {Chip, Card, Title, Button, FAB} from 'react-native-paper';
-import AppointmentApi from '../Api/CarAttendanceApi';
 import _ from 'lodash';
-import {goBack, push} from '../../../navigation/Navigator';
+import moment from 'moment';
+import React, { Component } from 'react';
+import {
+  ActivityIndicator, Image, Text, View
+} from 'react-native';
+import { Card, FAB } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { push } from '../../../navigation/Navigator';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
-import CheckIn from '../../CheckInOut/CheckIn';
-import {Image} from 'react-native';
+import { Clickable, MainContainer, MyFlatList, ProgressDialog } from '../../common';
+import styles from '../../HomeDetails/styles/HelpDesk.style';
+import CashAdvanceApi from '../Api/CashAdvanceApi';
 
 class CashAdvance extends Component {
   state = {
@@ -26,212 +21,57 @@ class CashAdvance extends Component {
     totalPage: 0,
     refreshing: false,
     loading: false,
-    loadMore: false,
-    isLast: false,
     listData: [],
-    dummyListData: [
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      ,
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-    ],
     showSearch: false,
     searchQuery: false,
   };
 
   componentDidMount = () => {
-    const checkinout = this.props.session.checkinout;
-    const user = this.props.session.user;
-
-    this.setState(
-      {
-        isCheckInPermission: checkinout,
-        userID: user.ID,
-      },
-      () => {
-        // this.getAllAppointment();
-      },
-    );
+    this.getAllList()
   };
 
-  updateListAfterCheckInCheckOut = (type, CheckInID, HeaderID) => {
-    console.log('type =====>', type);
-    console.log('CheckInID =====>', CheckInID);
-    console.log('HeaderID =====>', HeaderID);
-    let listData = this.state.listData;
 
-    if (type == 0) {
-      let index = listData.findIndex(el => el.ID == HeaderID);
-      console.log('index ===>', index);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = CheckInID;
-        item.IsCheckIn = 'Yes';
-        listData[index] = item;
-      }
-    } else {
-      let index = listData.findIndex(el => el.CheckInID == CheckInID);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = 0;
-        item.IsCheckIn = 'No';
-        listData[index] = item;
-      }
+
+  getAllList = () => {
+    const EmployeeID= store.getState().session.user.EmployeeID
+    const params = {
+      EmployeeID
     }
+ 
+    ProgressDialog.show()
 
-    this.setState({
-      listData,
-    });
-  };
+    CashAdvanceApi.getAllList(params, (res) => {
+      ProgressDialog.hide()
+        
+        if(res){
+          const Table = res.Table
+          if (Table) {
+            if (Array.isArray(Table)) {
+              this.setState(
+                { listData:[...Table]}
+                ,()=>console.log("this.state",this.state.listData)
+               );
+            }else{
+              //console.log("table name name",Table.CustomerName)
+            let results = [
+                {...Table}
+              ];
+              this.setState({
+                listData:results,
+                refreshing:false,
+                loading:false
+              },()=>console.log("this.state",this.state.listData))
+            }
+          
+          }
+        }
+     
+    }, () => {
+      ProgressDialog.hide()
+    })
+  }
 
-  // getAllAppointment = () => {
-  //   const { searchQuery } = this.state;
-
-  //   const params = {
-  //     PageIndex: this.state.page,
-  //     PageSize: 10,
-  //     Filter: searchQuery || '',
-  //   };
-  //   this.setState({
-  //     loading: !this.state.refreshing && !this.state.loadMore,
-  //   });
-  //   AppointmentApi.getAllAppointment(
-  //     params,
-  //     res => {
-  //       if (res) {
-  //         const { Table } = res && res;
-  //         let isLast = true;
-  //         if (Table) {
-  //           if (Array.isArray(Table)) {
-  //             let totalPage = Table[0]?.TotalCount / 10;
-  //             isLast = this.state.page == totalPage;
-  //             this.setState({
-  //               listData:
-  //                 this.state.page > 0
-  //                   ? [...this.state.listData, ...Table]
-  //                   : Table,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           } else {
-  //             let results = [{ ...Table }];
-  //             console.log('<===results  ===>', results);
-  //             this.setState({
-  //               listData: results,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         this.setState({
-  //           loading: false,
-  //           refreshing: false,
-  //           loadMore: false,
-  //           isLast: true,
-  //         });
-  //       }
-  //     },
-  //     () => {
-  //       this.setState({
-  //         loading: !this.state.refreshing && !this.state.loadMore,
-  //       });
-  //     },
-  //   );
-  // };
-
-  createdDateTime = strDate => {
-    let date = '';
-    if (strDate) {
-      const TStartSplit = strDate.split('T');
-      const sTime = TStartSplit[1];
-      const sDate = TStartSplit[0];
-      const StartHr = sTime.substring(0, 2);
-      const StartMin = sTime.substring(3, 5);
-      date = `${sDate} ${StartHr}:${StartMin}`;
-    }
-    return date;
-  };
-
-  createdDate = strDate => {
+  splitDate = strDate => {
     let date = '';
     if (strDate) {
       const TStartSplit = strDate.split('T');
@@ -240,12 +80,16 @@ class CashAdvance extends Component {
     }
     return date;
   };
+
   renderCell = ({index}) => {
-    const {isCheckInPermission, userID} = this.state;
+    
 
     const item = this.state.listData[index];
-
+    const oneDate = moment(item?.CashAdvanceDate);
+    const dayName = oneDate?.format('dddd');
+    console.log("dayName====",dayName);
     return (
+   
       <View>
         {index == 0 || index == 4 ? (
           <Text
@@ -256,19 +100,20 @@ class CashAdvance extends Component {
               marginLeft: ResponsivePixels.size20,
               marginTop: ResponsivePixels.size5,
             }}>
-            23rd July 2021 - Friday
+                {`${this.splitDate(item?.CashAdvanceDate)} - ${dayName}`}
           </Text>
         ) : null}
 
         <Card style={{margin: ResponsivePixels.size10}} key={index}>
           <Clickable
             onPress={() => {
-              this.props.navigation.push('AddAppointments', {item});
+              this.props.navigation.push('EditCashAdvance', { cashAdvanceId: item.ID });
+
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
               <View style={{flexDirection: 'column'}}>
                 <Text style={{fontSize: ResponsivePixels.size18}}>
-                  GUJ/BHARTI/BHARTI/TB/023
+                 {item?.ProjectName}
                 </Text>
                 <Text
                   style={{
@@ -276,7 +121,8 @@ class CashAdvance extends Component {
                     color: Colors.yellow,
                     fontWeight: 'bold',
                   }}>
-                  CAC-HAR-00002365
+                                  {item?.CashAdvanceCode}
+
                 </Text>
               </View>
 
@@ -325,7 +171,7 @@ class CashAdvance extends Component {
                       color: Colors.black,
                       fontWeight: 'bold',
                     }}>
-                    0.00
+                   {item?.FinalAmount}
                   </Text>
                 </View>
               </View>
@@ -375,7 +221,7 @@ class CashAdvance extends Component {
                       color: Colors.black,
                       fontWeight: 'bold',
                     }}>
-                    DAILY RIGGER & DT CHARGES
+                   {item?.ExpenseHead}
                   </Text>
                 </View>
               </View>
@@ -445,10 +291,10 @@ class CashAdvance extends Component {
               paddingLeft: ResponsivePixels.size20,
               paddingRight: ResponsivePixels.size20,
             }}>
-            Awiating Approval
+            {item?.ApprovalStatus}
           </Text>
 
-          <Image
+            {item?.IsEditable &&  <Image
                     source={Images.ic_right_arrow}
                     style={{
                       width: ResponsivePixels.size20,
@@ -458,7 +304,8 @@ class CashAdvance extends Component {
                       right: 10,
                     }}
                     resizeMode={'cover'}
-                  />
+                  />}
+         
       
         </Card>
       </View>
@@ -480,7 +327,7 @@ class CashAdvance extends Component {
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
-    const {dummyListData, refreshing, loading, loadMore, isLast, showSearch} =
+    const {listData, refreshing, loading, loadMore, isLast, showSearch} =
       this.state;
 
     return (
@@ -488,34 +335,24 @@ class CashAdvance extends Component {
         header={{
           left: {
             image: Images.ic_Menu,
-            onPress: () => goBack(),
+            onPress: () => {
+              this.props.navigation.openDrawer()
+            },
           },
           title: 'Cash Advance',
           hideUnderLine: true,
           isHome: true,
           light: true,
-          onClickSearch: () => {
-            this.searchOpp();
-          },
-          onChangeSearch: text => {
-            this.setState({searchQuery: text});
-          },
-          onCloseSearch: () => {
-            this.setState(
-              {showSearch: false, searchQuery: '', page: 0, refreshing: true},
-              () => {
-                this.getAllAppointment();
-              },
-            );
-          },
+        
         }}>
         <View style={styles.MainHeaderView}>
           <View style={styles.MainList}>
             <MyFlatList
               horizontal={false}
               scrollEnabled={true}
-              data={dummyListData || []}
+              data={listData || []}
               showsHorizontalScrollIndicator={false}
+              
               renderItem={item => this.renderCell(item)}
               style={{flex: 1, margin: ResponsivePixels.size5}}
               loading={loading}
@@ -523,38 +360,16 @@ class CashAdvance extends Component {
               onRefresh={() => {
                 this.setState(
                   {
-                    page: 0,
-                    refreshing: true,
+                    refreshing: false,
+                    loading:false,
+                    listData:[]
                   },
                   () => {
-                    // this.getAllAppointment();
+                     this.getAllList();
                   },
                 );
               }}
-              footerComponent={() => {
-                return loadMore ? (
-                  <ActivityIndicator
-                    size={'large'}
-                    color={Colors.blueGray900}
-                    style={{margin: 8}}
-                  />
-                ) : null;
-              }}
-              onEndReached={() => {
-                console.log('End');
-
-                if (!loadMore && !isLast) {
-                  this.setState(
-                    {
-                      page: this.state.page + 1,
-                      loadMore: true,
-                    },
-                    () => {
-                      // this.getAllAppointment();
-                    },
-                  );
-                }
-              }}
+           
             />
           </View>
         </View>
@@ -563,7 +378,7 @@ class CashAdvance extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAppointments');
+            push('AddCashAdvance');
           }}
         />
       </MainContainer>

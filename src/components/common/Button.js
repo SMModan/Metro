@@ -7,7 +7,7 @@ import ResponsivePixels from '../../utils/ResponsivePixels';
 
 
 export default Button = (props) => {
-    const { style, onPress, disabled, bordered, disableAllCaps } = props
+    const { style, onPress, disabled, bordered, disableAllCaps,textColor } = props
     const button = {
         backgroundColor: bordered ? Colors.primaryColo100 : disabled ? Colors.BlackColor400 : Colors.yellow,
         height: ResponsivePixels.size56,
@@ -15,7 +15,7 @@ export default Button = (props) => {
         borderRadius: ResponsivePixels.size8,
     }
     const textStyle = {
-        color: bordered ? Colors.primaryColor500 : Colors.White,
+        color: textColor ? textColor : Colors.White,
         fontFamily: FontName.semibold,
         fontSize: FontSize.fontSize17,
     }

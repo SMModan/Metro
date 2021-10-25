@@ -6,7 +6,12 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {Clickable, MainContainer, MyFlatList} from '../../common';
+import {
+  Clickable,
+  MainContainer,
+  MyFlatList,
+  ProgressDialog,
+} from '../../common';
 import {connect} from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import {strings} from '../../../language/Language';
@@ -19,12 +24,12 @@ import ResponsivePixels from '../../../utils/ResponsivePixels';
 import CheckIn from '../../CheckInOut/CheckIn';
 import {Image} from 'react-native';
 
-import { DrawerActions } from '@react-navigation/native'
+import {DrawerActions} from '@react-navigation/native';
+import {store} from '../../../App';
+import CarAttendanceApi from '../Api/CarAttendanceApi';
 class CarAttendance extends Component {
   state = {
     selectedIndex: 0,
-    page: 0,
-    totalPage: 0,
     refreshing: false,
     loading: false,
     loadMore: false,
@@ -112,127 +117,70 @@ class CarAttendance extends Component {
     ],
     showSearch: false,
     searchQuery: false,
+    startDate: '',
+    endDate: '',
   };
 
   componentDidMount = () => {
-    const checkinout = this.props.session.checkinout;
-    const user = this.props.session.user;
+    const date = new Date().getDate() - 1;
+    const month = new Date().getMonth() + 1;
+    const year = new Date().getFullYear();
 
     this.setState(
       {
-        isCheckInPermission: checkinout,
-        userID: user.ID,
+        startDate: month + '/' + date + '/' + year,
+        endDate: month + '/' + date + '/' + year,
       },
       () => {
-        // this.getAllAppointment();
+        this.getAllList();
       },
     );
   };
 
-  updateListAfterCheckInCheckOut = (type, CheckInID, HeaderID) => {
-    console.log('type =====>', type);
-    console.log('CheckInID =====>', CheckInID);
-    console.log('HeaderID =====>', HeaderID);
-    let listData = this.state.listData;
+  getAllList = () => {
+    const {startDate, endDate} = this.state;
+    const EmpId = store.getState().session.user.EmployeeID;
+    const params = {
+      EmpId,
+      fromdate: startDate,
+      todate: endDate,
+    };
 
-    if (type == 0) {
-      let index = listData.findIndex(el => el.ID == HeaderID);
-      console.log('index ===>', index);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = CheckInID;
-        item.IsCheckIn = 'Yes';
-        listData[index] = item;
-      }
-    } else {
-      let index = listData.findIndex(el => el.CheckInID == CheckInID);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = 0;
-        item.IsCheckIn = 'No';
-        listData[index] = item;
-      }
-    }
+    ProgressDialog.show();
 
-    this.setState({
-      listData,
-    });
+    CarAttendanceApi.getAllList(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          if (res) {
+            const Table = res.Table;
+            if (Table) {
+              if (Array.isArray(Table)) {
+                this.setState({listData: [...Table]}, () =>
+                  console.log('this.state', this.state.listData),
+                );
+              } else {
+                //console.log("table name name",Table.CustomerName)
+                let results = [{...Table}];
+                this.setState(
+                  {
+                    listData: results,
+                  },
+                  () => console.log('this.state', this.state.listData),
+                );
+              }
+            }
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
   };
 
-  // getAllAppointment = () => {
-  //   const { searchQuery } = this.state;
-
-  //   const params = {
-  //     PageIndex: this.state.page,
-  //     PageSize: 10,
-  //     Filter: searchQuery || '',
-  //   };
-  //   this.setState({
-  //     loading: !this.state.refreshing && !this.state.loadMore,
-  //   });
-  //   AppointmentApi.getAllAppointment(
-  //     params,
-  //     res => {
-  //       if (res) {
-  //         const { Table } = res && res;
-  //         let isLast = true;
-  //         if (Table) {
-  //           if (Array.isArray(Table)) {
-  //             let totalPage = Table[0]?.TotalCount / 10;
-  //             isLast = this.state.page == totalPage;
-  //             this.setState({
-  //               listData:
-  //                 this.state.page > 0
-  //                   ? [...this.state.listData, ...Table]
-  //                   : Table,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           } else {
-  //             let results = [{ ...Table }];
-  //             console.log('<===results  ===>', results);
-  //             this.setState({
-  //               listData: results,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         this.setState({
-  //           loading: false,
-  //           refreshing: false,
-  //           loadMore: false,
-  //           isLast: true,
-  //         });
-  //       }
-  //     },
-  //     () => {
-  //       this.setState({
-  //         loading: !this.state.refreshing && !this.state.loadMore,
-  //       });
-  //     },
-  //   );
-  // };
-
-  createdDateTime = strDate => {
-    let date = '';
-    if (strDate) {
-      const TStartSplit = strDate.split('T');
-      const sTime = TStartSplit[1];
-      const sDate = TStartSplit[0];
-      const StartHr = sTime.substring(0, 2);
-      const StartMin = sTime.substring(3, 5);
-      date = `${sDate} ${StartHr}:${StartMin}`;
-    }
-    return date;
-  };
-
-  createdDate = strDate => {
+  splitDate = strDate => {
     let date = '';
     if (strDate) {
       const TStartSplit = strDate.split('T');
@@ -247,16 +195,16 @@ class CarAttendance extends Component {
     const item = this.state.listData[index];
 
     return (
-      <Card style={{margin: ResponsivePixels.size10}} key={index}>
+      <Card style={{margin: ResponsivePixels.size5}} key={index}>
         <Clickable
           onPress={() => {
-            this.props.navigation.push('AddAppointments', {item});
+            // this.props.navigation.push('AddAppointments', {item});
           }}>
           <View style={{margin: ResponsivePixels.size15}}>
             <View style={{flexDirection: 'row', width: '100%'}}>
               <View style={{flexDirection: 'column', width: '30%'}}>
                 <Text style={{fontSize: ResponsivePixels.size18}}>
-                  OnCallCab
+                  {item?.AttendanceType}
                 </Text>
                 <Text
                   style={{
@@ -264,7 +212,7 @@ class CarAttendance extends Component {
                     color: Colors.Red900,
                     fontWeight: 'bold',
                   }}>
-                  1001
+                  {item?.CarNumber}
                 </Text>
               </View>
               <Text
@@ -274,7 +222,7 @@ class CarAttendance extends Component {
                   textAlign: 'right',
                   alignSelf: 'stretch',
                 }}>
-                23rd July 2021 - Friday
+                {item?.CarRecievedTime}
               </Text>
             </View>
 
@@ -323,7 +271,7 @@ class CarAttendance extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  23rd July 2021 11:55 to Oct 1 2021 5:09 PM
+                  {item?.CarRecievedTime} To {item?.CarReleasedTime}
                 </Text>
               </View>
             </View>
@@ -373,7 +321,7 @@ class CarAttendance extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  0.00
+                  {item?.totalKM}
                 </Text>
               </View>
             </View>
@@ -423,7 +371,7 @@ class CarAttendance extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  0
+                  {item?.CarTotalKM}
                 </Text>
               </View>
             </View>
@@ -448,7 +396,7 @@ class CarAttendance extends Component {
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
-    const {dummyListData, refreshing, loading, loadMore, isLast, showSearch} =
+    const {listData, refreshing, loading, loadMore, isLast, showSearch} =
       this.state;
 
     return (
@@ -457,8 +405,8 @@ class CarAttendance extends Component {
           left: {
             image: Images.ic_Menu,
             onPress: () => {
-              console.log("this.props.navigation",this.props.navigation)
-              this.props.navigation.openDrawer()
+              console.log('this.props.navigation', this.props.navigation);
+              this.props.navigation.openDrawer();
             },
           },
           title: 'Car Attendance',
@@ -492,7 +440,7 @@ class CarAttendance extends Component {
             <MyFlatList
               horizontal={false}
               scrollEnabled={true}
-              data={dummyListData || []}
+              data={listData || []}
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
               style={{flex: 1, margin: ResponsivePixels.size5}}
@@ -541,7 +489,7 @@ class CarAttendance extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAppointments');
+            push('StartTrip');
           }}
         />
       </MainContainer>

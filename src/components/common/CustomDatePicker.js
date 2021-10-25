@@ -33,7 +33,7 @@ export default class CustomDatePicker extends Component {
                         isDatePickerVisible: true
                     })
                 }} onChangeText={() => this.props.onDateChanged(this.state.selectedDate)
-                } label={this.props.label} value={Utils.formatDate(this.state.selectedDate, "DD-MM-YYYY")} editable={false} rightIcon={this.props.rightIcon} />
+                } label={this.props.label} value={Utils.formatDate(this.state.selectedDate, "DD-MM-YYYY")} editable={false} rightIcon={this.props.rightIcon}  />
                 <DateTimePickerModal
                     isVisible={this.state.isDatePickerVisible}
                     mode={this.props.mode || "date"}

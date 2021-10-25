@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
 import { Image, View } from 'react-native';
-import { Colors, FontName } from '../../utils';
+import { Colors, FontName, Images } from '../../utils';
 import FloatingEditText from './FloatingEditText';
 import SelectionView from './SelectionView';
 
@@ -89,7 +89,7 @@ export default class CustomPicker extends Component {
                     value={this.state.selectedItem?.name}
                     label={this.props.label}
                     editable={false}
-                    rightIcon={this.props.rightIcon}
+                    rightIcon={Images.ic_down}
                     leftIcon={this.props.leftIcon}
                     onPressLeftIcon={this.props.onPressLeftIcon}
                     onPressRightIcon={this.props.onPressRightIcon}

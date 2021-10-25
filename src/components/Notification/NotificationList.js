@@ -30,20 +30,6 @@ class NotificationList extends Component {
     return (
       <Card style={{ margin: 5 }} key={item.index} onPress={() => { }}>
         <View style={{ margin: 15, flexDirection: 'row' }}>
-          {/* <View style={{width: '20%'}}>
-            <View
-              style={{
-                borderRadius: 30,
-                backgroundColor: item.color,
-                width: 40,
-                height: 40,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Image source={Images.ic_Appointment} />
-            </View>
-          </View> */}
-
           <View
             style={{ flexDirection: 'column', width: '100%', color: '#485780' }}>
             <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: ResponsivePixels.size10 }}>{myDate}</Text>

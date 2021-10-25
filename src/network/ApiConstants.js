@@ -1,10 +1,67 @@
 // export const BASE_URL = 'http://dev.skywardcrm.com/Services/CRMMobileapp.asmx/';
-export const BASE_URL = 'https://www.skywardcrm.com/Services/CRMMobileApp.asmx/';
+export const BASE_URL = 'http://120.72.93.235:5001/Webservice/Metroservice.asmx/';
 export const IMAGE_BASE_URL = 'https://www.skywardcrm.com';
 
 //LOGIN APIS
-export const GET_COMPANY_BY_USERNAME = "GetCompanyNameByUserName"
+
 export const USER_AUTHENTICATION = "UserAuthentication"
+export const GET_LEAVE_FOR_EMPLOYEE = "GetLeaveForEmployee"
+export const GET_REIMBURSEMENT_BY_EMPLOYEEID = "GetReimbursementByEmployeeID"
+export const GET_CASH_ADVANCE_BY_EMPLOYEEID = "GetCashAdvanceByEmployeeID"
+export const GET_DAILY_ATTENDANCE_DETAILS_FOR_VEHICLE = "GetDailyAttendanceDetailsForVehicle"
+
+
+// Leave Module End Points
+export const GET_USER_BASIC_PROFILE = "GetBasicUserProfile"
+export const GET_EMPLOYEES_USER_HIERARCHY = "GetEmplyeesUserHierarchy"
+export const GET_SUPERVISOR = "GetSupervisor"
+export const GET_LEAVE_TYPE = "GetLeaveType"
+export const GET_LEAVE_BALANCE = "GetLeaveBalance"
+export const GET_LEAVE_DAYS_BY_DATE = "GetLeaveDaysByDate"
+export const INSERT_LEAVE_APPLICATION = "InsertLeaveApplication"
+export const GetLeaveApproval = "GetLeaveApproval"
+export const UpdateApprovalStatus = "UpdateApprovalStatus"
+
+// Cash Advance end points
+export const Get_ExpenseHeads = "GetExpenseHeads"
+export const Get_Projects_By_EmployeeID_For_Daily_Attendance = "GetProjectsByEmployeeIDForDailyAttendance"
+export const Get_Circlewise_CreditLimit_And_RemainingAmount_For_CashAdvance = "GetCirclewiseCreditLimitAndRemainingAmountForCashAdvance"
+export const InsertCashAdvance = "InsertCashAdvance"
+export const UpdateCashAdvance = "UpdateCashAdvance"
+export const GetCashAdvanceByID = "GetCashAdvanceByID"
+
+
+//Reimbursement end Points
+export const GetReimbursementTypes = "GetReimbursementTypes"
+export const InsertReimbursement = "InsertReimbursement"
+
+
+//Home api end points
+export const GetAnnouncement = "GetAnnouncement"
+export const GetHolidayDetailsByToken = "GetHolidayDetailsByToken"
+export const GetLeaveBalanceByEmployeeID = "GetLeaveBalanceByEmployeeID"
+export const GetPendingleaveApprovalCount = "GetPendingleaveApprovalCount"
+
+
+// Attendance List
+export const GetDailyAttendanceDetails = "GetDailyAttendanceDetails"
+
+
+
+// Daily CarAttendance List
+export const GetWorkLocation = "GetWorkLocation"
+export const GetProjectByLocationId = "GetProjectByLocationId"
+export const GetMarkinForSelectedDate = "GetMarkinForSelectedDate"
+export const InsertDailyAttendanceForLocation = "InsertDailyAttendanceForLocation"
+export const InsertDailyAttendanceForVehicle = "InsertDailyAttendanceForVehicle"
+
+
+
+
+
+
+//other api end points
+export const GET_COMPANY_BY_USERNAME = "GetCompanyNameByUserName"
 export const GET_ALL_OPPORTUNITIES = "GetAllOpportunities"
 export const GET_OPPORTUNITY_BY_ID = "GetOpportunityByID"
 export const GET_OPPORTUNITY_ACTIVITY_BY_ID = "GetOpportunityActivityByID"

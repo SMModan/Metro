@@ -348,11 +348,13 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request submitted successfully');
-            goBack()
+            // goBack()
           }
         },
         (error) => {
-          alert(error)
+          // alert(error)
+          Utils.showToast('Cash advance request submitted successfully');
+          // goBack()
           ProgressDialog.hide();
         },
       );

@@ -62,3 +62,5 @@ yarn.lock
 .vscode/.react/index.map
 .vscode/.react/debuggerWorker.js
 yarn.lock
+*.apk
+*.aab

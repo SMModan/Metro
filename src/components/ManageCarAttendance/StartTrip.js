@@ -43,6 +43,14 @@ componentDidMount() {
   };
 
 
+  onCircleSlected =(circleId)=>{
+    this.setState({
+      circleId
+    },()=>{
+      this.GetProjectByLocationId()
+    })
+  }
+
   
   GetWorkLocation = () => {
     const EmpId= store.getState().session.user.EmployeeID
@@ -95,10 +103,10 @@ componentDidMount() {
 
     
   GetProjectByLocationId = () => {
-    const EmpId= store.getState().session.user.EmployeeID
+    const EmployeeID= store.getState().session.user.EmployeeID
     const {circleId} = this.state
     const params = {
-      EmpId,
+      EmployeeID,
       LocationID:circleId
     }
  
@@ -282,7 +290,7 @@ componentDidMount() {
                 list={circleList||[]}
                 selectedItem={{id: circleId}}
                 label={'Circle'}
-                onSelect={item => this.onTextChanged('circleId', item.id)}
+                onSelect={item => this.onCircleSlected(item.id)}
               />
               <CustomPicker
                 list={projectList||[]}

@@ -66,14 +66,15 @@ GetLeaveBalanceByEmployeeID = () => {
     return (
       <MainContainer
         header={{
-          title: '',
+          title: 'My Leave Count',
           hideUnderLine: true,
           light: true,
           isHome:true
         }}>
         <View style={styles.MainHeaderView}>
           <View style={{alignItems:'center', marginTop: '50%'}}>
-            <Text style={styles.firstTitle}>{LeaveName} : {Balance}</Text>
+            {LeaveName ?<Text style={styles.firstTitle}>{LeaveName} : {Balance}</Text>:null}
+            
           </View>
         </View>
       </MainContainer>

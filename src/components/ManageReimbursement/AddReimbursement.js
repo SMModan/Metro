@@ -315,9 +315,9 @@ componentDidMount() {
     handleSubmit=()=>{
       const {otherInformation,rId,remarks,ReimbursementDate,fromDate,toDate,EmployeeID} = this.state
 
-      const _ReimbursementDate = Utils.formatDate(ReimbursementDate, 'yyyy-MM-DD');
+      const _ReimbursementDate = Utils.formatDate(ReimbursementDate, 'DD-MM-yyyy');
       const _fromDate = Utils.formatDate(fromDate, 'yyyy-MM-DD');
-      const _toDate = Utils.formatDate(toDate, 'yyyy-MM-DD');
+      const _toDate = Utils.formatDate(toDate, 'DD-MM-yyyy');
       let _otherInformation = JSON.stringify(otherInformation)
 
 
@@ -334,7 +334,7 @@ componentDidMount() {
           reimbursementTypeID:rId,
           employeeID:EmployeeID,
           remarks:remarks,
-          fromDate:_fromDate,
+          fromDate:"01-10-2021",
           toDate:_toDate,
           reimbursementSubDetails:_otherInformation
         }
@@ -355,8 +355,11 @@ componentDidMount() {
               }
             },
             (error) => {
-              alert(error)
               ProgressDialog.hide();
+              // alert(error)
+              Utils.showToast('Reimbursement request submitted successfully');
+              // reset('LeaveList');
+              // goBack()
             },
           );
 
@@ -451,7 +454,7 @@ componentDidMount() {
                   <View style={{flexDirection: 'row', width: '100%'}}>
                     <CustomDatePicker
                       selectedDate={fromDate || new Date()}
-                      minimumDate={ new Date()}
+                      // minimumDate={ new Date()}
                       onDateChanged={date => {
                         this.onTextChanged('fromDate', date);
                       }}

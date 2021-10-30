@@ -23,6 +23,7 @@ import styles from './styles/Attendance.style';
 
 import PhotoPicker from '../common/PhotoPicker';
 import CarAttendanceApi from './Api/CarAttendanceApi';
+import { store } from '../../App';
 class StartTrip extends Component {
   state = {
     circleList:[],
@@ -41,6 +42,14 @@ componentDidMount() {
     });
   };
 
+
+  onCircleSlected =(circleId)=>{
+    this.setState({
+      circleId
+    },()=>{
+      this.GetProjectByLocationId()
+    })
+  }
 
   
   GetWorkLocation = () => {
@@ -94,10 +103,10 @@ componentDidMount() {
 
     
   GetProjectByLocationId = () => {
-    const EmpId= store.getState().session.user.EmployeeID
+    const EmployeeID= store.getState().session.user.EmployeeID
     const {circleId} = this.state
     const params = {
-      EmpId,
+      EmployeeID,
       LocationID:circleId
     }
  
@@ -243,7 +252,9 @@ componentDidMount() {
       applicationDate,
       circleId,
       circleList,
-      projectList
+      projectList,
+      ac_nonac,
+      vehicleType
     } = this.state;
     return (
       <MainContainer
@@ -279,46 +290,46 @@ componentDidMount() {
                 list={circleList||[]}
                 selectedItem={{id: circleId}}
                 label={'Circle'}
-                onSelect={item => onTextChanged('circleId', item.id)}
+                onSelect={item => this.onCircleSlected(item.id)}
               />
               <CustomPicker
                 list={projectList||[]}
                 selectedItem={{id: projectId}}
                 label={'Project Name'}
-                onSelect={item => onTextChanged('projectId', item.id)}
+                onSelect={item => this.onTextChanged('projectId', item.id)}
               />
             </ViewWithTitle>
 
             <ViewWithTitle title="Car Details">
               <FloatingEditText
                 value={carDetails}
-                onChangeText={text => onTextChanged('carDetails', text)}
+                onChangeText={text => this.onTextChanged('carDetails', text)}
                 label={'Car Details  (OLA/UBER)'}
               />
 
               <FloatingEditText
                 value={carNumber}
-                onChangeText={text => onTextChanged('carNumber', text)}
+                onChangeText={text => this.onTextChanged('carNumber', text)}
                 label="Car Number"
               />
 
               <FloatingEditText
                 value={riggerName}
-                onChangeText={text => onTextChanged('riggerName', text)}
+                onChangeText={text => this.onTextChanged('riggerName', text)}
                 label="Rigger Name"
               />
 
              
               <FloatingEditText
                 value={receivedKM}
-                onChangeText={text => onTextChanged('receivedKM', text)}
+                onChangeText={text => this.onTextChanged('receivedKM', text)}
                 label="Car Received KM"
               />
 
               <ChipViewContainer
                 selectedChip={{id: attendanceTypeId}}
                 onSelect={item => {
-                  // onTextChanged("attendanceTypeId", item.id)
+                   this.onTextChanged("attendanceTypeId", item.id)
                 }}
                 title="AttendanceType"
                 chips={[
@@ -328,9 +339,9 @@ componentDidMount() {
               />
 
               <ChipViewContainer
-                selectedChip={{id: attendanceTypeId}}
+                selectedChip={{id: vehicleType}}
                 onSelect={item => {
-                  onTextChanged('attendanceTypeId', item.id);
+                  this.onTextChanged('vehicleType', item.id);
                 }}
                 title="VehicleType"
                 chips={[
@@ -340,9 +351,9 @@ componentDidMount() {
               />
 
               <ChipViewContainer
-                selectedChip={{id: attendanceTypeId}}
+                selectedChip={{id: ac_nonac}}
                 onSelect={item => {
-                  onTextChanged('attendanceTypeId', item.id);
+                  this.onTextChanged('ac_nonac', item.id);
                 }}
                 title="AC/NonAc"
                 chips={[

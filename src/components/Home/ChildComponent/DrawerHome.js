@@ -20,6 +20,7 @@ import AddReimbursement from '../../ManageReimbursement/AddReimbursement';
 import { store } from '../../../App';
 import { IS_LOGGED_IN } from '../../../data/PrefKeys';
 import { setSessionField } from '../../../reducers/SessionReducer';
+import AttendanceList from '../../MarkInOut/List/AttendanceList';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerHome() {
@@ -38,6 +39,7 @@ export default function DrawerHome() {
       <Stack.Screen component={AddCashAdvance} name="AddCashAdvance" />
       <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
       <Drawer.Screen component={ReportList} name="Reports" />
+      <Drawer.Screen component={AttendanceList} name="MarkInOutList" />
     </Drawer.Navigator>
   );
 }

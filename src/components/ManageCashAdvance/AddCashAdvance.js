@@ -308,7 +308,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
       adhocAmount
       } = this.state;
 
-     const _cashAdvanceDate = Utils.formatDate(cashAdvanceDate, 'yyyy-MM-DD');
+     const _cashAdvanceDate = Utils.formatDate(cashAdvanceDate, 'DD-MM-yyyy');
     // const _toDate = Utils.formatDate(toDate, 'yyyy-MM-DD');
 
 
@@ -348,11 +348,12 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request submitted successfully');
-            goBack()
+             goBack()
           }
         },
         (error) => {
-          alert(error)
+           alert(error)
+          // Utils.showToast('Cash advance request submitted successfully');
           ProgressDialog.hide();
         },
       );

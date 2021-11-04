@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { store } from '../../../App';
 import {
   GetLeaveBalanceByEmployeeID,
   GetProjectByLocationId,
@@ -26,8 +28,8 @@ const CarAttendanceApi = {
         }
       },
     );
-  } ,
-   GetWorkLocation(params, onDone, onError) {
+  },
+  GetWorkLocation(params, onDone, onError) {
 
     apiCall(
       GetWorkLocation,
@@ -112,6 +114,49 @@ const CarAttendanceApi = {
       },
     );
   },
+  uploadCarDocument(params) {
+    return new Promise((resolve, reject) => {
+
+      const { EmployeeID, fileName, DocumentContent } = params
+      const token = store.getState().session.user.AuthenticationToken;
+
+
+
+      let xmls = `<?xml version="1.0" encoding="utf-8"?>
+    <soap110:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap110="http://www.w3.org/2003/05/soap-envelope">
+    <soap110:Body>
+          <UploadFileForAttendance  xmlns="http://metrotele.org/">
+            <Token>${token}</Token>
+            <employeeID>${EmployeeID}</employeeID>
+            <f>${DocumentContent}</f>
+            <fileName>${fileName}</fileName>
+          </UploadFileForAttendance>
+        </soap110:Body>
+      </soap110:Envelope>`
+
+
+      axios.post('http://120.72.93.235:5001/Webservice/Metroservice.asmx?wsdl',
+        xmls,
+        {
+          headers:
+            { 'Content-Type': 'text/xml' }
+        }).then(res => {
+
+          var parser = require('fast-xml-parser');
+          const jsonResponse = parser.parse(res?.data)
+
+          console.log("jsonResponsejsonResponse", JSON.stringify(jsonResponse))
+          const InsertLeaveApplicationResult = jsonResponse && jsonResponse['soap:Envelope']['soap:Body']['UploadFileForAttendanceResponse']['UploadFileForAttendanceResult']
+
+          resolve(InsertLeaveApplicationResult)
+        }).catch(err => {
+          console.log("errerrerr", err)
+          console.log("err->", err.response.data)
+          reject(err)
+        });
+
+    })
+  }
 };
 
 export default CarAttendanceApi;

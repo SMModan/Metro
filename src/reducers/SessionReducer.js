@@ -14,7 +14,9 @@ const INIT_STATE = {
     user: {},
     token: "",
     connectionString: "",
-    machineCode: ""
+    machineCode: "",
+    distances: [],
+    currentTrip: ""
 }
 
 

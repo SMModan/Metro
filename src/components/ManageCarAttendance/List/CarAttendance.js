@@ -29,6 +29,8 @@ import { DrawerActions } from '@react-navigation/native';
 import { store } from '../../../App';
 import CarAttendanceApi from '../Api/CarAttendanceApi';
 import { setSessionField } from '../../../reducers/SessionReducer';
+import backgroundServer from "react-native-background-actions"
+
 class CarAttendance extends Component {
   state = {
     selectedIndex: 0,
@@ -451,6 +453,7 @@ class CarAttendance extends Component {
                 distances.splice(distanceIndex, 1)
                 store.dispatch(setSessionField("currentTrip", ""))
                 store.dispatch(setSessionField("distances", [...distances]))
+                backgroundServer.stop()
               }
             }, { text: "Cancel", style: "cancel" }])
 

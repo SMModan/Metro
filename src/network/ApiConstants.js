@@ -45,6 +45,10 @@ export const GetPendingleaveApprovalCount = "GetPendingleaveApprovalCount"
 
 // Attendance List
 export const GetDailyAttendanceDetails = "GetDailyAttendanceDetails"
+export const GetLastMarkInTime = "GetLastMarkInTime"
+export const InsertDailyAttendanceForLocation = "InsertDailyAttendanceForLocation"
+export const GetProjectsByEmployeeIDForDailyAttendance1 = "GetProjectsByEmployeeIDForDailyAttendance"
+export const InsertDailyAttendance = "InsertDailyAttendance"
 
 
 
@@ -52,7 +56,6 @@ export const GetDailyAttendanceDetails = "GetDailyAttendanceDetails"
 export const GetWorkLocation = "GetWorkLocation"
 export const GetProjectByLocationId = "GetProjectByLocationId"
 export const GetMarkinForSelectedDate = "GetMarkinForSelectedDate"
-export const InsertDailyAttendanceForLocation = "InsertDailyAttendanceForLocation"
 export const InsertDailyAttendanceForVehicle = "InsertDailyAttendanceForVehicle"
 
 

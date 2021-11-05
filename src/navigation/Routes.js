@@ -29,6 +29,7 @@ import LeaveList from '../components/ManageLeave/List/LeaveList';
 import AddReimbursement from '../components/ManageReimbursement/AddReimbursement';
 import Reimbursement from '../components/ManageReimbursement/List/Reimbursement';
 import ReportList from '../components/ManageReports/List/ReportList';
+import AddAttendance from '../components/MarkInOut/AddAttendance';
 import AttendanceList from '../components/MarkInOut/List/AttendanceList';
 import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportunity';
 import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/OppAttachment';
@@ -59,7 +60,8 @@ export default () => {
     const session = store.getState().session;
     console.log('session.is_logged_in', session.country_id);
     
-    setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
+     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"AddAttendance");
+    // setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'AddAttendance':"AddAttendance");
     SplashScreen.hide();
 
     setLoaded(true);
@@ -88,6 +90,7 @@ export default () => {
           <Stack.Screen component={MyLeaveCount} name="MyLeaveCount" />
           <Stack.Screen component={LeaveApprovalList} name="LeaveApprovalList" />
           <Stack.Screen component={AttendanceList} name="MarkInOutList" />
+          <Stack.Screen component={AddAttendance} name="AddAttendance" />
 
 
 

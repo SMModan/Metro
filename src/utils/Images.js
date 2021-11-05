@@ -52,5 +52,6 @@ export default ImageName = {
   ic_right_arrow: require('../../res/images/ic_right_arrow.png'),
   ic_leave_approval: require('../../res/images/ic_leave_approval.png'),
   ic_leave_balance: require('../../res/images/ic_leave_balance.png'),
-  ic_location: require('../../res/images/ic_location.png')
+  ic_location: require('../../res/images/ic_location.png'),
+  ic_time_glass: require('../../res/images/ic_time_glass.png'),
 };

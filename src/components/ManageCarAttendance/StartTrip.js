@@ -214,27 +214,6 @@ class StartTrip extends Component {
         subscribeForLocationAndRequestService()
         goBack()
 
-        // const params = {
-        //   EmployeeID,
-        //   Location: `${latitude},${longitude}`,
-        //   Remarks: remarks,
-        //   Time: _date,
-        //   Address: address.results[0].formatted_address
-
-        // }
-
-        // CarAttendanceApi.InsertDailyAttendanceForLocation(params, (res) => {
-
-        //   if (res) {
-        //     console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
-        //     this.InsertDailyAttendanceForVehicle(latitude, longitude)
-        //   }
-
-        // }, () => {
-        //   ProgressDialog.hide()
-        // })
-
-
       })
 
     })

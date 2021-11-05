@@ -20,7 +20,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
 
     const token = store.getState().session.user.AuthenticationToken;
     // const connectionString = store.getState().session.connectionString;
-    const machineCode = store.getState().session.machineCode || "dasmdmasndbasmdbsmadbmnsadbmasbdm";
+    // const machineCode = store.getState().session.machineCode || "dasmdmasndbasmdbsmadbmnsadbmasbdm";
     
     //   const connectionString = await getItem(KEY_LANGUAGE_ID, "1")
     // const { company_uuid } = store.getState().common.companyDetails
@@ -30,7 +30,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
     console.log(BASE_URL + endpoint + '\n------------------Params-------------------')
     console.log("Token", token);
     // console.log("connectionString", connectionString);
-    console.log("machineCode", machineCode);
+    // console.log("machineCode", machineCode);
 
 
     const isConnected = await fetch()
@@ -66,7 +66,7 @@ export default async (endpoint, params = {}, onSuccess, onFailure, method = METH
             params.Token = token
             // params.ConnectionString = connectionString
         }
-        params.MachineCode = machineCode
+        // params.MachineCode = machineCode
         // let paramsData = new FormData()
 
         // for (const property in params) {

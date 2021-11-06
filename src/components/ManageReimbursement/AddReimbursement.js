@@ -60,6 +60,7 @@ componentDidMount() {
   this.setState(
     {
       fromDate: new Date(),
+      toDate: new Date(),
     },
     () => {
       this.getEmplyeesUserHierarchy();
@@ -316,11 +317,30 @@ componentDidMount() {
       const {otherInformation,rId,remarks,ReimbursementDate,fromDate,toDate,EmployeeID} = this.state
 
       const _ReimbursementDate = Utils.formatDate(ReimbursementDate, 'DD-MM-yyyy');
-      const _fromDate = Utils.formatDate(fromDate, 'yyyy-MM-DD');
+      const _fromDate = Utils.formatDate(fromDate, 'DD-MM-yyyy');
       const _toDate = Utils.formatDate(toDate, 'DD-MM-yyyy');
-      let _otherInformation = JSON.stringify(otherInformation)
 
 
+
+      let _otherInformation = []
+      // JSON.stringify(otherInf)
+
+      for (let index = 0; index < otherInformation.length; index++) {
+        const otherInfo = otherInformation[index];
+
+        
+        let objOther = {
+          ExpenseHeadID:5,
+          Amount:otherInfo.Amount,
+          ProjectID:otherInfo.projectId,
+          FileName:otherInfo.FileName,
+          FilePath:otherInfo.FilePath,
+          FileContent:otherInfo.fileType,
+        }
+        _otherInformation.push(objOther)
+        
+      }
+      _otherInformation= JSON.stringify(_otherInformation)
       if (rId == 0) {
         Utils.showToast('Please select reimbursment type.');
       } else if (!remarks) {
@@ -334,30 +354,26 @@ componentDidMount() {
           reimbursementTypeID:rId,
           employeeID:EmployeeID,
           remarks:remarks,
-          fromDate:"01-10-2021",
+          fromDate:_fromDate,
           toDate:_toDate,
           reimbursementSubDetails:_otherInformation
         }
           console.log("params",params)
 
-
+          ProgressDialog.show();
           ReimbursementApi.InsertReimbursement(
             params,
             res => {
               if (res) {
-                const Table = res.Table;
-                if (Table) {
                   console.log('===========> getLeaveBalanceByDate ===========>', "res");
                   Utils.showToast('Reimbursement request submitted successfully');
-            // reset('LeaveList');
             goBack()
-                }
               }
             },
             (error) => {
               ProgressDialog.hide();
-              // alert(error)
-              Utils.showToast('Reimbursement request submitted successfully');
+               alert(error)
+              //Utils.showToast('Reimbursement request submitted successfully');
               // reset('LeaveList');
               // goBack()
             },

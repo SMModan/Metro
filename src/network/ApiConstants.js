@@ -1,5 +1,6 @@
-// export const BASE_URL = 'http://dev.skywardcrm.com/Services/CRMMobileapp.asmx/';
 export const BASE_URL = 'http://120.72.93.235:5001/Webservice/Metroservice.asmx/';
+//  export const BASE_URL = 'http://120.72.93.235:8050/Webservice/MetroService.asmx';  //sa
+
 export const IMAGE_BASE_URL = 'https://www.skywardcrm.com';
 
 //LOGIN APIS
@@ -62,6 +63,10 @@ export const InsertDailyAttendanceForVehicle = "InsertDailyAttendanceForVehicle"
 //Profile 
 
 export const GetBasicUserProfile = "GetBasicUserProfile"
+
+//Reports
+export const GetDailyAttendanceDetailsForVehicle = "GetDailyAttendanceDetailsForVehicle"
+export const GetDailyEmployeeLocationForMAP = "GetDailyEmployeeLocationForMAP"
 
 
 

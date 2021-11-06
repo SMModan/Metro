@@ -30,8 +30,10 @@ import moment from 'moment';
 class AddLeaveRequest extends Component {
   state = {
     fromDate: new Date(),
-    toDate: new Date(),
+    toDate: undefined,
     EmployeeID: 0,
+    supervisor: undefined,
+    
     employeeName: '',
     contactNo: '',
     leaveList: [],
@@ -40,7 +42,7 @@ class AddLeaveRequest extends Component {
     toDateIsCheck: false,
     isAllDayCheck: false,
     balance: 0,
-    totalDays: '0',
+    totalDays: 0,
     ReportingManagerId: 0,
     attachment: '',
     remarks: 'test',
@@ -53,7 +55,7 @@ class AddLeaveRequest extends Component {
       },
       () => {
         this.getEmplyeesUserHierarchy();
-        this.getLeaveBalanceByDate();
+        // this.getLeaveBalanceByDate();
       },
     );
   }
@@ -120,7 +122,9 @@ class AddLeaveRequest extends Component {
               };
               list.push(objData);
             }
-            this.setState({empList: list}, () => this.getBasicUserProfile());
+            this.setState({empList: list}, () => {
+              this.getBasicUserProfile()
+            });
           }
         }
       },
@@ -206,7 +210,7 @@ class AddLeaveRequest extends Component {
   getLeaveBalance = () => {
     // const EmployeeID = store.getState().session.user.EmployeeID;
     const {fromDate, leaveTypeId, EmployeeID} = this.state;
-    const _date = Utils.formatDate(fromDate, 'MM/DD/YYYY');
+    const _date = Utils.formatDate(fromDate, 'DD/MMM/YYYY');
 
     const params = {
       EmployeeId: EmployeeID,
@@ -242,8 +246,9 @@ class AddLeaveRequest extends Component {
     // const EmployeeID = store.getState().session.user.EmployeeID;
     const {fromDate, toDate, EmployeeID} = this.state;
 
-    const _fromDate = Utils.formatDate(fromDate, 'MM/DD/YYYY');
-    const _toDate = Utils.formatDate(toDate, 'MM/DD/YYYY');
+    const _fromDate = Utils.formatDate(fromDate, 'DD-MMM-YYYY');
+    const _toDate = Utils.formatDate(toDate, 'DD-MMM-YYYY');
+    // const _toDate = Utils.formatDate(toDate, 'MM/DD/YYYY');
 
     const params = {
       EmployeeID: EmployeeID,
@@ -270,6 +275,8 @@ class AddLeaveRequest extends Component {
     );
   };
 
+
+
   onTextChanged = (key, value) => {
     this.setState({
       [key]: value,
@@ -294,11 +301,15 @@ class AddLeaveRequest extends Component {
       StateID,
       employeeName,
       attachment,
+      supervisor,
+      balance
+      
     } = this.state;
 
     const _fromDate = Utils.formatDate(fromDate, 'yyyy-MM-DD');
     const _toDate = Utils.formatDate(toDate, 'yyyy-MM-DD');
 
+    const isSameDate = _fromDate==_toDate
     const DocumentName = attachment?.fileName;
     // const DocumentContentType= attachment.type
     const DocumentContent = attachment?.base64;
@@ -306,14 +317,34 @@ class AddLeaveRequest extends Component {
 
     // let blob =  this.base64ToBlob(DocumentContent);
     // console.log('btoB64 resp === ', blob);
-
-    if (leaveTypeId == 0) {
+    console.log("_fromDate ===================>",isSameDate && fromDateIsCheck && toDateIsCheck)
+    if (EmployeeID == 0) {
+      Utils.showToast('Please enter employee name.');
+    } 
+    else if (!supervisor) {
+      Utils.showToast('No supervisor found.');
+    } 
+    else if (leaveTypeId == 0) {
       Utils.showToast('Please select leave type.');
+    }  else if (!fromDate || !toDate) {
+      Utils.showToast('Please enter duration (Start and End Date).');
+    }else if (balance==0) {
+      Utils.showToast('Leave balance is not available.');
+    }else if (totalDays==0) {
+      Utils.showToast('Total Days count is not valid.');
     } else if (!contactNo) {
-      Utils.showToast('please enter contact number.');
+      Utils.showToast('Please enter contact number.');
     } else if (!remarks) {
-      Utils.showToast('please enter remarks.');
-    } else {
+      Utils.showToast('Please enter remarks.');
+    }else if(isSameDate && fromDateIsCheck && toDateIsCheck){
+      Utils.showToast('You can not select both half day for same date');
+      this.setState({
+        fromDateIsCheck:false,
+        totalDays:totalDays+0.5
+      })
+    }else if(leaveTypeId==2  && totalDays>2 && !attachment){
+      Utils.showToast('Please upload the document.');
+    }else {
       let params = {
         EmployeeID: EmployeeID,
         ReportingManagerId: supervisorId,
@@ -344,6 +375,7 @@ class AddLeaveRequest extends Component {
             Utils.showToast('Leave request submitted successfully');
             // reset('LeaveList');
             goBack()
+
           } else {
             const message = jsonResponse.Massage;
             alert(message);
@@ -457,11 +489,17 @@ class AddLeaveRequest extends Component {
                   selectedDate={
                     fromDate ? moment(fromDate).toDate() : undefined
                   }
-                  minimumDate={fromDate}
                   onDateChanged={date => {
+
+
                     this.setState(
                       {
                         fromDate: date,
+                        toDate:undefined,
+                        fromDateIsCheck:false,
+                        toDateIsCheck:false,
+                        isAllDayCheck:false,
+                        totalDays:0
                       },
                       () => {
                         console.log('fromDate===>', this.state.fromDate);
@@ -480,9 +518,22 @@ class AddLeaveRequest extends Component {
                   style={{width: '50%', marginTop: ResponsivePixels.size20}}
                   checked={fromDateIsCheck}
                   onPress={() => {
-                    this.onTextChanged('fromDateIsCheck', !fromDateIsCheck);
-                    this.onTextChanged('isAllDayCheck', false);
-                    this.getLeaveBalanceByDate();
+                   
+
+                    let _totalDays = this.state.totalDays
+
+                    if(fromDateIsCheck){
+                      _totalDays = _totalDays+0.5
+                    }else{
+                      _totalDays = _totalDays-0.5
+                    }
+                    this.setState({
+                      totalDays:_totalDays
+                    },()=>{
+                      this.onTextChanged('fromDateIsCheck', !fromDateIsCheck);
+                      this.onTextChanged('isAllDayCheck', false);
+                    })
+
                   }}
                 />
               </View>
@@ -514,9 +565,22 @@ class AddLeaveRequest extends Component {
                   style={{width: '50%', marginTop: ResponsivePixels.size20}}
                   checked={toDateIsCheck}
                   onPress={() => {
-                    this.onTextChanged('toDateIsCheck', !toDateIsCheck);
-                    this.onTextChanged('isAllDayCheck', false);
-                    this.getLeaveBalanceByDate();
+
+                    let _totalDays = this.state.totalDays
+
+                    if(toDateIsCheck){
+                      _totalDays = _totalDays+0.5
+                    }else{
+                      _totalDays = _totalDays-0.5
+                    }
+                    this.setState({
+                      totalDays:_totalDays
+                    },()=>{
+                      this.onTextChanged('toDateIsCheck', !toDateIsCheck);
+                      this.onTextChanged('isAllDayCheck', false);
+                    })
+
+               
                   }}
                 />
               </View>
@@ -526,10 +590,32 @@ class AddLeaveRequest extends Component {
                 color={Colors.Red900}
                 checked={isAllDayCheck}
                 onPress={() => {
-                  this.onTextChanged('fromDateIsCheck', false);
+                  
+
+                  let _totalDays = this.state.totalDays
+
+                  if(toDateIsCheck){
+                    _totalDays=_totalDays+0.5
+                  }
+                  if(fromDateIsCheck){
+                    _totalDays=_totalDays+0.5
+                  }
+
+
+                  if(isAllDayCheck){
+                    _totalDays = _totalDays*2
+                  }else{
+                    _totalDays = _totalDays/2
+                  }
+                  this.setState({
+                    totalDays:_totalDays
+                  },()=>{
+                    this.onTextChanged('fromDateIsCheck', false);
                   this.onTextChanged('toDateIsCheck', false);
                   this.onTextChanged('isAllDayCheck', !isAllDayCheck);
-                  this.getLeaveBalanceByDate();
+                  })
+
+                  // this.getLeaveBalanceByDate();
                 }}
               />
 

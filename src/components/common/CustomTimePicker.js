@@ -4,7 +4,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Utils from '../../utils/Utils';
 import FloatingEditText from './FloatingEditText';
 
-export default class CustomDatePicker extends Component {
+export default class CustomTimePicker extends Component {
 
     state = {
         isDatePickerVisible: false,
@@ -20,7 +20,7 @@ export default class CustomDatePicker extends Component {
     }
     render() {
         const iconStyle = this.props.iconStyle ? this.props.iconStyle : {}
-        
+        const {isModeTime} = this.props
         return (
 
             <View style={{ ...this.props.containerStyle }}>
@@ -35,10 +35,10 @@ export default class CustomDatePicker extends Component {
                     })
                 }} onChangeText={() => this.props.onDateChanged(this.state.selectedDate)
                 } label={this.props.label} 
-                value={Utils.formatDate(this.state.selectedDate, "DD-MM-YYYY")} editable={false} rightIcon={this.props.rightIcon}  />
+                value={isModeTime?Utils.formatDate(this.state.selectedDate, "HH:mm:A"):Utils.formatDate(this.state.selectedDate, "DD-MM-YYYY")} editable={false} rightIcon={this.props.rightIcon}  />
                 <DateTimePickerModal
                     isVisible={this.state.isDatePickerVisible}
-                    mode={this.props.mode || "date"}
+                    mode={this.props.mode || "time"}
                     date={this.state.selectedDate}
                     minimumDate={this.props.minimumDate}
                     maximumDate={this.props.maximumDate}

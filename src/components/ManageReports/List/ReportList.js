@@ -1,17 +1,19 @@
 import _ from 'lodash';
+import moment from 'moment';
 import React, {Component} from 'react';
 import {
   ActivityIndicator,
   Animated,
   Dimensions,
   Image,
+  Linking,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {connect} from 'react-redux';
-import {Colors, Images} from '../../../utils';
+import {Colors, Images, Utils} from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
   Clickable,
@@ -22,6 +24,7 @@ import {
   ProgressDialog,
   ScrollContainer,
 } from '../../common';
+import CustomTimePicker from '../../common/CustomTimePicker';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import ReportsApi from '../Api/ReportsApi';
 
@@ -39,87 +42,8 @@ class ReportList extends Component {
     listData: [],
     startDate:new Date(),
     endDate:new Date(),
-
-    dummyListData: [
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      ,
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-    ],
+    carAttendanceList:[],
+    attendanceList:[],
     showSearch: false,
     searchQuery: false,
     active: 1,
@@ -133,11 +57,9 @@ class ReportList extends Component {
     translateXTabTwo: new Animated.Value(0),
     translateXTabThree: new Animated.Value(width),
     translateY: -1000,
-    data: [],
     refreshing: false,
     loading: false,
     listData: [],
-    holidayList: [],
     showFilter:true
   };
 
@@ -205,109 +127,10 @@ class ReportList extends Component {
   };
 
   componentDidMount = () => {
-    const checkinout = this.props.session.checkinout;
-    const user = this.props.session.user;
-
-    this.setState(
-      {
-        userID: user.ID,
-      },
-      () => {
-         this.getEmplyeesUserHierarchy();
-      },
-    );
+    this.getEmplyeesUserHierarchy();
   };
 
-  updateListAfterCheckInCheckOut = (type, CheckInID, HeaderID) => {
-    console.log('type =====>', type);
-    console.log('CheckInID =====>', CheckInID);
-    console.log('HeaderID =====>', HeaderID);
-    let listData = this.state.listData;
-
-    if (type == 0) {
-      let index = listData.findIndex(el => el.ID == HeaderID);
-      console.log('index ===>', index);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = CheckInID;
-        item.IsCheckIn = 'Yes';
-        listData[index] = item;
-      }
-    } else {
-      let index = listData.findIndex(el => el.CheckInID == CheckInID);
-      if (index != -1) {
-        let item = listData[index];
-        item.CheckInID = 0;
-        item.IsCheckIn = 'No';
-        listData[index] = item;
-      }
-    }
-
-    this.setState({
-      listData,
-    });
-  };
-
-  // getAllAppointment = () => {
-  //   const { searchQuery } = this.state;
-
-  //   const params = {
-  //     PageIndex: this.state.page,
-  //     PageSize: 10,
-  //     Filter: searchQuery || '',
-  //   };
-  //   this.setState({
-  //     loading: !this.state.refreshing && !this.state.loadMore,
-  //   });
-  //   AppointmentApi.getAllAppointment(
-  //     params,
-  //     res => {
-  //       if (res) {
-  //         const { Table } = res && res;
-  //         let isLast = true;
-  //         if (Table) {
-  //           if (Array.isArray(Table)) {
-  //             let totalPage = Table[0]?.TotalCount / 10;
-  //             isLast = this.state.page == totalPage;
-  //             this.setState({
-  //               listData:
-  //                 this.state.page > 0
-  //                   ? [...this.state.listData, ...Table]
-  //                   : Table,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           } else {
-  //             let results = [{ ...Table }];
-  //             console.log('<===results  ===>', results);
-  //             this.setState({
-  //               listData: results,
-  //               loading: false,
-  //               refreshing: false,
-  //               loadMore: false,
-  //               isLast,
-  //             });
-  //           }
-  //         }
-  //       } else {
-  //         this.setState({
-  //           loading: false,
-  //           refreshing: false,
-  //           loadMore: false,
-  //           isLast: true,
-  //         });
-  //       }
-  //     },
-  //     () => {
-  //       this.setState({
-  //         loading: !this.state.refreshing && !this.state.loadMore,
-  //       });
-  //     },
-  //   );
-  // };
-
+ 
   createdDateTime = strDate => {
     let date = '';
     if (strDate) {
@@ -330,10 +153,104 @@ class ReportList extends Component {
     }
     return date;
   };
-  renderCell = ({index}) => {
+ 
+
+  renderLocationCell = ({index}) => {
     const {isCheckInPermission, userID} = this.state;
 
-    const item = this.state.listData[index];
+    const item = this.state.locationList[index];
+
+    return (
+      <Card style={{margin: ResponsivePixels.size10}} key={index}>
+        <Clickable
+          onPress={() => {
+
+
+            const latitude = item.Latitude;
+const longitude = item.Longitude;
+const label = "";
+
+const url = Platform.select({
+  ios: "maps:" + latitude + "," + longitude + "?q=" + label,
+  android: "geo:" + latitude + "," + longitude + "?q=" + label
+});
+
+Linking.canOpenURL(url).then(supported => {
+  if (supported) {
+    return Linking.openURL(url);
+  } else {
+    const browser_url =
+      "https://www.google.de/maps/@" +
+      latitude +
+      "," +
+      longitude +
+      "?q=" +
+      label;
+    return Linking.openURL(browser_url);
+  }
+});
+
+
+          }}>
+          <View style={{margin: ResponsivePixels.size15}}>
+            
+   
+          <View
+                style={{
+                  flexDirection: 'column',
+                  marginLeft: ResponsivePixels.size20,
+                }}>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size13,
+                    color: Colors.grayColor,
+                  }}>
+                  Latitude
+                </Text>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size15,
+                    color: Colors.black,
+                    fontWeight: 'bold',
+                  }}>
+                  {item?.Latitude} 
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'column',
+                  marginLeft: ResponsivePixels.size20,
+                }}>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size13,
+                    color: Colors.grayColor,
+                  }}>
+                  Longitude
+                </Text>
+                <Text
+                  style={{
+                    fontSize: ResponsivePixels.size15,
+                    color: Colors.black,
+                    fontWeight: 'bold',
+                  }}>
+                  {item?.Longitude} 
+                </Text>
+              </View>
+          </View>
+        </Clickable>
+      </Card>
+    );
+  };
+
+
+
+
+  renderCarAttendanceCell = ({index}) => {
+    const {isCheckInPermission, userID} = this.state;
+
+    const item = this.state.carAttendanceList[index];
 
     return (
       <Card style={{margin: ResponsivePixels.size10}} key={index}>
@@ -345,7 +262,7 @@ class ReportList extends Component {
             <View style={{flexDirection: 'row', width: '100%'}}>
               <View style={{flexDirection: 'column', width: '30%'}}>
                 <Text style={{fontSize: ResponsivePixels.size18}}>
-                  OnCallCab
+                  {item?.AttendanceType}
                 </Text>
                 <Text
                   style={{
@@ -353,7 +270,7 @@ class ReportList extends Component {
                     color: Colors.Red900,
                     fontWeight: 'bold',
                   }}>
-                  1001
+                  {item?.CarNumber}
                 </Text>
               </View>
               <Text
@@ -363,7 +280,7 @@ class ReportList extends Component {
                   textAlign: 'right',
                   alignSelf: 'stretch',
                 }}>
-                23rd July 2021 - Friday
+                {this.splitDate(item?.AttDate)}
               </Text>
             </View>
 
@@ -412,7 +329,7 @@ class ReportList extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  23rd July 2021 11:55 to Oct 1 2021 5:09 PM
+                  {item?.CarRecievedTime} To {item?.CarReleasedTime}
                 </Text>
               </View>
             </View>
@@ -462,7 +379,8 @@ class ReportList extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  0.00
+                 {item.CarTotalKM}
+
                 </Text>
               </View>
             </View>
@@ -512,7 +430,7 @@ class ReportList extends Component {
                     color: Colors.black,
                     fontWeight: 'bold',
                   }}>
-                  0
+                  {item.totalKM}
                 </Text>
               </View>
             </View>
@@ -522,19 +440,365 @@ class ReportList extends Component {
     );
   };
 
-  searchOpp = async () => {
-    this.setState(
-      {
-        listData: [],
-        page: 0,
-      },
-      () => {
-        // this.getAllAppointment();
-      },
+
+
+  renderAttendanceCell = ({index}) => {
+    const item = this.state.attendanceList[index];
+    const date = this.splitDate(item?.thedate);
+    const oneDate = moment(item?.thedate);
+    const dayName = oneDate?.format('dddd');
+    const day = oneDate?.format('DD');
+    const Month = oneDate?.format('MMM');
+
+    const _splitMarkInTime = this.splitTime(item?.MarkinTime);
+    const _splitMarkOutTime = this.splitTime(item?.MarkoutTime);
+
+    // console.log("_split",_splitMarkInTime)
+
+    return (
+      <View>
+        <Text
+          style={{
+            fontSize: ResponsivePixels.size15,
+            textAlign: 'left',
+            alignSelf: 'stretch',
+            marginLeft: ResponsivePixels.size20,
+            marginTop: ResponsivePixels.size5,
+            fontWeight: 'bold',
+          }}>
+          {`${date} - ${dayName}`}
+        </Text>
+
+        <Card style={{margin: ResponsivePixels.size10}} key={index}>
+          <Clickable
+            onPress={() => {
+              // this.props.navigation.push('AddAppointments', {item});
+            }}>
+            <View
+              style={{
+                margin: ResponsivePixels.size15,
+                padding: ResponsivePixels.size5,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  alignItems: 'center',
+                  height: ResponsivePixels.size80,
+                }}>
+                <View
+                  style={{
+                    width: '20%',
+                    height: '100%',
+                    backgroundColor: Colors.yellow,
+                    borderRadius: 10,
+                    flexDirection: 'column',
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size20,
+                      color: Colors.white,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      marginTop: ResponsivePixels.size8,
+                    }}>
+                    {day || 0}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size18,
+                      color: Colors.white,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      marginTop: ResponsivePixels.size8,
+                    }}>
+                    {Month}
+                  </Text>
+                </View>
+
+                <View style={{flexDirection: 'row', width: '80%'}}>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      marginLeft: ResponsivePixels.size20,
+                      width: '39%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: ResponsivePixels.size15,
+                        color: Colors.grayColor,
+                        textAlign: 'center',
+                      }}>
+                      Mark-In
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: ResponsivePixels.size20,
+                        color: Colors.black,
+                      }}>
+                      {_splitMarkInTime}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      height: '100%',
+                      backgroundColor: Colors.Red900,
+                      width: ResponsivePixels.size10,
+                      widht: '1%',
+                    }}
+                  />
+
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      marginLeft: ResponsivePixels.size20,
+                      width: '39%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: ResponsivePixels.size15,
+                        color: Colors.grayColor,
+                        textAlign: 'center',
+                      }}>
+                      Mark-Out
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: ResponsivePixels.size20,
+                        color: Colors.black,
+                        textAlign: 'center',
+                      }}>
+                      {_splitMarkOutTime}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  marginTop: ResponsivePixels.size10,
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    width: ResponsivePixels.size35,
+                    height: ResponsivePixels.size35,
+                    borderRadius: 100 / 2,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: Colors.BlackColor100,
+                  }}>
+                  <Image
+                    source={Images.ic_time_glass}
+                    style={{
+                      width: ResponsivePixels.size20,
+                      height: ResponsivePixels.size20,
+                      tintColor: Colors.Red900,
+                    }}
+                    resizeMode={'cover'}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    marginLeft: ResponsivePixels.size20,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size13,
+                      color: Colors.grayColor,
+                    }}>
+                    Total Workiong Hours
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size15,
+                      color: Colors.black,
+                      fontWeight: 'bold',
+                    }}>
+                    {item?.TotalWorkinghrs}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </Clickable>
+          <Text
+            style={{
+              fontSize: ResponsivePixels.size15,
+              color: Colors.white,
+              position: 'absolute',
+              bottom: 10,
+              right: 0,
+              borderTopLeftRadius: 100 / 2,
+              borderBottomLeftRadius: 100 / 2,
+              widht: ResponsivePixels.size400,
+              backgroundColor: Colors.Red900,
+              paddingLeft: ResponsivePixels.size20,
+              paddingRight: ResponsivePixels.size20,
+            }}>
+            {item?.Status}
+          </Text>
+        </Card>
+      </View>
     );
   };
 
   
+  getCarAttendanceReport = () => {
+    const {EmployeeID,startDate,endDate} = this.state
+
+    const _startDate = Utils.formatDate(startDate, 'DD-MMM-YYYY');
+    const _endDate = Utils.formatDate(endDate, 'DD-MMM-YYYY');
+
+    console.log("_endDate ===============>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",_endDate)
+    console.log("_startDate  ===============>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",_startDate)
+
+    const params = {
+      EmpId:EmployeeID,
+      fromdate:_startDate,
+      todate:_endDate
+
+    };
+
+    console.log("EmployeeID  ===============>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",EmployeeID)
+
+
+    ProgressDialog.show();
+    ReportsApi.GetDailyAttendanceDetailsForVehicle(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const Table = res.Table;
+          if (Table) {
+            let list = [];
+            if (Array.isArray(Table)) {
+              list=Table
+            } else {
+              list.push(Table);
+            }
+            this.setState({carAttendanceList: list});
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
+
+
+  splitDate = strDate => {
+    let date = '';
+    if (strDate) {
+      const TStartSplit = strDate.split('T');
+      const sDate = TStartSplit[0];
+      date = `${sDate}`;
+    }
+    return date;
+  };
+
+  splitTime = strDate => {
+    let date = '';
+    if (strDate) {
+      const TStartSplit = strDate.split('  ');
+      const stime = TStartSplit[1];
+      date = `${stime}`;
+    }
+    return date;
+  };
+ 
+  getAttendanceReport = () => {
+    const {EmployeeID,startDate,endDate} = this.state
+
+    const _startDate = Utils.formatDate(startDate, 'DD-MMM-YYYY');
+    const _endDate = Utils.formatDate(endDate, 'DD-MMM-YYYY');
+
+
+    const params = {
+      EmployeeId:EmployeeID,
+      fromdate:_startDate,
+      todate:_endDate
+    };
+  
+
+    ProgressDialog.show();
+    ReportsApi.GetDailyAttendanceDetails(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const Table = res.Table;
+          if (Table) {
+            let list = [];
+            if (Array.isArray(Table)) {
+              list=Table
+            } else {
+              list.push(Table);
+            }
+            this.setState({attendanceList: list});
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
+
+  getLocationReport = () => {
+    const {EmployeeID,startDate,startTime,endTime} = this.state
+
+
+
+    // GetDailyEmployeeLocationForMAP{Token=58837e26-afeb-483b-8e81-546c749f1da3; EmployeeID=1; StartTime=04-Nov-2021 00:05; EndTime=04-Nov-2021 23:55; }
+    const _Date = Utils.formatDate(startDate, 'DD-MMM-YYYY');
+    const _sTime = Utils.formatDate(startTime, 'HH:MM');
+    const _eTime = Utils.formatDate(endTime, 'HH:MM');
+
+    const __StartTime = `${_Date} ${_sTime}`
+    const __EndTime = `${_Date} ${_eTime}`
+    const params = {
+      EmployeeID:EmployeeID,
+      StartTime:__StartTime,
+      EndTime:__EndTime
+    };
+
+    console.log("params",params);
+
+
+    ProgressDialog.show();
+    ReportsApi.GetDailyEmployeeLocationForMAP(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const Table = res.Table;
+          if (Table) {
+            let list = [];
+            if (Array.isArray(Table)) {
+              list=Table
+            } else {
+              list.push(Table);
+            }
+            this.setState({locationList: list});
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
+
   getEmplyeesUserHierarchy = () => {
     const params = {};
 
@@ -572,8 +836,7 @@ class ReportList extends Component {
       },
     );
   };
-
-  searchOppDelayed = _.debounce(this.searchOpp, 1000);
+  // searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
     const {dummyListData, refreshing, loading, loadMore, isLast, showSearch} =
@@ -593,7 +856,12 @@ class ReportList extends Component {
       EmployeeID,
       showFilter,
       startDate,
-      endDate
+      endDate,
+      carAttendanceList,
+      attendanceList,
+      startTime,
+      endTime,
+      locationList
     } = this.state;
     return (
       <MainContainer
@@ -608,21 +876,6 @@ class ReportList extends Component {
           hideUnderLine: true,
           isHome: true,
           light: true,
-          onClickSearch: () => {
-            this.searchOpp();
-          },
-          onChangeSearch: text => {
-            this.setState({searchQuery: text});
-          },
-          onCloseSearch: () => {
-            this.setState(
-              {showSearch: false, searchQuery: '', page: 0, refreshing: true},
-              () => {
-                this.getAllAppointment();
-              },
-            );
-          },
-          showSearch,
           right: [
             {
               image: Images.ic_filter,
@@ -801,7 +1054,79 @@ class ReportList extends Component {
                   />
                 </View>
 
-                <View
+                    {active==2 ?   
+                    <>
+                     <View
+                  style={{
+                    paddingLeft: ResponsivePixels.size10,
+                    paddingRight: ResponsivePixels.size10,
+                    flexDirection: 'row',
+                    marginTop: ResponsivePixels.size10,
+                  }}>
+                     <CustomDatePicker
+                    selectedDate={startDate ||new Date()}
+                    label={'Date'}
+                    containerStyle={{flex: 1}}
+                    rightIcon={Images.ic_Calendar}
+
+                    onDateChanged={date => {
+                      this.setState(
+                        {
+                          startDate: date,
+                        }
+                      );
+                    }}
+                  />
+                  </View>
+                    <View
+                  style={{
+                    paddingLeft: ResponsivePixels.size10,
+                    paddingRight: ResponsivePixels.size10,
+                    flexDirection: 'row',
+                    marginTop: ResponsivePixels.size10,
+                  }}>
+                  <CustomTimePicker
+                     selectedDate={startTime}
+                    label={'Start Time'}
+                    containerStyle={{
+                      flex: 1,
+                      marginRight: ResponsivePixels.size10,
+                    }}
+                    mode="time"
+                    rightIcon={Images.ic_Calendar}
+                    isModeTime={true}
+                    onDateChanged={time => {
+                      console.log("startTime ================>>>>>>>>>>>>>>>>>>",time)
+                      this.setState(
+                        {
+                          startTime: time,
+                        }
+                      );
+                    }}
+
+                  />
+
+                  <CustomTimePicker
+
+                    selectedDate={endTime}
+                    label={'End Time'}
+                    containerStyle={{flex: 1}}
+                    rightIcon={Images.ic_Calendar}
+                    mode="time"
+                    isModeTime={true}
+                    onDateChanged={time => {
+                      this.setState(
+                        {
+                          endTime: time,
+                        }
+                      );
+                    }}
+                  />
+                </View>
+                
+                </>:null}
+
+{active==0 || active==1?   <View
                   style={{
                     paddingLeft: ResponsivePixels.size10,
                     paddingRight: ResponsivePixels.size10,
@@ -816,6 +1141,15 @@ class ReportList extends Component {
                       marginRight: ResponsivePixels.size10,
                     }}
                     rightIcon={Images.ic_Calendar}
+
+                    onDateChanged={date => {
+                      this.setState(
+                        {
+                          startDate: date,
+                        }
+                      );
+                    }}
+
                   />
 
                   <CustomDatePicker
@@ -824,61 +1158,72 @@ class ReportList extends Component {
                     label={'End Date'}
                     containerStyle={{flex: 1}}
                     rightIcon={Images.ic_Calendar}
+
+                    onDateChanged={date => {
+                      this.setState(
+                        {
+                          endDate: date,
+                        }
+                      );
+                    }}
                   />
-                </View>
+                </View>:null}
+             
                 <Button
                   title="Apply"
+                  onPress={()=>{
+                    const {active,EmployeeID} = this.state
+
+                    if(!EmployeeID){
+                      Utils.showToast("Please select employee name.")
+                    }else{
+                      if(active==0){
+                        this.getAttendanceReport()
+                      }else if(active==1){
+                        this.getCarAttendanceReport()
+                      }else if(active==2){
+                        this.getLocationReport()
+                      }
+                    }
+                   
+                  }}
                   style={{
                     margin: ResponsivePixels.size30,
                   }}
                 />
               </Card>:null}
              
-              <MyFlatList
+
+              {active==1 ?( <MyFlatList
                 horizontal={false}
                 scrollEnabled={true}
-                data={dummyListData || []}
+                data={carAttendanceList || []}
                 showsHorizontalScrollIndicator={false}
-                renderItem={item => this.renderCell(item)}
+                renderItem={item => this.renderCarAttendanceCell(item)}
                 style={{flex: 1, margin: ResponsivePixels.size5}}
-                loading={loading}
-                refreshing={refreshing}
-                onRefresh={() => {
-                  this.setState(
-                    {
-                      page: 0,
-                      refreshing: true,
-                    },
-                    () => {
-                      // this.getAllAppointment();
-                    },
-                  );
-                }}
-                footerComponent={() => {
-                  return loadMore ? (
-                    <ActivityIndicator
-                      size={'large'}
-                      color={Colors.blueGray900}
-                      style={{margin: 8}}
-                    />
-                  ) : null;
-                }}
-                onEndReached={() => {
-                  console.log('End');
+              />):null}
 
-                  if (!loadMore && !isLast) {
-                    this.setState(
-                      {
-                        page: this.state.page + 1,
-                        loadMore: true,
-                      },
-                      () => {
-                        // this.getAllAppointment();
-                      },
-                    );
-                  }
-                }}
-              />
+
+
+                  {active==0?( <MyFlatList
+                horizontal={false}
+                scrollEnabled={true}
+                data={attendanceList || []}
+                showsHorizontalScrollIndicator={false}
+                renderItem={item => this.renderAttendanceCell(item)}
+                style={{flex: 1, margin: ResponsivePixels.size5}}
+              />):null}
+
+                  {active==2?( <MyFlatList
+                horizontal={false}
+                scrollEnabled={true}
+                data={locationList || []}
+                showsHorizontalScrollIndicator={false}
+                renderItem={item => this.renderLocationCell(item)}
+                style={{flex: 1, margin: ResponsivePixels.size5}}
+              />):null}
+
+             
             </View>
           </ScrollContainer>
         </View>

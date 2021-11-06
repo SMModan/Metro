@@ -62,7 +62,7 @@ export default () => {
     const session = store.getState().session;
     console.log('session.is_logged_in', session.country_id);
     
-     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Reports");
+     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SelectCountry':"Home");
     // setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'AddAttendance':"AddAttendance");
     SplashScreen.hide();
 

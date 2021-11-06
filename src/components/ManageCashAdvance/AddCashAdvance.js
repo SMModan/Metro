@@ -313,6 +313,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
 
 
     const intRemainingCredit= parseInt(remainingCredit)
+    const intAdhocAmountCredit= parseInt(adhocAmount)
     const intamount= parseInt(amount)
 
 
@@ -324,6 +325,8 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
       Utils.showToast('please enter amount.');
     } else if (intRemainingCredit<intamount) {
       Utils.showToast('amount should be less then credit availble.');
+    }else if (intAdhocAmountCredit<intamount) {
+      Utils.showToast('amount should be less then Ad Hoc Amount availble.');
     } else if (!reason) {
       Utils.showToast('please enter reason.');
     } else {

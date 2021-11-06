@@ -3,7 +3,7 @@ import { View,ImageBackground,Image } from 'react-native';
 import { connect } from 'react-redux';
 import { strings } from '../../language/Language';
 import { goBack } from '../../navigation/Navigator';
-import { Images,Colors } from '../../utils';
+import { Images,Colors, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Button, Clickable, CustomPicker,
@@ -55,6 +55,7 @@ class MoreReimbursement extends Component {
       amount,} = this.state
       const {EmployeeID,getMoreInformation} = this.props
 const fileName = attachment.fileName
+const fileType = attachment.type
 const DocumentContent = attachment?.base64;
 
     if (!projectId) {
@@ -83,8 +84,9 @@ const DocumentContent = attachment?.base64;
               ProjectID:projectId,
               ExpenseHeadID:headId,
               Amount:amount,
-              FileName:jsonResponse?.FilePath,
-              FilePath:selectedAttachment,
+              FileName:fileName,
+              fileType:fileType,
+              FilePath:jsonResponse?.FilePath,
               headName,
               projectName
             }
@@ -112,6 +114,7 @@ const DocumentContent = attachment?.base64;
 
 
   }
+
   render() {
     const {
       projectId,

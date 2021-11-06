@@ -222,7 +222,9 @@ class EditCashAdvance extends Component {
 
     console.log("-=============>-=============>_cashAdvanceDate -=============>",_cashAdvanceDate)
 
+   
     const intRemainingCredit= parseInt(remainingCredit)
+    const intAdhocAmountCredit= parseInt(adhocAmount)
     const intamount= parseInt(amount)
 
 
@@ -232,6 +234,8 @@ class EditCashAdvance extends Component {
       Utils.showToast('please enter amount.');
     } else if (intRemainingCredit<intamount) {
       Utils.showToast('amount should be less then credit availble.');
+    }else if (intAdhocAmountCredit<intamount) {
+      Utils.showToast('amount should be less then Ad Hoc Amount availble.');
     } else if (!reason) {
       Utils.showToast('please enter reason.');
     } else {
@@ -404,7 +408,7 @@ class EditCashAdvance extends Component {
             </ViewWithTitle>
 
             <Button
-              title={strings.submit}
+              title="Update"
               disabled={!IsEditable}
               style={{margin: ResponsivePixels.size16}}
               onPress={()=>{this.handleSubmit()}}

@@ -21,11 +21,11 @@ import {store} from '../../../App';
 import {setSessionField} from '../../../reducers/SessionReducer';
 import loginApi from '../../Login/apis/LoginApis';
 
-import {TouchableOpacity, Animated, ScrollView, Dimensions} from 'react-native';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {Card} from 'react-native-paper';
 import HomeApis from '../apis/HomeApis';
 
+import {TouchableOpacity, Animated, ScrollView, Dimensions} from 'react-native';
 const {width} = Dimensions.get('window');
 
 class Home extends Component {

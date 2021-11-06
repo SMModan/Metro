@@ -35,9 +35,11 @@ import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportun
 import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/OppAttachment';
 import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
 import Opportunity from '../components/Opportunity/list/Opportunity';
+import Profile from '../components/Profile/Profile';
 import QuotationList from '../components/Quotation/QuotationList';
 import QuotationView from '../components/Quotation/QuotationView';
 import SelectCountry from '../components/SelectCountry/ChildComponent/SelectCountry';
+import ShowMeRoute from '../components/ShowMeRoute/ShowMeRoute';
 /////Skyward
 import Splash from '../components/Splash/ChildComponent/Splash';
 import AddNewTask from '../components/Task/AddNewTask';
@@ -60,7 +62,7 @@ export default () => {
     const session = store.getState().session;
     console.log('session.is_logged_in', session.country_id);
     
-     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"AddAttendance");
+     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Reports");
     // setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'AddAttendance':"AddAttendance");
     SplashScreen.hide();
 
@@ -91,6 +93,8 @@ export default () => {
           <Stack.Screen component={LeaveApprovalList} name="LeaveApprovalList" />
           <Stack.Screen component={AttendanceList} name="MarkInOutList" />
           <Stack.Screen component={AddAttendance} name="AddAttendance" />
+          <Stack.Screen component={Profile} name="Profile" />
+          <Stack.Screen component={ShowMeRoute} name="ShowMeRoute" />
 
 
 

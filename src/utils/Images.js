@@ -54,4 +54,5 @@ export default ImageName = {
   ic_leave_balance: require('../../res/images/ic_leave_balance.png'),
   ic_location: require('../../res/images/ic_location.png'),
   ic_time_glass: require('../../res/images/ic_time_glass.png'),
+  ic_dob: require('../../res/images/ic_dob.png')
 };

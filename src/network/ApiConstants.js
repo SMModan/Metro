@@ -59,6 +59,9 @@ export const GetMarkinForSelectedDate = "GetMarkinForSelectedDate"
 export const InsertDailyAttendanceForVehicle = "InsertDailyAttendanceForVehicle"
 
 
+//Profile 
+
+export const GetBasicUserProfile = "GetBasicUserProfile"
 
 
 

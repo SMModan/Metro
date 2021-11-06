@@ -13,6 +13,7 @@ import HomeApis from '../apis/HomeApis';
 import {ProgressDialog} from '../../common';
 import {Badge} from 'react-native-paper';
 import LeaveApprovalList from '../../ManageLeave/List/LeaveApprovalList';
+import ShowMeRoute from '../../ShowMeRoute/ShowMeRoute';
 // import ReportsMain from '../../Reports/ChildComponent/ReportsMain';
 // import MonieMattersMain from '../../MonieMatters/ChildComponent/MonieMattersMain';
 // import PaymentMain from '../../Payments/ChildComponent/PaymentMain';
@@ -54,6 +55,7 @@ export default function HomeTabs() {
     );
   };
 
+  
   return (
     <Tab.Navigator
       shifting
@@ -146,8 +148,8 @@ export default function HomeTabs() {
             />
           ),
         }}
-        name="Route"
-        component={DummyView}
+        name="ShowMeRoute"
+        component={ShowMeRoute}
       />
     </Tab.Navigator>
   );

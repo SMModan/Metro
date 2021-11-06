@@ -17,9 +17,9 @@ import StartTrip from '../../ManageCarAttendance/StartTrip';
 import AddLeaveRequest from '../../ManageLeave/AddLeaveRequest';
 import AddCashAdvance from '../../ManageCashAdvance/AddCashAdvance';
 import AddReimbursement from '../../ManageReimbursement/AddReimbursement';
-import { store } from '../../../App';
-import { IS_LOGGED_IN } from '../../../data/PrefKeys';
-import { setSessionField } from '../../../reducers/SessionReducer';
+import {store} from '../../../App';
+import {IS_LOGGED_IN} from '../../../data/PrefKeys';
+import {setSessionField} from '../../../reducers/SessionReducer';
 import AttendanceList from '../../MarkInOut/List/AttendanceList';
 const Drawer = createDrawerNavigator();
 
@@ -97,41 +97,68 @@ const SideMenu = ({navigation}) => {
   ]);
   return (
     <View
-      style={{flex: 1, backgroundColor: 'white', padding: 16, paddingTop: ResponsivePixels.size50}}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Image
-          style={{
-            width: ResponsivePixels.size80,
-            height: ResponsivePixels.size80,
-            backgroundColor: 'gray',
-            borderRadius: 50,
-          }}
-        />
-        <Text
-          style={[
-            {
-              marginTop: 16,
-              fontSize: 20,
-              fontFamily: FontName.bold,
-              color: Colors.yellow,
-            },
-          ]}>
-          {'Admin Admin - EMP001'}
-        </Text>
-        <Text
-          style={[
-            {
-              marginTop: ResponsivePixels.size2,
-              fontSize: ResponsivePixels.size15,
-              fontFamily: FontName.bold,
-              color: Colors.black,
-              textDecorationLine: 'underline',
-            },
-          ]}>
-          {'View Profile'}
-        </Text>
-      </View>
-
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+        padding: 16,
+        paddingTop: ResponsivePixels.size50,
+      }}>
+      <Clickable
+        onPress={() => {
+          //  props.navigation.toggleDrawer();
+          navigation.toggleDrawer();
+          push('Profile');
+        }}>
+        <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <View
+            style={{
+              width: ResponsivePixels.size100,
+              height: ResponsivePixels.size100,
+              borderColor: Colors.secondary500,
+              backgroundColor: Colors.secondary500,
+              margin: ResponsivePixels.size5,
+              borderWidth: 2,
+              borderRadius: 75,
+              alignSelf: 'center',
+              alignItems: 'center',
+              alignContent: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={Images.ic_Person}
+              style={{
+                width: ResponsivePixels.size60,
+                height: ResponsivePixels.size60,
+                tintColor: Colors.white,
+              }}
+              resizeMode={'contain'}
+            />
+          </View>
+          <Text
+            style={[
+              {
+                marginTop: 16,
+                fontSize: 20,
+                fontFamily: FontName.bold,
+                color: Colors.yellow,
+              },
+            ]}>
+            {'Admin Admin - EMP001'}
+          </Text>
+          <Text
+            style={[
+              {
+                marginTop: ResponsivePixels.size2,
+                fontSize: ResponsivePixels.size15,
+                fontFamily: FontName.bold,
+                color: Colors.black,
+                textDecorationLine: 'underline',
+              },
+            ]}>
+            View Profile
+          </Text>
+        </View>
+      </Clickable>
       <FlatList
         style={{flex: 1, marginTop: ResponsivePixels.size20}}
         data={routes}
@@ -171,11 +198,11 @@ const SideMenu = ({navigation}) => {
                 AlertDialog.hide();
                 push('SignIn');
                 //    loginApi.logout()
-                 store.dispatch(setSessionField("is_logged_in", false))
-                 store.dispatch(setSessionField("user", {}))
-                 store.dispatch(setSessionField('country_id', undefined));
-                 store.dispatch(setSessionField('country_name', undefined));
-                 reset("SelectCountry")
+                store.dispatch(setSessionField('is_logged_in', false));
+                store.dispatch(setSessionField('user', {}));
+                store.dispatch(setSessionField('country_id', undefined));
+                store.dispatch(setSessionField('country_name', undefined));
+                reset('SelectCountry');
               },
             },
             negativeButton: {

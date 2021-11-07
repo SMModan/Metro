@@ -23,17 +23,7 @@ class AttendanceList extends Component {
     loading: false,
     loadMore: false,
     isLast: false,
-    listData: [
-      {
-        ID: '1',
-        attDate: '23 Oct 2021',
-        thedate: '2021-10-23T00:00:00+05:30',
-        TotalWorkingHrs: '02:46',
-        MarkinTime: 'Oct 23 2021  2:44PM',
-        MarkoutTime: 'Oct 23 2021  5:30PM',
-        Status: 'Present',
-      },
-    ],
+    listData: [],
     fromDate: new Date(),
     toDate: new Date(),
   };
@@ -85,7 +75,7 @@ class AttendanceList extends Component {
   };
 
   componentDidMount = () => {
-    // this.getAllList();
+     this.getAllList();
   };
 
   splitDate = strDate => {
@@ -302,7 +292,7 @@ class AttendanceList extends Component {
               fontSize: ResponsivePixels.size15,
               color: Colors.white,
               position: 'absolute',
-              bottom: 10,
+              top: 5,
               right: 0,
               borderTopLeftRadius: 100 / 2,
               borderBottomLeftRadius: 100 / 2,

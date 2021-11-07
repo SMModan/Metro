@@ -465,8 +465,9 @@ class StartTrip extends Component {
             </ViewWithTitle>
 
             <Button
-              title="Start Trip"
+              title="Start Trip (in Progress)"
               style={{ margin: ResponsivePixels.size16 }}
+              disabled={true}
               onPress={() => {
                 // goBack();
                 this.InsertDailyAttendanceForLocation()

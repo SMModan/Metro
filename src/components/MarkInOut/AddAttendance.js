@@ -683,9 +683,12 @@ askForLocationPermission(() => {
             </ViewWithTitle>
 
    <Button
-              title={MarkInTime?("Mark Out"):"Mark In"}
+              // title={MarkInTime?("Mark Out"):"Mark In"}
               style={{margin: ResponsivePixels.size16}}
-              disabled={EmployeeID==0?true:false}
+              // disabled={EmployeeID==0?true:false}
+              title="Mark In (in Progress)"
+
+              disabled={true}
               onPress={() => {
                 this.handleSubmit();
               }}

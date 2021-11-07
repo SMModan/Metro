@@ -140,7 +140,7 @@ android {
 
 
     defaultConfig {
-        applicationId "skyward.crm.new_skyward_crm"
+        applicationId "skyward.metro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

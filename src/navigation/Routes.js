@@ -27,6 +27,7 @@ import AddLeaveRequest from '../components/ManageLeave/AddLeaveRequest';
 import LeaveApprovalList from '../components/ManageLeave/List/LeaveApprovalList';
 import LeaveList from '../components/ManageLeave/List/LeaveList';
 import AddReimbursement from '../components/ManageReimbursement/AddReimbursement';
+import EditReimbursement from '../components/ManageReimbursement/EditReimbursement';
 import Reimbursement from '../components/ManageReimbursement/List/Reimbursement';
 import ReportList from '../components/ManageReports/List/ReportList';
 import AddAttendance from '../components/MarkInOut/AddAttendance';
@@ -87,6 +88,7 @@ export default () => {
           <Stack.Screen component={EditCashAdvance} name="EditCashAdvance" />
           <Stack.Screen component={Reimbursement} name="ReimbursementList" />
           <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
+          <Stack.Screen component={EditReimbursement} name="EditReimbursement" />
           <Stack.Screen component={ReportList} name="Reports" />
           <Stack.Screen component={AddNotes} name="AddNotes" />
           <Stack.Screen component={MyLeaveCount} name="MyLeaveCount" />

@@ -304,8 +304,12 @@ componentDidMount() {
 
     getMoreInformation=(objInfo)=>{
       let _otherInformation = this.state.otherInformation
+      let _objInfo = objInfo
+      _objInfo.RowStateID=2
+      _otherInformation.push(_objInfo)
 
-      _otherInformation.push(objInfo)
+
+      console.log("_objInfo_objInfo_objInfo_objInfo",_objInfo)
       this.setState({
         otherInformation:_otherInformation,
         isVisibleAddMoreInfo:false
@@ -330,12 +334,13 @@ componentDidMount() {
 
         
         let objOther = {
-          ExpenseHeadID:5,
+          ExpenseHeadID:otherInfo.ExpenseHeadID,
           Amount:otherInfo.Amount,
           ProjectID:otherInfo.projectId,
           FileName:otherInfo.FileName,
           FilePath:otherInfo.FilePath,
           FileContent:otherInfo.fileType,
+          RowStateID:otherInfo.RowStateID,
         }
         _otherInformation.push(objOther)
         
@@ -365,6 +370,8 @@ componentDidMount() {
             params,
             res => {
               if (res) {
+              ProgressDialog.hide();
+
                   console.log('===========> getLeaveBalanceByDate ===========>', "res");
                   Utils.showToast('Reimbursement request submitted successfully');
             goBack()

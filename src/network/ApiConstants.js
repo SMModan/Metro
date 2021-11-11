@@ -1,6 +1,5 @@
-export const BASE_URL = 'http://120.72.93.235:5001/Webservice/Metroservice.asmx/';
-//  export const BASE_URL = 'http://120.72.93.235:8050/Webservice/MetroService.asmx';  //sa
-
+// export const BASE_URL = 'http://120.72.93.235:5001/Webservice/Metroservice.asmx/';
+export const BASE_URL = 'http://120.72.93.235:8050/Webservice/MetroService.asmx';  //sa
 export const IMAGE_BASE_URL = 'https://www.skywardcrm.com';
 
 //LOGIN APIS
@@ -35,6 +34,8 @@ export const GetCashAdvanceByID = "GetCashAdvanceByID"
 //Reimbursement end Points
 export const GetReimbursementTypes = "GetReimbursementTypes"
 export const InsertReimbursement = "InsertReimbursement"
+export const UpdateReimbursement = "UpdateReimbursement"
+export const GetReimbursementByID = "GetReimbursementByID"
 
 
 //Home api end points

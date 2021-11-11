@@ -21,14 +21,23 @@ export default class CustomPicker extends Component {
     }
     updateSelectedItem = () => {
         if (this.props.selectedItem) {
+
+            if (this.props.list.filter(e => e.id == this.props.selectedItem?.id).length > 0) {
+
             const item = this.props.list.find((item) => {
                 return item.id == this.props.selectedItem?.id || ""
             })
-            if (item)
+
+            if (item){
                 this.setState({ selectedItem: item })
-            else
-                this.setState({ selectedItem: { name: "", id: "" } })
+            }
+            else{
+            console.log("this.props.selectedItem?.id",item)
+                this.setState({ selectedItem: { name: "", id: "0" } })
+            }
         }
+    }
+
 
     }
     componentDidUpdate = (prevProps, prevState, snapShot) => {
@@ -43,7 +52,7 @@ export default class CustomPicker extends Component {
                 if (!this.props.selectedItem?.id) {
                     this.setState({ selectedItem: { name: "", id: "" } })
 
-                } else if (this.props.selectedItem?.id != this.state.selectedItem.id) {
+                } else if (this.props.selectedItem?.id != this.state.selectedItem?.id) {
                     this.updateSelectedItem()
 
                 }

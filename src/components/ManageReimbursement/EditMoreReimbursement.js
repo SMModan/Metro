@@ -23,7 +23,7 @@ import ReimbursementApi from './Api/ReimbursementApi';
 
 
 
-class MoreReimbursement extends Component {
+class EditMoreReimbursement extends Component {
   state = {
     loading: false,
     AssignUserRemarks: [],
@@ -33,7 +33,10 @@ class MoreReimbursement extends Component {
       amount:"",
       projectName:"",
       headName:"",
-      attachment:""
+      attachment:"",
+      FilePath:"",
+      FileName:"",
+      FileContent:"",
   };
 
 
@@ -43,6 +46,30 @@ class MoreReimbursement extends Component {
     });
   };
 
+  componentDidMount() {
+    console.log("editMoreInfoObj ========>>>>>>>>>>>>>>>>>",this.props.headList)
+    const {Amount,ExpenseHeadID,ProjectID,FilePath,FileName,ExpenseHeadName,ProjectName,FileContent,ID} = this.props.editMoreInfoObj
+
+    console.log("Amount",Amount)
+    console.log("ExpenseHeadID",ExpenseHeadID)
+    console.log("ID",ID)
+    console.log("FileContent",FileContent)
+
+    
+    this.setState({
+      ID:ID,
+      amount:`${Amount}`,
+      headId:ExpenseHeadID,
+      projectId:ProjectID,
+      FilePath:FilePath,
+      FileName:FileName,
+      FileContent:FileContent,
+      headName:ExpenseHeadName,
+      ProjectName:ProjectName,
+
+    })
+  }
+  
 
 
   handleSubmit =()=>{
@@ -52,11 +79,11 @@ class MoreReimbursement extends Component {
       headId,
       projectName,
       headName,
-      amount,} = this.state
-      const {EmployeeID,getMoreInformation} = this.props
-const fileName = attachment.fileName
-const fileType = attachment.type
-const DocumentContent = attachment?.base64;
+      amount,ID} = this.state
+      const {EmployeeID,updateMoreInformation} = this.props
+      const fileName = attachment.fileName
+      const fileType = attachment.type
+      const DocumentContent = attachment?.base64;
 
     if (!projectId) {
       Utils.showToast('please select project.');
@@ -64,6 +91,27 @@ const DocumentContent = attachment?.base64;
       Utils.showToast('please select Expense head.');
     } else if (!amount) {
       Utils.showToast('please enter amount.');
+    } else if (!attachment) {
+      const {FileName,FileContent,FilePath} = this.state
+
+      let objInfo = {
+        ProjectID:projectId,
+        ExpenseHeadID:headId,
+        Amount:amount,
+        FileName:FileName,
+        fileType:FileContent,
+        FilePath:FilePath,
+        ExpenseHeadName:headName,
+        ProjectName:projectName,
+        projectId:projectId,
+
+      ID:ID,
+       
+      }
+      console.log("objInfo",objInfo)
+
+
+      updateMoreInformation(objInfo)
     } else {
       let params = {
         fileName,
@@ -87,13 +135,12 @@ const DocumentContent = attachment?.base64;
               FileName:fileName,
               fileType:fileType,
               FilePath:jsonResponse?.FilePath,
-              headName,
-              projectName,
               ExpenseHeadName:headName,
-              ProjectName:projectName
-            }
+              ProjectName:projectName,
+             projectId:projectId,
 
-            getMoreInformation(objInfo)
+            }
+            updateMoreInformation(objInfo)
           }
 
 
@@ -111,10 +158,6 @@ const DocumentContent = attachment?.base64;
         },
       );
     }
-
-
-
-
   }
 
   render() {
@@ -123,14 +166,15 @@ const DocumentContent = attachment?.base64;
       headId,
       amount,
       selectedAttachment,
+      FilePath
     } = this.state;
 
-    const {handleMoreInformation,headList,projectList,EmployeeID} = this.props
+    const {handleEditMoreInformationDialogue,headList,projectList,EmployeeID,editMoreInfoObj} = this.props
     return (
       <MainContainer
         header={{
          
-          title: 'Add Reimbursement Details',
+          title: 'Edit Reimbursement Details',
           hideUnderLine: true,
           light: true,
           isHome: true,
@@ -199,7 +243,7 @@ const DocumentContent = attachment?.base64;
                             alignItems: 'center',
                           }}>
                           <Image source={Images.ic_upload} />
-                          <Text style={styles.uploadText}>Upload here</Text>
+                          <Text style={styles.uploadText}>{FilePath||"Upload here"}</Text>
                         </View>
                       ) : null}
                     </ImageBackground>
@@ -215,10 +259,10 @@ const DocumentContent = attachment?.base64;
 <Button
               title={"Cancel"}
               style={{marginRight: ResponsivePixels.size16,width:"40%",backgroundColor:Colors.gray}}
-              onPress={()=>{handleMoreInformation()}}
+              onPress={()=>{handleEditMoreInformationDialogue()}}
             />
                       <Button
-              title={strings.submit}
+              title="Update"
               style={{width:"50%",marginRight:ResponsivePixels.size16}}
               onPress={()=>{this.handleSubmit()}}
             />
@@ -239,4 +283,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MoreReimbursement);
+export default connect(mapStateToProps, mapDispatchToProps)(EditMoreReimbursement);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { store } from '../../../App';
 import {
+  GetReimbursementByID,
   GetReimbursementTypes,
   GET_EMPLOYEES_USER_HIERARCHY,
   Get_ExpenseHeads,
@@ -8,7 +9,8 @@ import {
   GET_REIMBURSEMENT_BY_EMPLOYEEID,
   GET_SUPERVISOR,
   GET_USER_BASIC_PROFILE,
-  InsertReimbursement
+  InsertReimbursement,
+  UpdateReimbursement
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
@@ -125,12 +127,31 @@ const ReimbursementApi = {
         }
       },
     );
+  },getReimbursementByID(params, onDone, onError) {
+
+    apiCall(
+      GetReimbursementByID,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
   },addReimbursementFile(params, onDone, onError) {
 
     const { EmployeeID,fileName,DocumentContent} = params
      const token = store.getState().session.user.AuthenticationToken;
 
-
+console.log("tokennnn",token)
+console.log("EmployeeID",EmployeeID)
+console.log("fileName",fileName)
+console.log("DocumentContent",DocumentContent)
 
     let xmls = `<?xml version="1.0" encoding="utf-8"?>
     <soap110:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap110="http://www.w3.org/2003/05/soap-envelope">
@@ -145,7 +166,7 @@ const ReimbursementApi = {
       </soap110:Envelope>`
 
 
-    axios.post('http://120.72.93.235:5001/Webservice/Metroservice.asmx?wsdl',
+    axios.post('http://120.72.93.235:8050/Webservice/Metroservice.asmx?wsdl',
         xmls,
         {
             headers:
@@ -171,6 +192,23 @@ InsertReimbursement(params, onDone, onError) {
 
   apiCall(
     InsertReimbursement,
+    params,
+    res => {
+      if (onDone) {
+        onDone(res);
+      }
+    },
+    error => {
+      if (onError) {
+        onError(error);
+      }
+    },
+  );
+},
+UpdateReimbursement(params, onDone, onError) {
+
+  apiCall(
+    UpdateReimbursement,
     params,
     res => {
       if (onDone) {

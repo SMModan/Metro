@@ -117,7 +117,7 @@ class Reimbursement extends Component {
         <Card style={{margin: ResponsivePixels.size10}} key={index}>
           <Clickable
             onPress={() => {
-              // this.props.navigation.push('AddAppointments', {item});
+               this.props.navigation.push('EditReimbursement', {item});
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
               <View style={{flexDirection: 'column'}}>
@@ -241,7 +241,7 @@ class Reimbursement extends Component {
               fontSize: ResponsivePixels.size15,
               color: Colors.white,
               position: 'absolute',
-              top: 20,
+              top: 40,
               right: 0,
               borderTopLeftRadius: 100 / 2,
               borderBottomLeftRadius: 100 / 2,

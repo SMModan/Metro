@@ -761,8 +761,8 @@ Linking.canOpenURL(url).then(supported => {
 
     // GetDailyEmployeeLocationForMAP{Token=58837e26-afeb-483b-8e81-546c749f1da3; EmployeeID=1; StartTime=04-Nov-2021 00:05; EndTime=04-Nov-2021 23:55; }
     const _Date = Utils.formatDate(startDate, 'DD-MMM-YYYY');
-    const _sTime = Utils.formatDate(startTime, 'HH:MM');
-    const _eTime = Utils.formatDate(endTime, 'HH:MM');
+    const _sTime = Utils.formatDate(startTime, 'HH:mm');
+    const _eTime = Utils.formatDate(endTime, 'HH:mm');
 
     const __StartTime = `${_Date} ${_sTime}`
     const __EndTime = `${_Date} ${_eTime}`

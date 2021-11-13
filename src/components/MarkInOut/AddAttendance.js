@@ -6,6 +6,9 @@ import {strings} from '../../language/Language';
 import {goBack, push, reset} from '../../navigation/Navigator';
 import {Images, Colors, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
+import CustomTimePicker from '../common/CustomTimePicker';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+
 import {
   Button,
   ChipViewContainer,
@@ -46,7 +49,12 @@ class AddAttendance extends Component {
     EmployeeID:0,
     employeeName:"",
     MarkInTime:"",
-    isVisibleMarkInMarkOut:true
+    isVisibleMarkInMarkOut:true,
+    isOldDateMarkout:false,
+    startTime:"",
+    differenceTime:0,
+    percenTageCircularBar:0,
+    currentTime:""
   };
 
   componentDidMount() {
@@ -57,7 +65,7 @@ class AddAttendance extends Component {
     const date = new Date()
     const _date = `${date.getDate().toString().padStart(2, "0")}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
     
-
+    const currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
 let _self = this
 
@@ -83,6 +91,7 @@ askForLocationPermission(() => {
       longitude:latitude,
       longitude:longitude,
       address:address,
+      
     })
     store.dispatch(setSessionField("current_location", position.coords))
     goBack()
@@ -91,13 +100,15 @@ askForLocationPermission(() => {
 
 })
 
-
     this.setState({
       date:_date,
+      // startTime:_sTime,
       day:date.getDate().toString().padStart(2, "0"),
       month:monthNames[date.getMonth()],
-      year:date.getFullYear()
+      year:date.getFullYear(),
+      
     },()=>{
+      
       this.getEmplyeesUserHierarchy();
     })
   
@@ -150,7 +161,56 @@ askForLocationPermission(() => {
     }
     return date;
   };
+  splitDateWithSpace = strDate => {
+    let date = '';
+    if (strDate) {
+      const TStartSplit = strDate.split(' ');
+      const sDate = TStartSplit[0];
+      date = `${sDate}`;
+    }
+    return date;
+  };
+  splitDateWithDash = strDate => {
+    let TStartSplit = '';
+    if (strDate) {
+       TStartSplit = strDate.split('-');
+    }
+    return TStartSplit;
+  };
 
+  getHoursDifference = (markInDate,markInTime,markOutTime)=>{
+
+
+
+    let date_1 = `${markInDate} ${markInTime}`
+    let date_2 = `${markInDate} ${markOutTime}`
+
+
+    console.log("date_1  =======>",date_1)
+    console.log("date_2  =======>",date_2)
+    var date1 = new Date(date_1);
+var date2 = new Date(date_2);
+
+var diff = date2.getTime() - date1.getTime();
+
+var msec = diff;
+var hh = Math.floor(msec / 1000 / 60 / 60);
+msec -= hh * 1000 * 60 * 60;
+var mm = Math.floor(msec / 1000 / 60);
+msec -= mm * 1000 * 60;
+var ss = Math.floor(msec / 1000);
+msec -= ss * 1000;
+
+let percenTageCircularBar = hh*100/24
+
+this.setState({
+  differenceHours:hh,
+  differenceMinutes:mm,
+  differenceTime:hh + ":" + mm + ":" + ss,
+  percenTageCircularBar
+})
+console.log(hh + ":" + mm + ":" + ss);
+  }
 
   getLastMarkInTime = () => {
     // const EmployeeID = store.getState().session.user.EmployeeID;
@@ -159,11 +219,13 @@ askForLocationPermission(() => {
     const params = {
       EmployeeID: EmployeeID,
     };
+    ProgressDialog.show();
 
     AttendanceApi.GetLastMarkInTime(
       params,
       jsonResponse => {
         console.log('res=================?????????????????????????', jsonResponse);
+        ProgressDialog.hide();
 
         if (jsonResponse) {
           console.log('res        =========             ========    ', jsonResponse);
@@ -176,12 +238,52 @@ askForLocationPermission(() => {
 
             if(table){
               let MarkInTime = table.MarkInTime
-  
+              let MarkInDate = table.MarkInTime
+              let isOldDateMarkout =false
+              
             MarkInTime = this.splitTime(MarkInTime)
-  
-            this.setState({
-              MarkInTime
-            })
+            MarkInDate = this.splitDateWithSpace(MarkInDate)
+
+            const date = new Date()
+            const _date = `${date.getDate().toString().padStart(2, "0")}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
+
+
+            console.log("datedatedatedatedate",date)
+            console.log("_date_date_date_date_date_date",_date)
+
+
+            let dayMonthSplit=[]
+            if(MarkInDate !=_date){
+              isOldDateMarkout=true
+               dayMonthSplit=this.splitDateWithDash(MarkInDate)
+
+              
+
+               this.setState({
+                MarkInTime,
+                isOldDateMarkout,
+                MarkInDate,
+                day:dayMonthSplit[0],
+                month:dayMonthSplit[1]
+               },()=>{
+                 alert(`Your mark-out for previous date (${MarkInDate}) is pending.`)
+               })
+
+               this.getHoursDifference(MarkInDate,MarkInTime,MarkInTime)
+
+            }else{
+              this.setState({
+                MarkInTime,
+                isOldDateMarkout,
+                MarkInDate:_date
+              })
+
+              const currentDate = new Date()
+              const currentTime = `${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`
+
+              this.getHoursDifference(_date,MarkInTime,currentTime)
+
+            }             
             }
           }else{
 
@@ -196,6 +298,8 @@ askForLocationPermission(() => {
         }
       },
       (jsonResponse) => {
+        ProgressDialog.hide();
+
         this.setState({
           isVisibleMarkInMarkOut:true
         })
@@ -256,13 +360,11 @@ askForLocationPermission(() => {
 
   
   AddForLocation = () => {
-    const { latitude,longitude,address, remarks ,EmployeeID,MarkInTime} = this.state
+    const { latitude,longitude,address, remarks ,EmployeeID,MarkInTime,isOldDateMarkout,MarkInDate} = this.state
 
    
     const date = new Date()
     const _date = `${date.getDate().toString().padStart(2, "0")}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
-    
-
     let fullDate = `${_date} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
 
@@ -270,7 +372,7 @@ askForLocationPermission(() => {
       EmployeeID: EmployeeID,
       Location:"22.9909532 , 72.5298553",
       Remarks:"",
-      Time:fullDate,
+      Time:isOldDateMarkout?MarkInDate:fullDate,
       Address:"Ahmedabad"
     };
 
@@ -363,21 +465,20 @@ askForLocationPermission(() => {
 
 
   insertMarkOut = () => {
-    const { EmployeeID,projectId} = this.state
+    const { EmployeeID,projectId,isOldDateMarkout,startTime,MarkInDate} = this.state
     const date = new Date()
     const _date = `${date.getDate().toString().padStart(2, "0")}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
     let fullDate = `${_date} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-
+    const _sTime = Utils.formatDate(startTime, 'HH:mm:ss');
+    let oldMarkoutDateAndTime = `${MarkInDate} ${_sTime}`
+    console.log("oldMarkoutDateAndTimeoldMarkoutDateAndTime",oldMarkoutDateAndTime)
     const params = {
       MarkType:2,
       EmployeeId:EmployeeID,
       MarkInTime:"",
-      MarkOutTime:"",
+      MarkOutTime:isOldDateMarkout?oldMarkoutDateAndTime:"",
       projectID:projectId
     };
-
-    
-    
 
     ProgressDialog.show();
       AttendanceApi.InsertDailyAttendance(
@@ -386,6 +487,8 @@ askForLocationPermission(() => {
           // console.log("res Insert leave for  ===============================>",jsonResponse.InsertLeaveApplicationResponse);
           console.log('\n JSONResponse', jsonResponse);
           const isSucceed = jsonResponse.IsSucceed;
+          ProgressDialog.hide();
+
           if (isSucceed) {
 
             AlertDialog.show({
@@ -426,7 +529,8 @@ askForLocationPermission(() => {
     const {
       EmployeeID,
       projectId,
-      MarkInTime
+      MarkInTime,
+      differenceHours,
     } = this.state;
 
     if (EmployeeID == 0) {
@@ -435,7 +539,10 @@ askForLocationPermission(() => {
       Utils.showToast('Please select project');
 
     }else {
-      this.AddForLocation()      
+      if(MarkInTime && differenceHours<4){
+        alert("Your presents hours are less then 4. it will mark as absent.")
+      }
+     this.AddForLocation()      
     
     }
   };
@@ -460,7 +567,13 @@ askForLocationPermission(() => {
       year,
       AttendanceType,
       MarkInTime,
-      isVisibleMarkInMarkOut
+      isVisibleMarkInMarkOut,
+      isOldDateMarkout,
+      startTime,
+      differenceTime,
+      MarkInDate,
+      differenceHours,
+      percenTageCircularBar
     } = this.state;
 
     return (
@@ -508,6 +621,32 @@ askForLocationPermission(() => {
                   );
                 }}
               />
+{isOldDateMarkout ?<CustomTimePicker
+                     selectedDate={startTime||undefined}
+                    label={'Start Time'}
+                    containerStyle={{
+                      flex: 1,
+                      marginRight: ResponsivePixels.size10,
+                    }}
+                    mode="time"
+                    rightIcon={Images.ic_Calendar}
+                    isModeTime={true}
+                    onDateChanged={time => {
+
+                      this.setState(
+                        {
+                          startTime: time,
+                        }
+                      ,()=>{
+
+                      const _sTime = Utils.formatDate(time, 'HH:mm:ss');
+                      this.getHoursDifference(MarkInDate,MarkInTime,_sTime)
+
+                      });
+                    }}
+
+                  />:null}
+
 
             </ViewWithTitle>
        
@@ -618,8 +757,38 @@ askForLocationPermission(() => {
                       {/* {_splitMarkOutTime} */}
                     </Text>
                   </View>
+
+
+                  
                 </View>
               </View>
+
+
+        {MarkInTime?     <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  alignItems: 'center',
+                  marginTop:ResponsivePixels.size20,
+                  justifyContent:"center",
+                  alignSelf:"center"
+                }}>
+                          <AnimatedCircularProgress
+                      size={ResponsivePixels.size120}
+                      width={ResponsivePixels.size20}
+                      fill={percenTageCircularBar||0}
+                      tintColor={Colors.Red900}
+                      rotation={0}
+                      backgroundColor="#3d5875">
+                      {
+                        (fill) => (
+                          <Text>
+                            { differenceTime }
+                          </Text>
+                        )
+                      }
+                    </AnimatedCircularProgress>
+              </View>:null} 
 
 {AttendanceType &&
               <View
@@ -683,12 +852,12 @@ askForLocationPermission(() => {
             </ViewWithTitle>
 
    <Button
-              // title={MarkInTime?("Mark Out"):"Mark In"}
+              title={MarkInTime?("Mark Out"):"Mark In"}
               style={{margin: ResponsivePixels.size16}}
-              // disabled={EmployeeID==0?true:false}
-              title="Mark In (in Progress)"
+              disabled={EmployeeID==0?true:false}
+              // title="Mark In (in Progress)"
 
-              disabled={true}
+              // disabled={true}
               onPress={() => {
                 this.handleSubmit();
               }}

@@ -34,9 +34,14 @@ class StartTrip extends Component {
     circleList: [],
     AssignUserRemarks: [],
     selectedAttachment: '',
-    circleId: 0
+    circleId: "",
+    projectId: "",
+    attendanceTypeId:0,
+    vehicleType:1,
+    ac_nonac:0
   };
   componentDidMount() {
+
     this.GetWorkLocation()
     // this.GetProjectByLocationId()
   }
@@ -157,18 +162,51 @@ class StartTrip extends Component {
   }
 
 
+  
+  InsertDailyAttendanceForLocation1 = () => {
+    const EmployeeID = store.getState().session.user.EmployeeID
+    const { LocationID, remarks } = this.state
+
+    const date = new Date()
+    const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
+   
+
+    askForLocationPermission(() => {
+      ProgressDialog.show()
+
+      Geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords
+        Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
+        let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
+        try {
+          address = await Geocoder.from(latitude, longitude)
+        } catch (error) {
+          console.log(error)
+        }
+
+        ProgressDialog.hide()
+        store.dispatch(setSessionField("current_location", position.coords))
+        store.dispatch(setSessionField("currentTrip", "123"))
+        subscribeForLocationAndRequestService()
+         goBack()
+
+      })
+    })
+  }
+
+
+
   GetMarkinForSelectedDate = () => {
-    const EmpId = store.getState().session.user.EmployeeID
+    const EmployeeID = store.getState().session.user.EmployeeID
     const { circleId } = this.state
 
     const date = new Date()
-    const _date = Utils.formatDate(date, 'yyyy-MM-DD');
+    const _date = Utils.formatDate(date, 'DD-MMM-YYYY');
 
 
 
     const params = {
-      EmpId,
-      LocationID: circleId,
+      EmployeeID,
       Date: _date
     }
 
@@ -180,46 +218,53 @@ class StartTrip extends Component {
         console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
       }
 
+    }, (res) => {
+      console.log("res <<<<<<<<<<<<<<<<<=====>>>>>>>>>>>>>",res)
+      alert(res)
+      ProgressDialog.hide()
+    })
+  }
+
+
+
+  InsertDailyAttendanceForLocation = () => {
+    const EmployeeID = store.getState().session.user.EmployeeID
+    const { circleId } = this.state
+    
+    const date = new Date()
+    const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
+
+    const params = {
+      Location:"22.9909636,72.5298871",
+       Remarks:"=",
+       Time:_date,
+        Address:"Ahmedabad",
+        EmployeeID
+       }
+
+       console.log("params === InsertDailyAttendanceForLocation",params)
+
+    ProgressDialog.show()
+
+    CarAttendanceApi.InsertDailyAttendanceForLocation(params, (res) => {
+      ProgressDialog.hide()
+
+      if (res) {
+      
+        const isSucceed = res.IsSucceed
+
+        if(isSucceed){
+          this.InsertDailyAttendanceForVehicle()
+        }
+
+
+      }
+
     }, () => {
       ProgressDialog.hide()
     })
   }
 
-  InsertDailyAttendanceForLocation = () => {
-    const EmployeeID = store.getState().session.user.EmployeeID
-    const { LocationID, remarks } = this.state
-
-    const date = new Date()
-    const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
-
-    askForLocationPermission(() => {
-      ProgressDialog.show()
-
-      Geolocation.getCurrentPosition(async (position) => {
-
-        const { latitude, longitude } = position.coords
-        Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
-        let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
-        try {
-
-
-          address = await Geocoder.from(latitude, longitude)
-        } catch (error) {
-
-        }
-
-        ProgressDialog.hide()
-        store.dispatch(setSessionField("current_location", position.coords))
-        store.dispatch(setSessionField("currentTrip", "123"))
-        subscribeForLocationAndRequestService()
-        goBack()
-
-      })
-
-    })
-
-
-  }
 
   InsertDailyAttendanceForVehicle = async (latitude, longitude) => {
     const EmployeeID = store.getState().session.user.EmployeeID
@@ -232,10 +277,10 @@ class StartTrip extends Component {
       attendanceTypeId,
       remarks,
       attachment,
-
       circleId,
       ac_nonac,
-      vehicleType } = this.state
+      vehicleType 
+    } = this.state
 
     ProgressDialog.show()
     let res = {}
@@ -247,10 +292,9 @@ class StartTrip extends Component {
       })
     }
 
-    console.log("res", res)
 
     const params = {
-      EmployeeID,
+      EmployeeId:EmployeeID,
       DocumentName: res?.FileName || "",
       DocumentPath: res?.FilePath || "",
       CarNum: carNumber,
@@ -265,14 +309,16 @@ class StartTrip extends Component {
       TotalKM: 0,
       VechicleType: vehicleType,
       ISAC: ac_nonac,
-      StartLatitude: latitude,
-      StartLongitude: longitude,
+      StartLatitude: latitude||"22.9909636",
+      StartLongitude: longitude||"72.5298871",
       EndLongitude: "",
       EndLatitude: "",
       MarkType: 1,
       AttendanceType: attendanceTypeId || 0
     }
+    console.log("params", params)
 
+    // "22.9909636,72.5298871"
     CarAttendanceApi.InsertDailyAttendanceForVehicle(params, (res) => {
 
       if (res) {
@@ -282,7 +328,10 @@ class StartTrip extends Component {
         goBack()
       }
 
-    }, () => {
+    }, (error) => {
+      alert(error)
+
+      
       ProgressDialog.hide()
     })
   }
@@ -470,7 +519,46 @@ class StartTrip extends Component {
               // disabled={true}
               onPress={() => {
                 // goBack();
-                this.InsertDailyAttendanceForLocation()
+
+                const {
+                  projectId,
+                  carDetails,
+                  carNumber,
+                  riggerName,
+                  receivedKM,
+                  attendanceTypeId,
+                  remarks,
+                  attachment,
+                  circleId,
+                  ac_nonac,
+                  vehicleType 
+                } = this.state
+
+
+
+                if(!circleId){
+                  Utils.showToast("Please select circle.")
+                }else if(!projectId){
+                  Utils.showToast("Please select project.")
+                }else if(!carDetails){
+                  Utils.showToast("Please enter car details.")
+                }else if(!carNumber){
+                  Utils.showToast("Please enter car number.")
+                }else if(!riggerName){
+                  Utils.showToast("Please enter rigger name.")
+                }else if(!receivedKM){
+                  Utils.showToast("Please enter received KM.")
+                }else if(!remarks){
+                  Utils.showToast("Please enter remarks")
+                }else if(!attachment){
+                  Utils.showToast("Please upload documents")
+                }else{
+                  this.GetMarkinForSelectedDate()
+                   this.InsertDailyAttendanceForLocation()
+                }
+
+
+
                 // this.InsertDailyAttendanceForVehicle()
 
               }}

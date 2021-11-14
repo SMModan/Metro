@@ -7,7 +7,8 @@ import {
   GetMarkinForSelectedDate,
   GET_DAILY_ATTENDANCE_DETAILS_FOR_VEHICLE,
   InsertDailyAttendanceForLocation,
-  InsertDailyAttendanceForVehicle
+  InsertDailyAttendanceForVehicle,
+  GetPendingCarOutNumber
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
@@ -79,6 +80,22 @@ const CarAttendanceApi = {
         }
       },
     );
+  },  GetPendingCarOutNumber(params, onDone, onError) {
+
+    apiCall(
+      GetPendingCarOutNumber,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
   },
   InsertDailyAttendanceForLocation(params, onDone, onError) {
 
@@ -133,9 +150,9 @@ const CarAttendanceApi = {
           </UploadFileForAttendance>
         </soap110:Body>
       </soap110:Envelope>`
+      // http://120.72.93.235:8050/Webservice/MetroService.asmx
 
-
-      axios.post('http://120.72.93.235:5001/Webservice/Metroservice.asmx?wsdl',
+      axios.post('http://120.72.93.235:8050/Webservice/Metroservice.asmx?wsdl',
         xmls,
         {
           headers:

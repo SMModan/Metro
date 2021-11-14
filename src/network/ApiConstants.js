@@ -58,6 +58,7 @@ export const InsertDailyAttendance = "InsertDailyAttendance"
 export const GetWorkLocation = "GetWorkLocation"
 export const GetProjectByLocationId = "GetProjectByLocationId"
 export const GetMarkinForSelectedDate = "GetMarkinForSelectedDate"
+export const GetPendingCarOutNumber = "GetPendingCarOutNumber"
 export const InsertDailyAttendanceForVehicle = "InsertDailyAttendanceForVehicle"
 
 

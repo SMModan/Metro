@@ -18,6 +18,7 @@ import AddNotes from '../components/Home/ChildComponent/AddNotes';
 import DrawerHome from '../components/Home/ChildComponent/DrawerHome';
 import MyLeaveCount from '../components/Home/ChildComponent/MyLeaveCount';
 import SignIn from '../components/Login/ChildComponent/SignIn';
+import EndTrip from '../components/ManageCarAttendance/EndTrip';
 import CarAttendance from '../components/ManageCarAttendance/List/CarAttendance';
 import StartTrip from '../components/ManageCarAttendance/StartTrip';
 import AddCashAdvance from '../components/ManageCashAdvance/AddCashAdvance';
@@ -63,7 +64,7 @@ export default () => {
     const session = store.getState().session;
     console.log('session.is_logged_in', session.country_id);
     
-     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'CarAttendanceList':"CarAttendanceList");
+     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'EndTrip':"EndTrip");
     // setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'AddAttendance':"AddAttendance");
     SplashScreen.hide();
 
@@ -97,6 +98,7 @@ export default () => {
           <Stack.Screen component={AddAttendance} name="AddAttendance" />
           <Stack.Screen component={Profile} name="Profile" />
           <Stack.Screen component={ShowMeRoute} name="ShowMeRoute" />
+          <Stack.Screen component={EndTrip} name="EndTrip" />
 
 
 

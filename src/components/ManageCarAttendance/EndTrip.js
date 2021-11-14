@@ -4,7 +4,7 @@ import {View, ImageBackground, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
 import {goBack, push} from '../../navigation/Navigator';
-import {Images} from '../../utils';
+import {Images, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Button,
@@ -23,6 +23,7 @@ import styles from './styles/Attendance.style';
 
 import PhotoPicker from '../common/PhotoPicker';
 import CarAttendanceApi from './Api/CarAttendanceApi';
+import { store } from '../../App';
 class EndTrip extends Component {
   state = {
     circleList:[],
@@ -31,7 +32,7 @@ class EndTrip extends Component {
     circleId:0
   };
 componentDidMount() {
-  this.GetWorkLocation()
+  this.GetPendingCarOutNumber()
   // this.GetProjectByLocationId()
 }
 
@@ -43,207 +44,176 @@ componentDidMount() {
 
 
   
-  GetWorkLocation = () => {
-    const EmpId= store.getState().session.user.EmployeeID
-    const params = {
-      EmpId
-    }
- 
-    ProgressDialog.show()
-
-    CarAttendanceApi.GetWorkLocation(params, (res) => {
-        
-        if(res){
-          const Table = res.Table
-          if (Table) {
-            ProgressDialog.hide()
-
-            let circleList = []
-            if (Array.isArray(Table)) {
-              console.log("circleList =================>>>>>>>>>>>>>>>>>",Table)
-              for (let index = 0; index < Table.length; index++) {
-                const circle = Table[index];
-
-                const objCircle = {
-                  id:circle.ID,
-                  name:circle.OrganizationName
-                }
-                circleList.push(objCircle)
-              }
-             
-            }else{
-           
-              const objCircle = {
-                id:Table.ID,
-                name:Table.OrganizationName
-              }
-              circleList.push(objCircle)
-
-            }
-            this.setState({
-              circleList
-            })
-          }
-        }
-     
-    }, () => {
-      ProgressDialog.hide()
-    })
-  }
 
 
-    
-  GetProjectByLocationId = () => {
-    const EmpId= store.getState().session.user.EmployeeID
-    const {circleId} = this.state
-    const params = {
-      EmpId,
-      LocationID:circleId
-    }
- 
-    ProgressDialog.show()
-
-    CarAttendanceApi.GetProjectByLocationId(params, (res) => {
-        
-        if(res){
-          const Table = res.Table
-          if (Table) {
-            ProgressDialog.hide()
-
-            let projectList = []
-            if (Array.isArray(Table)) {
-              console.log("circleList =================>>>>>>>>>>>>>>>>>",Table)
-              for (let index = 0; index < Table.length; index++) {
-                const project = Table[index];
-
-                const objProject = {
-                  id:project.ID,
-                  name:project.ProjectName
-                }
-                projectList.push(objProject)
-              }
-             
-            }else{
-              const objProject = {
-                id:Table.ID,
-                name:Table.ProjectName
-              }
-              projectList.push(objProject)
-
-            }
-            this.setState({
-              projectList
-            })
-          }
-        }
-     
-    }, () => {
-      ProgressDialog.hide()
-    })
-  }
-
-
+  
+  
   GetMarkinForSelectedDate = () => {
-    const EmpId= store.getState().session.user.EmployeeID
-    const {circleId} = this.state
+    const EmployeeID = store.getState().session.user.EmployeeID
+    const { circleId } = this.state
 
     const date = new Date()
-    const _date = Utils.formatDate(date, 'yyyy-MM-DD');
+    const _date = Utils.formatDate(date, 'DD-MMM-YYYY');
 
 
 
     const params = {
-      EmpId,
-      LocationID:circleId,
-      Date:_date
+      EmployeeID,
+      Date: _date
     }
- 
+
     ProgressDialog.show()
     CarAttendanceApi.GetMarkinForSelectedDate(params, (res) => {
-        
-        if(res){
-          console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>",res)
-        }
-     
-    }, () => {
+      ProgressDialog.hide()
+
+      if (res) {
+        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
+      }
+
+    }, (res) => {
+      console.log("res <<<<<<<<<<<<<<<<<=====>>>>>>>>>>>>>",res)
+      alert(res)
       ProgressDialog.hide()
     })
   }
+  
+  GetPendingCarOutNumber = () => {
+    const EmployeeID = store.getState().session.user.EmployeeID
+    
+    const params = {
+      EmployeeID,
+    }
+
+    ProgressDialog.show()
+    CarAttendanceApi.GetPendingCarOutNumber(params, (res) => {
+      ProgressDialog.hide()
+
+      if (res) {
+        const table= res.Table
+        if(table){
+          this.setState({
+            carNumber:""+table?.CarNumber
+          })
+        }
+        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", this.state.carNumber)
+      }
+
+    }, (res) => {
+      console.log("res <<<<<<<<<<<<<<<<<=====>>>>>>>>>>>>>",res)
+      ProgressDialog.hide()
+    })
+  }
+
+
 
   InsertDailyAttendanceForLocation = () => {
-    const EmployeeID= store.getState().session.user.EmployeeID
-    const {LocationID,Remarks} = this.state
-
+    const EmployeeID = store.getState().session.user.EmployeeID
+    const { circleId } = this.state
+    
     const date = new Date()
-    const _date = Utils.formatDate(date, 'dd-MMM-yyyy HH:mm:ss');
-
-
+    const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
 
     const params = {
-      EmployeeID,
-      Location:"Remaining to set",
-      Remarks,
-      Time:_date,
-      Address:"Remaining to set",
-    }
- 
+      Location:"22.9909636,72.5298871",
+       Remarks:"=",
+       Time:_date,
+        Address:"Ahmedabad",
+        EmployeeID
+       }
+
+       console.log("params === InsertDailyAttendanceForLocation",params)
+
     ProgressDialog.show()
+
     CarAttendanceApi.InsertDailyAttendanceForLocation(params, (res) => {
-        
-        if(res){
-          console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>",res)
+      ProgressDialog.hide()
+
+      if (res) {
+      
+        const isSucceed = res.IsSucceed
+
+        if(isSucceed){
+          this.InsertDailyAttendanceForVehicle()
         }
-     
+
+
+      }
+
     }, () => {
       ProgressDialog.hide()
     })
   }
 
-  InsertDailyAttendanceForVehicle = () => {
-    const EmployeeID= store.getState().session.user.EmployeeID
-    const {LocationID,Remarks} = this.state
 
-    const date = new Date()
-    const _date = Utils.formatDate(date, 'dd-MMM-yyyy HH:mm:ss');
+  InsertDailyAttendanceForVehicle = async (latitude, longitude) => {
+    const EmployeeID = store.getState().session.user.EmployeeID
+    const {
+      carNumber,
+      remarks,
+      attachment,
+      carReleaseKM
+    } = this.state
 
+    ProgressDialog.show()
+    let res = {}
+    if (attachment && attachment.fileName) {
+      res = await CarAttendanceApi.uploadCarDocument({
+        EmployeeID,
+        fileName: attachment.fileName,
+        DocumentContent: attachment.base64
+      })
+    }
 
 
     const params = {
-      EmployeeID,
-      Location:"Remaining to set",
-      Remarks,
-      Time:_date,
-      Address:"Remaining to set",
+      EmployeeId:EmployeeID,
+      DocumentName: res?.FileName || "",
+      DocumentPath: res?.FilePath || "",
+      CarNum: carNumber,
+      DocumentType: attachment?.type || "",
+      RiggerName: "",
+      ReceiveKM: "0",
+      ReleasedKM: carReleaseKM,
+      Remarks: remarks,
+      WorkLocationID: "0",
+      ProjectID: "",//testing
+      CarVenderName: "",
+      TotalKM: "123",
+      VechicleType: "0",
+      ISAC: "0",
+      StartLatitude: "",
+      StartLongitude: "",
+      EndLongitude: "",
+      EndLatitude: "",
+      MarkType: 2,
+      AttendanceType: "0"
     }
- 
-    ProgressDialog.show()
+
+
+
+    // "22.9909636,72.5298871"
     CarAttendanceApi.InsertDailyAttendanceForVehicle(params, (res) => {
-        
-        if(res){
-          console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>",res)
-        }
-     
-    }, () => {
+
+      if (res) {
+        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
+        ProgressDialog.hide()
+       
+      }
+
+    }, (error) => {
+      alert(error)
       ProgressDialog.hide()
     })
   }
+
 
   render() {
     const {
       employeeName,
-      projectId,
-      carDetails,
       carNumber,
-      riggerName,
-      receivedKM,
-      attendanceTypeId,
       remarks,
       selectedAttachment,
-
       applicationDate,
-      circleId,
-      circleList,
-      projectList,
       carReleaseKM,
       
     } = this.state;
@@ -254,7 +224,7 @@ componentDidMount() {
             image: Images.ic_BackWhite,
             onPress: () => goBack(),
           },
-          title: 'Start Trip',
+          title: 'End Trip',
           hideUnderLine: true,
           light: true,
         }}>
@@ -285,20 +255,21 @@ componentDidMount() {
               
 
               <FloatingEditText
-                value={carNumber}
-                onChangeText={text => onTextChanged('carNumber', text)}
+                value={carNumber||""}
+                onChangeText={text => this.onTextChanged('carNumber', text)}
                 label="Car Number"
                 editable={false}
               />
 <FloatingEditText
                 value={carReleaseKM}
-                onChangeText={text => onTextChanged('carReleaseKM', text)}
+                onChangeText={text => this.onTextChanged('carReleaseKM', text)}
+                inputType="numeric"
                 label={'Car Release KM'}
               />
 
               <FloatingEditText
                 value={remarks}
-                onChangeText={text => this.onTextChanged('Remarks', text)}
+                onChangeText={text => this.onTextChanged('remarks', text)}
                 label="Remarks"
                 multiline={true}
               />
@@ -352,7 +323,20 @@ componentDidMount() {
               title="End Trip"
               style={{margin: ResponsivePixels.size16}}
               onPress={() => {
-                goBack();
+
+                const {carReleaseKM,attachment} = this.state
+                if(!carReleaseKM){
+                  Utils.showToast("Please enter Release KM.")
+                }else if(!remarks){
+                  Utils.showToast("Please enter Remarks.")
+                }else if(!attachment){
+                  Utils.showToast("Please upload document.")
+                }else{
+                  this.GetMarkinForSelectedDate()
+                  this.InsertDailyAttendanceForLocation()
+  
+                }
+                
               }}
             />
           </View>

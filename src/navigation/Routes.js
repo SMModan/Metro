@@ -64,8 +64,8 @@ export default () => {
     const session = store.getState().session;
     console.log('session.is_logged_in', session.country_id);
     
-     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'CarAttendanceList':"CarAttendanceList");
-    // setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'AddAttendance':"AddAttendance");
+    //  setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'CarAttendanceList':"CarAttendanceList");
+     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
     SplashScreen.hide();
 
     setLoaded(true);

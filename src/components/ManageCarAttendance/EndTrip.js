@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
+import {View, ImageBackground, Image,Alert} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack, push} from '../../navigation/Navigator';
+import {goBack, push, reset} from '../../navigation/Navigator';
 import {Images, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -32,8 +32,18 @@ class EndTrip extends Component {
     circleId:0
   };
 componentDidMount() {
+
+  console.log("this.props.navigation.state.params.",this.props.route?.params?.item)
+
+const item = this.props.route?.params?.item
+this.setState({
+  itemProps:item
+},()=>{
   this.GetPendingCarOutNumber()
-  // this.GetProjectByLocationId()
+  //  this.GetProjectByLocationId()
+})
+
+
 }
 
   onTextChanged = (key, value) => {
@@ -72,7 +82,14 @@ componentDidMount() {
 
     }, (res) => {
       console.log("res <<<<<<<<<<<<<<<<<=====>>>>>>>>>>>>>",res)
-      alert(res)
+
+      Alert.alert("Warn", `${res}`, [{
+        text: "Ok", onPress: () => {
+          this.InsertDailyAttendanceForLocation()
+        }
+      }])
+      // InsertDailyAttendanceForLocation
+
       ProgressDialog.hide()
     })
   }
@@ -108,14 +125,16 @@ componentDidMount() {
 
   InsertDailyAttendanceForLocation = () => {
     const EmployeeID = store.getState().session.user.EmployeeID
-    const { circleId } = this.state
-    
-    const date = new Date()
-    const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
+    const { circleId,remarks,itemProps } = this.state
+      const dateee = itemProps.AttDate
+
+      const _date = Utils.formatDate(dateee, 'DD-MMM-yyyy HH:mm:ss');
+      console.log("_date  =======>>>>><<<<<<<<<>>>>>>>>><<<<<>>>>>>>",_date)
+
 
     const params = {
       Location:"22.9909636,72.5298871",
-       Remarks:"=",
+       Remarks:remarks,
        Time:_date,
         Address:"Ahmedabad",
         EmployeeID
@@ -176,7 +195,7 @@ componentDidMount() {
       ReleasedKM: carReleaseKM,
       Remarks: remarks,
       WorkLocationID: "0",
-      ProjectID: "",//testing
+      ProjectID: "0",//testing
       CarVenderName: "",
       TotalKM: "123",
       VechicleType: "0",
@@ -189,19 +208,30 @@ componentDidMount() {
       AttendanceType: "0"
     }
 
-
-
+console.log("params ------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",params)
     // "22.9909636,72.5298871"
     CarAttendanceApi.InsertDailyAttendanceForVehicle(params, (res) => {
 
       if (res) {
-        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
+        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================<<<<<<<<<<<<<<<<<<<<<<<<<<<<", res)
         ProgressDialog.hide()
-       
+       const IsSucceed = res.IsSucceed
+       if(IsSucceed){
+        
+        Alert.alert("Sucess", `Trip End Successfully`, [{
+          text: "Ok", onPress: () => {
+            reset("Home")
+          }
+        }])
+       }
       }
 
     }, (error) => {
-      alert(error)
+      Alert.alert("Warn", error, [{
+        text: "Ok", onPress: () => {
+          reset("Home")
+        }
+      }])
       ProgressDialog.hide()
     })
   }
@@ -245,7 +275,7 @@ componentDidMount() {
                 }}
                 label={'Application Date'}
                 containerStyle={{flex: 1}}
-                disabled={false}
+                disabled={true}
               />
 
            
@@ -274,7 +304,7 @@ componentDidMount() {
                 multiline={true}
               />
 
-              <View>
+<View>
                 <Clickable
                   onPress={() => {
                     PhotoPicker({
@@ -293,7 +323,6 @@ componentDidMount() {
                           },
                         );
                       },
-                      noImage: true,
                     });
                   }}
                   style={{
@@ -301,7 +330,7 @@ componentDidMount() {
                     marginTop: ResponsivePixels.size20,
                   }}>
                   <ImageBackground
-                    imageStyle={{borderRadius: ResponsivePixels.size16}}
+                    imageStyle={{ borderRadius: ResponsivePixels.size16 }}
                     source={selectedAttachment}
                     style={styles.uploadView}>
                     {!selectedAttachment ? (
@@ -332,8 +361,8 @@ componentDidMount() {
                 }else if(!attachment){
                   Utils.showToast("Please upload document.")
                 }else{
-                  this.GetMarkinForSelectedDate()
-                  this.InsertDailyAttendanceForLocation()
+                   this.GetMarkinForSelectedDate()
+
   
                 }
                 

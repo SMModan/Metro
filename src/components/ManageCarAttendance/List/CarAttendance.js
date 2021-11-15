@@ -39,100 +39,23 @@ class CarAttendance extends Component {
     loadMore: false,
     isLast: false,
     listData: [],
-    dummyListData: [
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      ,
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-      {
-        date: '23rd July 2021 - Friday',
-        on_call_cab: '1001',
-        auto_complete_total_km: '0.00',
-        totalKm: '00',
-        applied_duration: '23rd July 2021 11:55 to Oct 1 2021 5:09 PM',
-      },
-    ],
+    isVisibleFab:true,
     showSearch: false,
     searchQuery: false,
     startDate: '',
     endDate: '',
+    isFabVisible:true
   };
 
   componentDidMount = () => {
-    const date = new Date().getDate() - 1;
+    const date = new Date().getDate() ;
     const month = new Date().getMonth() + 1;
     const year = new Date().getFullYear();
 
     this.setState(
       {
-        startDate: month + '/' + date + '/' + year,
+        // startDate: month + '/' + date + '/' + year,
+        startDate:  '05/' + date + '/' + year,
         endDate: month + '/' + date + '/' + year,
       },
       () => {
@@ -141,6 +64,21 @@ class CarAttendance extends Component {
     );
   };
 
+
+  handleFabVisiblity = ()=>{
+    const {listData} = this.state
+    for (let index = 0; index < listData.length; index++) {
+      const list = listData[index];
+    const CarReleasedTime= list.CarReleasedTime
+      if(!CarReleasedTime){
+        this.setState({
+          isFabVisible:false
+        })
+        break; 
+      }
+      
+    }
+  }
   getAllList = () => {
     const { startDate, endDate } = this.state;
     const EmpId = store.getState().session.user.EmployeeID;
@@ -162,7 +100,7 @@ class CarAttendance extends Component {
             if (Table) {
               if (Array.isArray(Table)) {
                 this.setState({ listData: [...Table] }, () =>
-                  console.log('this.state', this.state.listData),
+                this.handleFabVisiblity()
                 );
               } else {
                 //console.log("table name name",Table.CustomerName)
@@ -171,7 +109,9 @@ class CarAttendance extends Component {
                   {
                     listData: results,
                   },
-                  () => console.log('this.state', this.state.listData),
+                  ()=>{
+                    this.handleFabVisiblity()
+                  }
                 );
               }
             }
@@ -194,10 +134,11 @@ class CarAttendance extends Component {
     return date;
   };
   renderCell = ({ index }) => {
-    const { isCheckInPermission, userID } = this.state;
 
     const item = this.state.listData[index];
 
+    const CarReleasedTime= item.CarReleasedTime
+console.log("itemmmm",item)
     return (
       <Card style={{ margin: ResponsivePixels.size5 }} key={index}>
         <Clickable
@@ -206,7 +147,7 @@ class CarAttendance extends Component {
           }}>
           <View style={{ margin: ResponsivePixels.size15 }}>
             <View style={{ flexDirection: 'row', width: '100%' }}>
-              <View style={{ flexDirection: 'column', width: '30%' }}>
+              <View style={{ flexDirection: 'column', width: '50%' }}>
                 <Text style={{ fontSize: ResponsivePixels.size18 }}>
                   {item?.AttendanceType}
                 </Text>
@@ -222,9 +163,9 @@ class CarAttendance extends Component {
               <Text
                 style={{
                   fontSize: ResponsivePixels.size15,
-                  width: '70%',
+                  width: '50%',
                   textAlign: 'right',
-                  alignSelf: 'stretch',
+                  alignSelf: 'center',
                 }}>
                 {item?.CarRecievedTime}
               </Text>
@@ -330,10 +271,12 @@ class CarAttendance extends Component {
               </View>
             </View>
 
-            <View
+<View style={{width:"100%",flexDirection:"row"}}>
+
+<View
               style={{
                 flexDirection: 'row',
-                width: '100%',
+                width: '60%',
                 marginTop: ResponsivePixels.size10,
                 alignItems: 'center',
               }}>
@@ -379,7 +322,50 @@ class CarAttendance extends Component {
                 </Text>
               </View>
             </View>
+
+<View
+style={{width:"40%",justifyContent:"flex-end",alignContent:"flex-end"}}
+>
+{!CarReleasedTime ? <Button 
+             style={{
+              width:"100%",
+              justifyContent:"flex-end",   
+            }} 
+            title="End Trip" 
+            onPress={() => {
+
+const distanceIndex = this.props.session.distances.findIndex((item) => item.id == this.props.session.currentTrip)
+
+const tripDistance = this.props.session.distances[distanceIndex]?.distance || 0
+
+const distances = [...this.props.session.distances]
+distances.splice(distanceIndex, 1)
+store.dispatch(setSessionField("currentTrip", ""))
+store.dispatch(setSessionField("distances", [...distances]))
+backgroundServer.stop()
+push('EndTrip',{item});
+
+
+// Alert.alert("Distance", `Total distance ${(tripDistance / 1000).toFixed(2)} kms`, [{
+//   text: "End trip", onPress: () => {
+
+//     const distances = [...this.props.session.distances]
+//     distances.splice(distanceIndex, 1)
+//     store.dispatch(setSessionField("currentTrip", ""))
+//     store.dispatch(setSessionField("distances", [...distances]))
+//     backgroundServer.stop()
+//     push('EndTrip');
+//   }
+// }, { text: "Cancel", style: "cancel" }])
+
+}}   /> : null}
+
+</View>
+</View>
+     
           </View>
+          
+    
         </Clickable>
       </Card>
     );
@@ -400,7 +386,7 @@ class CarAttendance extends Component {
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast, showSearch } =
+    const { listData, refreshing, loading, loadMore, isLast, isFabVisible } =
       this.state;
 
     return (
@@ -417,21 +403,7 @@ class CarAttendance extends Component {
           hideUnderLine: true,
           isHome: true,
           light: true,
-          onClickSearch: () => {
-            this.searchOpp();
-          },
-          onChangeSearch: text => {
-            this.setState({ searchQuery: text });
-          },
-          onCloseSearch: () => {
-            this.setState(
-              { showSearch: false, searchQuery: '', page: 0, refreshing: true },
-              () => {
-                this.getAllAppointment();
-              },
-            );
-          },
-          showSearch,
+        
           right: [
             {
               image: Images.ic_filter,
@@ -440,24 +412,7 @@ class CarAttendance extends Component {
           ],
         }}>
         <View style={styles.MainHeaderView}>
-          {this.props.session.currentTrip ? <Button title="Trip End" onPress={() => {
-
-            const distanceIndex = this.props.session.distances.findIndex((item) => item.id == this.props.session.currentTrip)
-
-            const tripDistance = this.props.session.distances[distanceIndex]?.distance || 0
-
-            Alert.alert("Distance", `Total distance ${(tripDistance / 1000).toFixed(2)} kms`, [{
-              text: "End trip", onPress: () => {
-
-                const distances = [...this.props.session.distances]
-                distances.splice(distanceIndex, 1)
-                store.dispatch(setSessionField("currentTrip", ""))
-                store.dispatch(setSessionField("distances", [...distances]))
-                backgroundServer.stop()
-              }
-            }, { text: "Cancel", style: "cancel" }])
-
-          }} style={{ margin: 16 }} /> : null}
+         
           <View style={styles.MainList}>
             <MyFlatList
               horizontal={false}
@@ -466,54 +421,23 @@ class CarAttendance extends Component {
               showsHorizontalScrollIndicator={false}
               renderItem={item => this.renderCell(item)}
               style={{ flex: 1, margin: ResponsivePixels.size5 }}
-              loading={loading}
               refreshing={refreshing}
               onRefresh={() => {
-                this.setState(
-                  {
-                    page: 0,
-                    refreshing: true,
-                  },
-                  () => {
-                    // this.getAllAppointment();
-                  },
-                );
-              }}
-              footerComponent={() => {
-                return loadMore ? (
-                  <ActivityIndicator
-                    size={'large'}
-                    color={Colors.blueGray900}
-                    style={{ margin: 8 }}
-                  />
-                ) : null;
-              }}
-              onEndReached={() => {
-                console.log('End');
-
-                if (!loadMore && !isLast) {
-                  this.setState(
-                    {
-                      page: this.state.page + 1,
-                      loadMore: true,
-                    },
-                    () => {
-                      // this.getAllAppointment();
-                    },
-                  );
-                }
+                this.getAllList()
               }}
             />
           </View>
         </View>
-        <FAB
+
+{isFabVisible?<FAB
           style={styles.fab}
           icon="plus"
           color={Colors.white}
           onPress={() => {
             push('StartTrip');
           }}
-        />
+        />:null}
+        
       </MainContainer>
     );
   }

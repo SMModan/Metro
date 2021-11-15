@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ImageBackground, Image } from 'react-native';
+import { View, ImageBackground, Image, Alert } from 'react-native';
 
 import { connect } from 'react-redux';
 import { strings } from '../../language/Language';
@@ -220,8 +220,15 @@ class StartTrip extends Component {
 
     }, (res) => {
       console.log("res <<<<<<<<<<<<<<<<<=====>>>>>>>>>>>>>",res)
-      alert(res)
-      ProgressDialog.hide()
+
+      Alert.alert("Warn", res, [{
+        text: "Ok", onPress: () => {
+          ProgressDialog.hide()
+          this.InsertDailyAttendanceForLocation()
+
+        }
+      }])
+      
     })
   }
 
@@ -324,14 +331,17 @@ class StartTrip extends Component {
       if (res) {
         console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
         ProgressDialog.hide()
+        Utils.showToast("Trip Started Successfully")
         subscribeForLocationAndRequestService()
         goBack()
       }
 
     }, (error) => {
-      alert(error)
-
-      
+      Alert.alert("Warn", error, [{
+        text: "Ok", onPress: () => {
+          goBack()
+        }
+      }])
       ProgressDialog.hide()
     })
   }
@@ -554,11 +564,7 @@ class StartTrip extends Component {
                   Utils.showToast("Please upload documents")
                 }else{
                   this.GetMarkinForSelectedDate()
-                   this.InsertDailyAttendanceForLocation()
                 }
-
-
-
                 // this.InsertDailyAttendanceForVehicle()
 
               }}

@@ -14,6 +14,10 @@ import {
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
+
+
+
+
 const ReimbursementApi = {
   getAllList(params, onDone, onError) {
 
@@ -147,6 +151,8 @@ const ReimbursementApi = {
 
     const { EmployeeID,fileName,DocumentContent} = params
      const token = store.getState().session.user.AuthenticationToken;
+     const imageUrl = store.getState().session.imageUrl;
+
 
 console.log("tokennnn",token)
 console.log("EmployeeID",EmployeeID)
@@ -166,7 +172,7 @@ console.log("DocumentContent",DocumentContent)
       </soap110:Envelope>`
 
 
-    axios.post('http://120.72.93.235:8050/Webservice/Metroservice.asmx?wsdl',
+    axios.post(imageUrl,
         xmls,
         {
             headers:

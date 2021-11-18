@@ -188,7 +188,7 @@ class StartTrip extends Component {
         store.dispatch(setSessionField("current_location", position.coords))
         store.dispatch(setSessionField("currentTrip", "123"))
         subscribeForLocationAndRequestService()
-         goBack()
+        //  goBack()
 
       })
     })
@@ -292,6 +292,10 @@ class StartTrip extends Component {
     ProgressDialog.show()
     let res = {}
     if (attachment && attachment.fileName) {
+
+      const sessionStore = store.getState().session;
+const imageUrl = sessionStore.imageUrl
+
       res = await CarAttendanceApi.uploadCarDocument({
         EmployeeID,
         fileName: attachment.fileName,
@@ -333,7 +337,6 @@ class StartTrip extends Component {
         ProgressDialog.hide()
         Utils.showToast("Trip Started Successfully")
         subscribeForLocationAndRequestService()
-        goBack()
       }
 
     }, (error) => {

@@ -6,17 +6,21 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  Animated,
+  Dimensions,
+
 } from 'react-native';
 import {
   Clickable,
   MainContainer,
   MyFlatList,
-  ProgressDialog, Button
+  CustomPicker,
+  ProgressDialog, Button, CustomDatePicker, ScrollContainer
 } from '../../common';
 import { connect } from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import { strings } from '../../../language/Language';
-import { Images, Colors, FontName } from '../../../utils';
+import { Images, Colors, FontName, Utils } from '../../../utils';
 import { Chip, Card, Title, FAB } from 'react-native-paper';
 import AppointmentApi from '../Api/CarAttendanceApi';
 import _ from 'lodash';
@@ -30,6 +34,7 @@ import { store } from '../../../App';
 import CarAttendanceApi from '../Api/CarAttendanceApi';
 import { setSessionField } from '../../../reducers/SessionReducer';
 import backgroundServer from "react-native-background-actions"
+const {width} = Dimensions.get('window');
 
 class CarAttendance extends Component {
   state = {
@@ -42,26 +47,19 @@ class CarAttendance extends Component {
     isVisibleFab:true,
     showSearch: false,
     searchQuery: false,
-    startDate: '',
-    endDate: '',
-    isFabVisible:true
+    isFabVisible:true,
+    showFilter:false,
+    startDate:new Date(),
+    endDate:new Date()
   };
 
-  componentDidMount = () => {
-    const date = new Date().getDate() ;
-    const month = new Date().getMonth() + 1;
-    const year = new Date().getFullYear();
 
-    this.setState(
-      {
-        // startDate: month + '/' + date + '/' + year,
-        startDate:  '05/' + date + '/' + year,
-        endDate: month + '/' + date + '/' + year,
-      },
-      () => {
-        this.getAllList();
-      },
-    );
+  componentDidMount = () => {
+    // const date = new Date().getDate() ;
+    // const month = new Date().getMonth() + 1;
+    // const year = new Date().getFullYear();
+
+    this.getAllList();
   };
 
 
@@ -72,7 +70,7 @@ class CarAttendance extends Component {
     const CarReleasedTime= list.CarReleasedTime
       if(!CarReleasedTime){
         this.setState({
-          isFabVisible:false
+          isFabVisible:false,
         })
         break; 
       }
@@ -82,10 +80,14 @@ class CarAttendance extends Component {
   getAllList = () => {
     const { startDate, endDate } = this.state;
     const EmpId = store.getState().session.user.EmployeeID;
+
+    const _startDate = Utils.formatDate(startDate, 'MM-DD-yyyy');
+    const _endDate = Utils.formatDate(endDate, 'MM-DD-yyyy');
+
     const params = {
       EmpId,
-      fromdate: startDate,
-      todate: endDate,
+      fromdate: _startDate,
+      todate: _endDate,
     };
 
     ProgressDialog.show();
@@ -386,7 +388,7 @@ push('EndTrip',{item});
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
-    const { listData, refreshing, loading, loadMore, isLast, isFabVisible } =
+    const { listData, refreshing, loading, loadMore, isLast, isFabVisible,showFilter,endDate,startDate } =
       this.state;
 
     return (
@@ -407,13 +409,132 @@ push('EndTrip',{item});
           right: [
             {
               image: Images.ic_filter,
-              onPress: () => this.setState({ showSearch: true }),
+              onPress: () => this.setState({ showFilter: !this.state.showFilter }),
             },
           ],
         }}>
         <View style={styles.MainHeaderView}>
+        <ScrollContainer>
          
           <View style={styles.MainList}>
+
+            
+          {showFilter ? <Card
+                style={{
+                  marginLeft: ResponsivePixels.size10,
+                  marginRight: ResponsivePixels.size10,
+                  marginTop: ResponsivePixels.size15,
+                  padding: ResponsivePixels.size5,
+                  paddingBottom:ResponsivePixels.size25
+                }}>
+             
+                 
+
+  <View
+                  style={{
+                    paddingLeft: ResponsivePixels.size10,
+                    paddingRight: ResponsivePixels.size10,
+                    flexDirection: 'row',
+                    marginTop: ResponsivePixels.size10,
+                  }}>
+
+<CustomDatePicker
+                    selectedDate={startDate}
+                    label={'Start Date'}
+                    containerStyle={{
+                      flex: 1,
+                      marginRight: ResponsivePixels.size10,
+                    }}
+                    rightIcon={Images.ic_Calendar}
+
+                    onDateChanged={date => {
+                      this.setState(
+                        {
+                          startDate: date,
+                        }
+                      );
+                    }}
+
+                  />
+<CustomDatePicker
+                    selectedDate={endDate ||new Date()}
+                    minimumDate={startDate|| new Date()}
+                    label={'End Date'}
+                    containerStyle={{flex: 1}}
+                    rightIcon={Images.ic_Calendar}
+                    onDateChanged={date => {
+                      this.setState(
+                        {
+                          endDate: date,
+                        }
+                      );
+                    }}
+                  /> 
+                  {/* <CustomDatePicker
+                    selectedDate={endDate ||new Date()}
+                    minimumDate={startDate|| new Date()}
+                    label={'End Date'}
+                    containerStyle={{flex: 1}}
+                    rightIcon={Images.ic_Calendar}
+                    onDateChanged={date => {
+                      this.setState(
+                        {
+                          endDate: date,
+                        }
+                      );
+                    }}
+                  />  */}
+                </View>
+              
+
+  <View
+                  style={{
+                    paddingLeft: ResponsivePixels.size10,
+                    paddingRight: ResponsivePixels.size10,
+                    flexDirection: 'row',
+                    marginTop: ResponsivePixels.size10,
+                  }}>
+               
+                  <Button
+                  title="Clear"
+                  onPress={()=>{
+                    
+                    this.setState({
+                      startDate:new Date(),
+                      endDate:new Date(),
+                      showFilter:false,
+                      listData:[]
+                    },()=>{
+                      this.getAllList()
+                    })
+                  
+                   
+                  }}
+                  style={{
+                    width:"50%",
+                    marginRight:ResponsivePixels.size10
+                  }}
+                />
+ <Button
+                  title="Apply"
+                  onPress={()=>{
+                    this.setState({
+                      showFilter:false,
+                      listData:[]
+
+                    },()=>{
+                      this.getAllList()
+                    })
+                   
+                  }}
+                  style={{
+                    width:"50%"
+                  }}
+                />
+                </View>
+              </Card>:null}
+             
+         
             <MyFlatList
               horizontal={false}
               scrollEnabled={true}
@@ -427,6 +548,7 @@ push('EndTrip',{item});
               }}
             />
           </View>
+          </ScrollContainer>
         </View>
 
 {isFabVisible?<FAB

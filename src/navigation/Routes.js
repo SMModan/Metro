@@ -65,7 +65,7 @@ export default () => {
     console.log('session.is_logged_in', session.country_id);
     
     //  setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'CarAttendanceList':"CarAttendanceList");
-     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
+    setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
     SplashScreen.hide();
 
     setLoaded(true);

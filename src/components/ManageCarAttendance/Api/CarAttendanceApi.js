@@ -12,6 +12,7 @@ import {
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
+
 const CarAttendanceApi = {
   getAllList(params, onDone, onError) {
 
@@ -136,6 +137,8 @@ const CarAttendanceApi = {
 
       const { EmployeeID, fileName, DocumentContent } = params
       const token = store.getState().session.user.AuthenticationToken;
+      const imageUrl = store.getState().session.imageUrl;
+
 
 
 
@@ -151,8 +154,8 @@ const CarAttendanceApi = {
         </soap110:Body>
       </soap110:Envelope>`
       // http://120.72.93.235:8050/Webservice/MetroService.asmx
-
-      axios.post('http://120.72.93.235:8050/Webservice/Metroservice.asmx?wsdl',
+      // axios.post('http://120.72.93.235:8050/Webservice/Metroservice.asmx?wsdl',
+      axios.post(imageUrl,
         xmls,
         {
           headers:

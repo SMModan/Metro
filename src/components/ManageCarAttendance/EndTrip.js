@@ -176,6 +176,7 @@ this.setState({
     ProgressDialog.show()
     let res = {}
     if (attachment && attachment.fileName) {
+
       res = await CarAttendanceApi.uploadCarDocument({
         EmployeeID,
         fileName: attachment.fileName,

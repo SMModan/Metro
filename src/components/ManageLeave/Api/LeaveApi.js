@@ -18,6 +18,8 @@ import {
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
+
+
 const LeaveApi = {
   getAllLeaves(params, onDone, onError) {
 
@@ -187,6 +189,7 @@ const LeaveApi = {
     const { EmployeeID, ReportingManagerId, FromDate, ToDate, TotalDays,Remarks,FromHalfDay,ToHalfDay,IsAllHalfDay,LeaveRequestTypeID
      ,DocumentName,DocumentContentType,DocumentContent,PhoneNumDuringLeave,StateID,EmployeeName} = params
      const token = store.getState().session.user.AuthenticationToken;
+     const imageUrl = store.getState().session.imageUrl;
 
 
 
@@ -216,7 +219,7 @@ const LeaveApi = {
       </soap110:Envelope>`
 
 
-    axios.post('http://120.72.93.235:5001/Webservice/Metroservice.asmx?wsdl',
+    axios.post(imageUrl,
         xmls,
         {
             headers:

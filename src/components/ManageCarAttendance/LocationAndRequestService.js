@@ -77,6 +77,8 @@ const subscribeForLocation = () => {
 export const askForLocationPermission = (onGrant) => {
 
     if (Platform.OS == "android") {
+
+        // 29
         requestMultiple([PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION, PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION, PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION], { message: "We required your location to get to food deliveries requests.", title: "Location Permission", buttonPositive: "Go to Settings" })
             .then((res) => {
 

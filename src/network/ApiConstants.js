@@ -1,6 +1,15 @@
 // export const BASE_URL = 'http://120.72.93.235:5001/Webservice/Metroservice.asmx/';
-export const BASE_URL = 'http://120.72.93.235:8050/Webservice/MetroService.asmx';  //sa
-export const IMAGE_BASE_URL = 'https://www.skywardcrm.com';
+
+import { store } from "../App";
+
+const session = store.getState().session;
+console.log('session.is_logged_in', session.baseUrl);
+
+// export const BASE_URL = 'http://120.72.93.235:8050/Webservice/MetroService.asmx';  //sa
+// export const IMAGE_BASE_URL = 'https://www.skywardcrm.com';
+
+export const BASE_URL = session.baseUrl
+export const IMAGE_BASE_URL = session.assetsUrl
 
 //LOGIN APIS
 

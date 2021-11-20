@@ -355,28 +355,7 @@ class CarAttendance extends Component {
                     }}
                     title="End Trip"
                     onPress={() => {
-                      // const distanceIndex = this.props.session.distances.findIndex((item) => item.id == this.props.session.currentTrip)
-
-                      // const tripDistance = this.props.session.distances[distanceIndex]?.distance || 0
-
-                      // const distances = [...this.props.session.distances]
-                      // distances.splice(distanceIndex, 1)
-                      // store.dispatch(setSessionField("currentTrip", ""))
-                      // store.dispatch(setSessionField("distances", [...distances]))
-
                       push('EndTrip', {item});
-
-                      // Alert.alert("Distance", `Total distance ${(tripDistance / 1000).toFixed(2)} kms`, [{
-                      //   text: "End trip", onPress: () => {
-
-                      //     const distances = [...this.props.session.distances]
-                      //     distances.splice(distanceIndex, 1)
-                      //     store.dispatch(setSessionField("currentTrip", ""))
-                      //     store.dispatch(setSessionField("distances", [...distances]))
-                      //     backgroundServer.stop()
-                      //     push('EndTrip');
-                      //   }
-                      // }, { text: "Cancel", style: "cancel" }])
                     }}
                   />
                 ) : null}

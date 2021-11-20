@@ -7,7 +7,7 @@ import {
 import { Card, FAB } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { store } from '../../../App';
-import { push } from '../../../navigation/Navigator';
+import { goBack, push } from '../../../navigation/Navigator';
 import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import { Clickable, MainContainer, MyFlatList, ProgressDialog } from '../../common';
@@ -334,9 +334,9 @@ class CashAdvance extends Component {
       <MainContainer
         header={{
           left: {
-            image: Images.ic_Menu,
+            image: Images.ic_BackWhite,
             onPress: () => {
-              this.props.navigation.openDrawer()
+              goBack()
             },
           },
           title: 'Cash Advance',

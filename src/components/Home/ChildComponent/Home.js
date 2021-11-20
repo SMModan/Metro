@@ -26,6 +26,7 @@ import {Card} from 'react-native-paper';
 import HomeApis from '../apis/HomeApis';
 
 import {TouchableOpacity, Animated, ScrollView, Dimensions} from 'react-native';
+import { askForLocationPermission } from '../../ManageCarAttendance/LocationAndRequestService';
 const {width} = Dimensions.get('window');
 
 class Home extends Component {
@@ -118,6 +119,29 @@ class Home extends Component {
   componentDidMount = () => {
     //console.log("this.props.session.user.EmployeeName",this.props.session.user)
     // setTimeout(() => this.loadPermissions(), 300)
+
+
+    askForLocationPermission(status => {
+      console.log('status ========<<<<<', '>>>>>>>>>>>>>> ' + status);
+      // ProgressDialog.show()
+
+      // Geolocation.getCurrentPosition(async (position) => {
+      //   const { latitude, longitude } = position.coords
+      //   Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
+      //   let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
+      //   try {
+      //     address = await Geocoder.from(latitude, longitude)
+      //   } catch (error) {
+      //     console.log(error)
+      //   }
+      //   store.dispatch(setSessionField("current_location", position.coords))
+      //  store.dispatch(setSessionField("currentTrip", "123"))
+
+      // })
+      // ProgressDialog.hide()
+    });
+
+
 
     const CountryName= store.getState().session.country_name
     this.setState({

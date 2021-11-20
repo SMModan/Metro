@@ -1,17 +1,20 @@
-import React, {Component} from 'react';
-import {Text, View, Image, Dimensions, Linking} from 'react-native';
-import {Card} from 'react-native-paper';
-import {goBack} from '../../navigation/Navigator';
-
-import {Images, Colors, Utils} from '../../utils';
+import { isAndroid } from '@nativescript/core';
+import React, { Component } from 'react';
+import { Dimensions, Linking, Platform, View } from 'react-native';
+import { getDeviceType } from 'react-native-device-info';
+import Geolocation from 'react-native-geolocation-service';
+import { Card } from 'react-native-paper';
+import StepIndicator from 'react-native-step-indicator';
+import { goBack } from '../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   FloatingEditText,
-  MainContainer,
-  ProgressDialog,
-  ScrollContainer,
+  MainContainer, ScrollContainer
 } from '../common';
-import StepIndicator from 'react-native-step-indicator';
+
+
+
 const {width} = Dimensions.get('window');
 const labels = ['', ''];
 const customStyles = {
@@ -46,17 +49,38 @@ export default class ShowMeRoute extends Component {
     this.state = {
       startLocation: '',
       endLocation: '',
+      latitude: '',
+        longitude: '',
     };
+
+
+    Geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords
+     const latLang = `${latitude},${longitude}`
+      
+      this.setState({
+        latitude,
+        longitude,
+        startLocation:latLang
+      },()=>{
+        console.log("latitude =======>>>>>>>",latitude);
+        console.log("longitude =======>>>>>>>",longitude);
+      })
+    })
+
+
   }
 
   render() {
-    const {endLocation, startLocation} = this.state;
+    const {endLocation, startLocation,latitude,longitude} = this.state;
     return (
       <MainContainer
         header={{
           left: {
-            image: Images.ic_BackWhite,
-            onPress: () => goBack(),
+            image: Images.ic_Menu,
+            onPress: () => {
+              this.props.navigation.openDrawer();
+            },
           },
           title: 'Show Me Route',
           hideUnderLine: true,
@@ -83,6 +107,7 @@ export default class ShowMeRoute extends Component {
                   onChangeText={text => this.setState({startLocation: text})}
                   label={'Source Location'}
                   rightIcon={Images.ic_location}
+                  editable={false}
                 />
                 <FloatingEditText
                   value={endLocation}
@@ -108,7 +133,15 @@ export default class ShowMeRoute extends Component {
                   Utils.showToast('Please enter end Location.');
                 } else {
                   // alert("testing")
-                  var url = `https://www.google.com/maps/dir/?api=1&travelmode=driving&dir_action=navigate&destination=${endLocation}`;
+                  const {latitude,longitude} = this.state
+                  let url   =""
+
+
+                  if(Platform.OS === 'ios'){
+                    url=`http://maps.apple.commaps?saddr=${latitude},${longitude}"&daddr=" ${endLocation}`
+                  }else{
+                    url=`http://maps.google.com/maps?saddr=${latitude},${longitude}"&daddr=" ${endLocation}`
+                  }
                   Linking.canOpenURL(url)
                     .then(supported => {
                       if (!supported) {

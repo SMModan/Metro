@@ -1,3 +1,5 @@
+import {Images} from '../utils';
+
 export const COMPANY_ID = "4bf735e97269421a80b82359e7dc2288"
 
 export const MAX_MOBILE_NUMBER = 15;
@@ -56,3 +58,133 @@ export const DROPDWON_GET_RELATED_TO= "GetRelatedTo"
 
     export const VALUE_TH_BASE_URL_PROD = "http://120.72.93.235:8010/Webservice/MetroService.asmx/"
     export const VALUE_TH_ASSETS_URL_PROD = "http://120.72.93.235:8010/"
+
+    export const SIDEMENU_INDIA =[{
+          title: 'Home',
+          icon: Images.ic_home,
+          route: 'Dashboard',
+        },
+        {
+          title: 'Car Attendence',
+          icon: Images.ic_Appointment,
+          route: 'CarAttendanceList',
+        },
+        {
+          title: 'Leave',
+          icon: Images.ic_HelpDesk,
+          route: 'LeaveList',
+        },
+        {
+          title: 'Cash Advance',
+          icon: Images.ic_Call,
+          route: 'CashAdvanceList',
+        },
+        {
+          title: 'Reimburshment',
+          icon: Images.ic_task,
+          route: 'ReimbursementList',
+        },
+        {
+          title: 'Reports',
+          icon: Images.ic_HelpDesk,
+          route: 'Reports',
+        },
+      ]
+
+
+      
+    export const SIDEMENU_PH =[
+        {
+          title: 'Home',
+          icon: Images.ic_home,
+          route: 'Dashboard',
+        },
+        {
+          title: 'Car Attendence',
+          icon: Images.ic_Appointment,
+          route: 'CarAttendanceList',
+        },
+        {
+          title: 'Markin - Markout',
+          icon: Images.ic_Appointment,
+          route: 'MarkInOutList',
+        },
+        {
+          title: 'Leave',
+          icon: Images.ic_HelpDesk,
+          route: 'LeaveList',
+        },
+        {
+          title: 'Cash Advance',
+          icon: Images.ic_Call,
+          route: 'CashAdvanceList',
+        },
+        {
+          title: 'Reimburshment',
+          icon: Images.ic_task,
+          route: 'ReimbursementList',
+        },
+        {
+          title: 'Reports',
+          icon: Images.ic_HelpDesk,
+          route: 'Reports',
+        },
+      ]
+
+      
+    export const SIDEMENU_SA =[
+        {
+            title: 'Home',
+            icon: Images.ic_home,
+            route: 'Dashboard',
+          },
+          {
+            title: 'Car Attendence',
+            icon: Images.ic_Appointment,
+            route: 'CarAttendanceList',
+          },
+          {
+            title: 'Markin - Markout',
+            icon: Images.ic_Appointment,
+            route: 'MarkInOutList',
+          },
+          {
+            title: 'Cash Advance',
+            icon: Images.ic_Call,
+            route: 'CashAdvanceList',
+          },
+          {
+            title: 'Reimburshment',
+            icon: Images.ic_task,
+            route: 'ReimbursementList',
+          },
+          {
+            title: 'Reports',
+            icon: Images.ic_HelpDesk,
+            route: 'Reports',
+          },
+      ]
+
+      
+    export const SIDEMENU_TH =[
+        {
+            title: 'Home',
+            icon: Images.ic_home,
+            route: 'Dashboard',
+          },
+          {
+            title: 'Car Attendence',
+            icon: Images.ic_Appointment,
+            route: 'CarAttendanceList',
+          },
+          {
+            title: 'Markin - Markout',
+            icon: Images.ic_Appointment,
+            route: 'MarkInOutList',
+          },
+          {
+            title: 'Reports',
+            icon: Images.ic_HelpDesk,
+            route: 'Reports',
+          },
+      ]

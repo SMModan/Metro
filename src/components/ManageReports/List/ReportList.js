@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {connect} from 'react-redux';
+import { goBack } from '../../../navigation/Navigator';
 import {Colors, Images, Utils} from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
@@ -867,9 +868,9 @@ Linking.canOpenURL(url).then(supported => {
       <MainContainer
         header={{
           left: {
-            image: Images.ic_Menu,
+            image: Images.ic_BackWhite,
             onPress: () => {
-              this.props.navigation.openDrawer();
+            goBack()
             },
           },
           title: 'Reports List',

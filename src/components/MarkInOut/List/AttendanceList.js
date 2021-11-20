@@ -4,7 +4,7 @@ import {ActivityIndicator, Image, Text, View} from 'react-native';
 import {Card, FAB} from 'react-native-paper';
 import {connect} from 'react-redux';
 import {store} from '../../../App';
-import {push} from '../../../navigation/Navigator';
+import {goBack, push} from '../../../navigation/Navigator';
 import {Colors, Images, Utils} from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
@@ -16,6 +16,7 @@ import {
   ScrollContainer,
 } from '../../common';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
+import {askForLocationPermission} from '../../ManageCarAttendance/LocationAndRequestService';
 import AttendanceApi from '../Api/AttendanceApi';
 
 class AttendanceList extends Component {
@@ -25,9 +26,9 @@ class AttendanceList extends Component {
     loadMore: false,
     isLast: false,
     listData: [],
-    showFilter:false,
-    startDate:new Date(),
-    endDate:new Date()
+    showFilter: false,
+    startDate: new Date(),
+    endDate: new Date(),
   };
 
   getAllList = () => {
@@ -77,7 +78,11 @@ class AttendanceList extends Component {
   };
 
   componentDidMount = () => {
-     this.getAllList();
+    this.getAllList();
+
+    askForLocationPermission(status => {
+      console.log('status ========<<<<<', '>>>>>>>>>>>>>> ' + status);
+    });
   };
 
   splitDate = strDate => {
@@ -318,174 +323,163 @@ class AttendanceList extends Component {
       loading,
       loadMore,
       isLast,
-      showFilter,endDate,startDate
+      showFilter,
+      endDate,
+      startDate,
     } = this.state;
 
     return (
       <MainContainer
         header={{
           left: {
-            image: Images.ic_Menu,
+            image: Images.ic_BackWhite,
             onPress: () => {
-              this.props.navigation.openDrawer();
+             goBack()
             },
           },
           title: 'Markin - Markout',
           hideUnderLine: true,
           isHome: true,
           light: true,
-        
+
           right: [
             {
               image: Images.ic_filter,
               onPress: () => {
-                this.setState({ showFilter: !this.state.showFilter })
+                this.setState({showFilter: !this.state.showFilter});
               },
             },
           ],
         }}>
         <View style={styles.MainHeaderView}>
-        <ScrollContainer>
-
-          <View style={styles.MainList}>
-
-          {showFilter ? <Card
-                style={{
-                  marginLeft: ResponsivePixels.size10,
-                  marginRight: ResponsivePixels.size10,
-                  marginTop: ResponsivePixels.size15,
-                  padding: ResponsivePixels.size5,
-                  paddingBottom:ResponsivePixels.size25,
-                  
-                }}>
-             
-                 
-
-  <View
+          <ScrollContainer>
+            <View style={styles.MainList}>
+              {showFilter ? (
+                <Card
                   style={{
-                    paddingLeft: ResponsivePixels.size10,
-                    paddingRight: ResponsivePixels.size10,
-                    flexDirection: 'row',
-                    marginTop: ResponsivePixels.size10,
+                    marginLeft: ResponsivePixels.size10,
+                    marginRight: ResponsivePixels.size10,
+                    marginTop: ResponsivePixels.size15,
+                    padding: ResponsivePixels.size5,
+                    paddingBottom: ResponsivePixels.size25,
                   }}>
-
-<CustomDatePicker
-                    selectedDate={startDate}
-                    label={'Start Date'}
-                    containerStyle={{
-                      flex: 1,
-                      marginRight: ResponsivePixels.size10,
-                    }}
-                    rightIcon={Images.ic_Calendar}
-
-                    onDateChanged={date => {
-                      this.setState(
-                        {
+                  <View
+                    style={{
+                      paddingLeft: ResponsivePixels.size10,
+                      paddingRight: ResponsivePixels.size10,
+                      flexDirection: 'row',
+                      marginTop: ResponsivePixels.size10,
+                    }}>
+                    <CustomDatePicker
+                      selectedDate={startDate}
+                      label={'Start Date'}
+                      containerStyle={{
+                        flex: 1,
+                        marginRight: ResponsivePixels.size10,
+                      }}
+                      rightIcon={Images.ic_Calendar}
+                      onDateChanged={date => {
+                        this.setState({
                           startDate: date,
-                        }
-                      );
-                    }}
-
-                  />
-<CustomDatePicker
-                    selectedDate={endDate ||new Date()}
-                    minimumDate={startDate|| new Date()}
-                    label={'End Date'}
-                    containerStyle={{flex: 1}}
-                    rightIcon={Images.ic_Calendar}
-                    onDateChanged={date => {
-                      this.setState(
-                        {
+                        });
+                      }}
+                    />
+                    <CustomDatePicker
+                      selectedDate={endDate || new Date()}
+                      minimumDate={startDate || new Date()}
+                      label={'End Date'}
+                      containerStyle={{flex: 1}}
+                      rightIcon={Images.ic_Calendar}
+                      onDateChanged={date => {
+                        this.setState({
                           endDate: date,
-                        }
-                      );
-                    }}
-                  /> 
-               
-                </View>
-              
+                        });
+                      }}
+                    />
+                  </View>
 
-  <View
-                  style={{
-                    paddingLeft: ResponsivePixels.size10,
-                    paddingRight: ResponsivePixels.size10,
-                    flexDirection: 'row',
-                    marginTop: ResponsivePixels.size10,
-                  }}>
-               
-                  <Button
-                  title="Clear"
-                  onPress={()=>{
-                    
-                    this.setState({
-                      startDate:new Date(),
-                      endDate:new Date(),
-                      showFilter:false,
-                      listData:[]
-                    },()=>{
-                      this.getAllList()
-                    })
-                  
-                   
-                  }}
-                  style={{
-                    width:"50%",
-                    marginRight:ResponsivePixels.size10
-                  }}
-                />
- <Button
-                  title="Apply"
-                  onPress={()=>{
-                    this.setState({
-                      showFilter:false,
-                      listData:[]
-
-                    },()=>{
-                      this.getAllList()
-                    })
-                   
-                  }}
-                  style={{
-                    width:"50%"
-                  }}
-                />
-                </View>
-              </Card>:null}
-            <MyFlatList
-              horizontal={false}
-              scrollEnabled={true}
-              data={
-                listData || [
-                  {
-                    ID: '1',
-                    attDate: '23 Oct 2021',
-                    thedate: '2021-10-23T00:00:00+05:30',
-                    TotalWorkingHrs: '02:46',
-                    MarkinTime: 'Oct 23 2021  2:44PM',
-                    MarkoutTime: 'Oct 23 2021  5:30PM',
-                    Status: 'Present',
-                  },
-                ]
-              }
-              showsHorizontalScrollIndicator={false}
-              renderItem={item => this.renderCell(item)}
-              style={{flex: 1, margin: ResponsivePixels.size5}}
-              loading={loading}
-              refreshing={refreshing}
-              onRefresh={() => {
-                this.getAllList();
-              }}
-              footerComponent={() => {
-                return loadMore ? (
-                  <ActivityIndicator
-                    size={'large'}
-                    color={Colors.blueGray900}
-                    style={{margin: 8}}
-                  />
-                ) : null;
-              }}
-            />
-          </View>
+                  <View
+                    style={{
+                      paddingLeft: ResponsivePixels.size10,
+                      paddingRight: ResponsivePixels.size10,
+                      flexDirection: 'row',
+                      marginTop: ResponsivePixels.size10,
+                    }}>
+                    <Button
+                      title="Clear"
+                      onPress={() => {
+                        this.setState(
+                          {
+                            startDate: new Date(),
+                            endDate: new Date(),
+                            showFilter: false,
+                            listData: [],
+                          },
+                          () => {
+                            this.getAllList();
+                          },
+                        );
+                      }}
+                      style={{
+                        width: '50%',
+                        marginRight: ResponsivePixels.size10,
+                      }}
+                    />
+                    <Button
+                      title="Apply"
+                      onPress={() => {
+                        this.setState(
+                          {
+                            showFilter: false,
+                            listData: [],
+                          },
+                          () => {
+                            this.getAllList();
+                          },
+                        );
+                      }}
+                      style={{
+                        width: '50%',
+                      }}
+                    />
+                  </View>
+                </Card>
+              ) : null}
+              <MyFlatList
+                horizontal={false}
+                scrollEnabled={true}
+                data={
+                  listData || [
+                    {
+                      ID: '1',
+                      attDate: '23 Oct 2021',
+                      thedate: '2021-10-23T00:00:00+05:30',
+                      TotalWorkingHrs: '02:46',
+                      MarkinTime: 'Oct 23 2021  2:44PM',
+                      MarkoutTime: 'Oct 23 2021  5:30PM',
+                      Status: 'Present',
+                    },
+                  ]
+                }
+                showsHorizontalScrollIndicator={false}
+                renderItem={item => this.renderCell(item)}
+                style={{flex: 1, margin: ResponsivePixels.size5}}
+                loading={loading}
+                refreshing={refreshing}
+                onRefresh={() => {
+                  this.getAllList();
+                }}
+                footerComponent={() => {
+                  return loadMore ? (
+                    <ActivityIndicator
+                      size={'large'}
+                      color={Colors.blueGray900}
+                      style={{margin: 8}}
+                    />
+                  ) : null;
+                }}
+              />
+            </View>
           </ScrollContainer>
         </View>
         <FAB

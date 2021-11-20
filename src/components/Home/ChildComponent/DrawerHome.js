@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {FlatList, Image, Text, View} from 'react-native';
 import {AlertDialog, Clickable} from '../../common';
@@ -21,9 +21,12 @@ import {store} from '../../../App';
 import {IS_LOGGED_IN} from '../../../data/PrefKeys';
 import {setSessionField} from '../../../reducers/SessionReducer';
 import AttendanceList from '../../MarkInOut/List/AttendanceList';
+import { SIDEMENU_INDIA, SIDEMENU_PH, SIDEMENU_SA, SIDEMENU_TH } from '../../../utils/AppConstants';
 const Drawer = createDrawerNavigator();
 
 export default function DrawerHome() {
+
+
   return (
     <Drawer.Navigator
       drawerContent={props => <SideMenu {...props} />}
@@ -44,6 +47,9 @@ export default function DrawerHome() {
   );
 }
 
+
+
+
 const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
@@ -58,6 +64,9 @@ const HomeStack = () => {
   );
 };
 const SideMenu = ({navigation}) => {
+
+  const countryId = store.getState().session.country_id
+
   const [routes, setRoutes] = useState([
     {
       title: 'Home',
@@ -95,6 +104,51 @@ const SideMenu = ({navigation}) => {
       route: 'Reports',
     },
   ]);
+useEffect(() => {
+  
+  if(countryId ==1){
+    setRoutes(SIDEMENU_INDIA)
+  }else if(countryId ==2){
+    setRoutes(SIDEMENU_PH)
+  }else if(countryId ==3){
+    setRoutes(SIDEMENU_SA)
+  }else if(countryId ==4){
+    setRoutes(SIDEMENU_TH)
+  }else{
+    setRoutes(SIDEMENU_INDIA)
+  }
+
+}, [])
+  
+const renderCell = ({index}) => {
+  const item = routes[index];
+
+  return (
+    <Clickable
+    onPress={() => navigation.navigate(item.route)}
+    style={{
+      flexDirection: 'row',
+      paddingVertical: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: Colors.editTextHintColor,
+      alignItems: 'center',
+    }}>
+    <Text
+      style={[
+        {
+          marginStart: ResponsivePixels.size20,
+          fontSize: ResponsivePixels.size20,
+          fontFamily: FontName.regular,
+          color: Colors.black,
+        },
+      ]}>
+      {item.title}
+    </Text>
+  </Clickable>
+  );
+};
+
+
   return (
     <View
       style={{
@@ -162,30 +216,7 @@ const SideMenu = ({navigation}) => {
       <FlatList
         style={{flex: 1, marginTop: ResponsivePixels.size20}}
         data={routes}
-        renderItem={({item}) => (
-          <Clickable
-            onPress={() => navigation.navigate(item.route)}
-            style={{
-              flexDirection: 'row',
-              paddingVertical: 16,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.editTextHintColor,
-              alignItems: 'center',
-            }}>
-            {/* <Image source={item.icon}  style={{width:ResponsivePixels.size20,height:ResponsivePixels.size20, resizeMode: 'contain' }}/> */}
-            <Text
-              style={[
-                {
-                  marginStart: ResponsivePixels.size20,
-                  fontSize: ResponsivePixels.size20,
-                  fontFamily: FontName.regular,
-                  color: Colors.black,
-                },
-              ]}>
-              {item.title}
-            </Text>
-          </Clickable>
-        )}
+        renderItem={item => renderCell(item)}
       />
       <Clickable
         onPress={() => {

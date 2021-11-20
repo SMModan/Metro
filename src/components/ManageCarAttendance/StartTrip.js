@@ -3,7 +3,7 @@ import { View, ImageBackground, Image, Alert } from 'react-native';
 
 import { connect } from 'react-redux';
 import { strings } from '../../language/Language';
-import { goBack, push } from '../../navigation/Navigator';
+import { goBack, push, replace, reset } from '../../navigation/Navigator';
 import { Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -38,11 +38,16 @@ class StartTrip extends Component {
     projectId: "",
     attendanceTypeId:0,
     vehicleType:1,
-    ac_nonac:0
+    ac_nonac:0,
+    latitude:0,
+    longitude:0
   };
   componentDidMount() {
 
-    this.GetWorkLocation()
+
+    
+
+     this.GetWorkLocation()
     // this.GetProjectByLocationId()
   }
 
@@ -163,37 +168,7 @@ class StartTrip extends Component {
 
 
   
-  InsertDailyAttendanceForLocation1 = () => {
-    const EmployeeID = store.getState().session.user.EmployeeID
-    const { LocationID, remarks } = this.state
-
-    const date = new Date()
-    const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
-   
-
-    askForLocationPermission(() => {
-      ProgressDialog.show()
-
-      Geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords
-        Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
-        let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
-        try {
-          address = await Geocoder.from(latitude, longitude)
-        } catch (error) {
-          console.log(error)
-        }
-
-        ProgressDialog.hide()
-        store.dispatch(setSessionField("current_location", position.coords))
-        store.dispatch(setSessionField("currentTrip", "123"))
-        subscribeForLocationAndRequestService()
-        //  goBack()
-
-      })
-    })
-  }
-
+ 
 
 
   GetMarkinForSelectedDate = () => {
@@ -236,16 +211,17 @@ class StartTrip extends Component {
 
   InsertDailyAttendanceForLocation = () => {
     const EmployeeID = store.getState().session.user.EmployeeID
-    const { circleId } = this.state
+    const {latitude,longitude } = this.state
     
     const date = new Date()
     const _date = Utils.formatDate(date, 'DD-MMM-yyyy HH:mm:ss');
+     const latLang = `${latitude},${longitude}`
 
     const params = {
-      Location:"22.9909636,72.5298871",
+      Location:latLang,
        Remarks:"=",
        Time:_date,
-        Address:"Ahmedabad",
+        Address:"Key Need to setto get address",
         EmployeeID
        }
 
@@ -255,18 +231,12 @@ class StartTrip extends Component {
 
     CarAttendanceApi.InsertDailyAttendanceForLocation(params, (res) => {
       ProgressDialog.hide()
-
       if (res) {
-      
-        const isSucceed = res.IsSucceed
-
+       const isSucceed = res.IsSucceed
         if(isSucceed){
           this.InsertDailyAttendanceForVehicle()
         }
-
-
       }
-
     }, () => {
       ProgressDialog.hide()
     })
@@ -293,8 +263,6 @@ class StartTrip extends Component {
     let res = {}
     if (attachment && attachment.fileName) {
 
-      const sessionStore = store.getState().session;
-const imageUrl = sessionStore.imageUrl
 
       res = await CarAttendanceApi.uploadCarDocument({
         EmployeeID,
@@ -315,28 +283,29 @@ const imageUrl = sessionStore.imageUrl
       ReleasedKM: 0,
       Remarks: remarks,
       WorkLocationID: circleId || 0,
-      ProjectID: projectId || 183,//testing
+      ProjectID: projectId || 0,//testing
       CarVenderName: carDetails,
       TotalKM: 0,
       VechicleType: vehicleType,
       ISAC: ac_nonac,
-      StartLatitude: latitude||"22.9909636",
-      StartLongitude: longitude||"72.5298871",
+      StartLatitude: latitude||"",
+      StartLongitude: longitude||"",
       EndLongitude: "",
       EndLatitude: "",
       MarkType: 1,
       AttendanceType: attendanceTypeId || 0
     }
     console.log("params", params)
-
-    // "22.9909636,72.5298871"
     CarAttendanceApi.InsertDailyAttendanceForVehicle(params, (res) => {
-
       if (res) {
-        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
-        ProgressDialog.hide()
-        Utils.showToast("Trip Started Successfully")
-        subscribeForLocationAndRequestService()
+       subscribeForLocationAndRequestService()
+
+        setTimeout(() => {
+          ProgressDialog.hide()
+          Utils.showToast("Trip Started Successfully")
+          replace("CarAttendanceList")
+        }, 2000);
+       
       }
 
     }, (error) => {
@@ -533,6 +502,19 @@ const imageUrl = sessionStore.imageUrl
               onPress={() => {
                 // goBack();
 
+                Geolocation.getCurrentPosition((position) => {
+                  const { latitude, longitude } = position.coords
+        store.dispatch(setSessionField("current_location", position.coords))
+                  
+                  this.setState({
+                    latitude,
+                    longitude
+                  },()=>{
+                    console.log("latitude =======>>>>>>>",latitude);
+                    console.log("longitude =======>>>>>>>",longitude);
+                  })
+                })
+            
                 const {
                   projectId,
                   carDetails,
@@ -566,9 +548,10 @@ const imageUrl = sessionStore.imageUrl
                 }else if(!attachment){
                   Utils.showToast("Please upload documents")
                 }else{
-                  this.GetMarkinForSelectedDate()
+                store.dispatch(setSessionField("distances", 0))
+
+                   this.GetMarkinForSelectedDate()
                 }
-                // this.InsertDailyAttendanceForVehicle()
 
               }}
             />

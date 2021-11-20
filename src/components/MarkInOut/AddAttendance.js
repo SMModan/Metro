@@ -28,9 +28,7 @@ import {Card, RadioButton, Text} from 'react-native-paper';
 import PhotoPicker from '../common/PhotoPicker';
 import AttendanceApi from './Api/AttendanceApi';
 import {store} from '../../App';
-
-import { askForLocationPermission, subscribeForLocationAndRequestService } from '../ManageCarAttendance/LocationAndRequestService';
-import Geocoder from 'react-native-geocoding';
+import Geolocation from 'react-native-geolocation-service';
 
 import moment from 'moment';
 import { utils } from '@react-native-firebase/app';
@@ -70,35 +68,6 @@ class AddAttendance extends Component {
 let _self = this
 
 
-askForLocationPermission(() => {
-  ProgressDialog.show()
-  console.log("latitude",position)
-  console.log("latitude",position)
-  Geolocation.getCurrentPosition(async (position) => {
-    alert("tesign")
-    const { latitude, longitude } = position.coords
-    Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
-    let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
-    try {
-      address = await Geocoder.from(latitude, longitude)
-    } catch (error) {
-      console.log("error =========================>>>>>>>>>>>>>>>>>>>>",error)
-    }
-
-    ProgressDialog.hide()
-
-    _self.setState({
-      longitude:latitude,
-      longitude:longitude,
-      address:address,
-      
-    })
-    store.dispatch(setSessionField("current_location", position.coords))
-    goBack()
-
-  })
-
-})
 
     this.setState({
       date:_date,
@@ -360,17 +329,19 @@ console.log(hh + ":" + mm + ":" + ss);
 
   
   AddForLocation = () => {
-    const { latitude,longitude,address, remarks ,EmployeeID,MarkInTime,isOldDateMarkout,MarkInDate} = this.state
+    const { latitude,
+      longitude,address, remarks ,EmployeeID,MarkInTime,isOldDateMarkout,MarkInDate} = this.state
 
    
     const date = new Date()
     const _date = `${date.getDate().toString().padStart(2, "0")}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
     let fullDate = `${_date} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    const latLang = `${latitude},${longitude}`
 
 
     const params = {
       EmployeeID: EmployeeID,
-      Location:"22.9909532 , 72.5298553",
+      Location:latLang,
       Remarks:"",
       Time:isOldDateMarkout?MarkInDate:fullDate,
       Address:"Ahmedabad"
@@ -859,6 +830,19 @@ console.log(hh + ":" + mm + ":" + ss);
 
               // disabled={true}
               onPress={() => {
+
+                Geolocation.getCurrentPosition((position) => {
+                  const { latitude, longitude } = position.coords
+                  
+                  this.setState({
+                    latitude,
+                    longitude
+                  },()=>{
+                    console.log("latitude =======>>>>>>>",latitude);
+                    console.log("longitude =======>>>>>>>",longitude);
+                  })
+                })
+
                 this.handleSubmit();
               }}
             /></>:null }

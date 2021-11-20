@@ -10,6 +10,9 @@ export const navigate = (name, params) => {
 export const push = (name, params) => {
     navigationRef.current?.dispatch(StackActions.push(name, params))
 }
+export const replace = (name, params) => {
+    navigationRef.current?.dispatch(StackActions.replace(name, params))
+}
 
 export const goBack = (name) => {
     navigationRef.current?.goBack(name);

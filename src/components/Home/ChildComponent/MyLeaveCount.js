@@ -66,6 +66,12 @@ GetLeaveBalanceByEmployeeID = () => {
     return (
       <MainContainer
         header={{
+          left: {
+            image: Images.ic_Menu,
+            onPress: () => {
+              this.props.navigation.openDrawer();
+            },
+          },
           title: 'My Leave Count',
           hideUnderLine: true,
           light: true,

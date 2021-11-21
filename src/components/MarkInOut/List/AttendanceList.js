@@ -1,10 +1,10 @@
 import moment from 'moment';
 import React, {Component} from 'react';
-import {ActivityIndicator, Image, Text, View} from 'react-native';
+import {ActivityIndicator, BackHandler, Image, Text, View} from 'react-native';
 import {Card, FAB} from 'react-native-paper';
 import {connect} from 'react-redux';
 import {store} from '../../../App';
-import {goBack, push} from '../../../navigation/Navigator';
+import {goBack, push, replace, reset} from '../../../navigation/Navigator';
 import {Colors, Images, Utils} from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
@@ -315,6 +315,21 @@ class AttendanceList extends Component {
     );
   };
 
+
+
+  
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    reset("Home")
+    return true;
+  }
   render() {
     const {
       dummyListData,
@@ -334,7 +349,7 @@ class AttendanceList extends Component {
           left: {
             image: Images.ic_BackWhite,
             onPress: () => {
-             goBack()
+             reset("Home")
             },
           },
           title: 'Markin - Markout',
@@ -487,7 +502,7 @@ class AttendanceList extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddAttendance');
+            replace('AddAttendance');
           }}
         />
       </MainContainer>

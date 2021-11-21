@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Modal, Image} from 'react-native';
+import {View, ImageBackground, Modal, Image, BackHandler} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack, push} from '../../navigation/Navigator';
+import {goBack, push, replace} from '../../navigation/Navigator';
 import {Images, Colors, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -324,7 +324,7 @@ const {ID} = this.state
               ProgressDialog.hide();
               if (res) {
                   Utils.showToast('Reimbursement request submitted successfully');
-            goBack()
+                  replace("ReimbursementList")
               }
             },
             (error) => {
@@ -345,6 +345,23 @@ const {ID} = this.state
       }
       return date;
     };
+
+
+    componentWillMount() {
+      BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    
+    componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    
+    handleBackButtonClick() {
+      replace("ReimbursementList")
+      return true;
+    }
+
+
+
   render() {
     const {
       EmployeeName,
@@ -376,7 +393,7 @@ const {ID} = this.state
             header={{
               left: {
                 image: Images.ic_BackWhite,
-                onPress: () => goBack(),
+                onPress: () => replace("ReimbursementList"),
               },
               title: 'Edit Reimbursement',
               hideUnderLine: true,

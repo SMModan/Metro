@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Modal, Image} from 'react-native';
+import {View, ImageBackground, Modal, Image, BackHandler} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack, push} from '../../navigation/Navigator';
+import {goBack, push, replace} from '../../navigation/Navigator';
 import {Images, Colors, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -374,7 +374,7 @@ componentDidMount() {
 
                   console.log('===========> getLeaveBalanceByDate ===========>', "res");
                   Utils.showToast('Reimbursement request submitted successfully');
-            goBack()
+                  replace("ReimbursementList")
               }
             },
             (error) => {
@@ -390,19 +390,20 @@ componentDidMount() {
 
     }
 
+    componentWillMount() {
+      BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    
+    componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+    
+    handleBackButtonClick() {
+      replace("ReimbursementList")
+      return true;
+    }
   render() {
     const {
-      employeeName,
-      ApplicationDate,
-      circleId,
-      projectId,
-      carDetails,
-      carNumber,
-      riggerName,
-      receivedKM,
-      attendanceTypeId,
-      selectedAttachment,
-
       isVisibleAddMoreInfo,
       otherInformation,
       empList,
@@ -423,7 +424,7 @@ componentDidMount() {
             header={{
               left: {
                 image: Images.ic_BackWhite,
-                onPress: () => goBack(),
+                onPress: () => replace("ReimbursementList"),
               },
               title: 'Apply For Reimbursement',
               hideUnderLine: true,

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Card} from 'react-native-paper';
 import {connect} from 'react-redux';
+import { store } from '../../../App';
 import { goBack } from '../../../navigation/Navigator';
 import {Colors, Images, Utils} from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
@@ -28,6 +29,8 @@ import {
 import CustomTimePicker from '../../common/CustomTimePicker';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import ReportsApi from '../Api/ReportsApi';
+import ReportTypeIN from './ReportTypeIN';
+import ReportTypeSA from './ReportTypeSA';
 
 const {width} = Dimensions.get('window');
 
@@ -47,91 +50,32 @@ class ReportList extends Component {
     attendanceList:[],
     showSearch: false,
     searchQuery: false,
-    active: 1,
-    xTabOne: 0,
-    xTabTwo: 0,
-    xTabThree: 0,
-    animatedWidth: '50%',
-    announcementType: 1,
-    translateX: new Animated.Value(80),
-    translateXTabOne: new Animated.Value(width),
-    translateXTabTwo: new Animated.Value(0),
-    translateXTabThree: new Animated.Value(width),
-    translateY: -1000,
+    active:1,
     refreshing: false,
     loading: false,
     listData: [],
-    showFilter:true
+    showFilter:true,
+    countryId:undefined
   };
 
-  handleSlide = type => {
-    let {
-      active,
-      xTabOne,
-      xTabTwo,
-      xTabThree,
-      translateX,
-      translateXTabOne,
-      translateXTabTwo,
-      translateXTabThree,
-    } = this.state;
-    Animated.spring(translateX, {
-      toValue: type,
-      duration: 20,
-    }).start();
-    if (active === 0) {
-      Animated.parallel([
-        Animated.spring(translateXTabOne, {
-          toValue: 0,
-          duration: 20,
-        }).start(),
-        Animated.spring(translateXTabTwo, {
-          toValue: width,
-          duration: 20,
-        }).start(),
-        Animated.spring(translateXTabThree, {
-          toValue: width,
-          duration: 20,
-        }).start(),
-      ]);
-    } else if (active === 1) {
-      Animated.parallel([
-        Animated.spring(translateXTabOne, {
-          toValue: width,
-          duration: 20,
-        }).start(),
-        Animated.spring(translateXTabTwo, {
-          toValue: 0,
-          duration: 20,
-        }).start(),
-        Animated.spring(translateXTabThree, {
-          toValue: width,
-          duration: 20,
-        }).start(),
-      ]);
-    } else {
-      Animated.parallel([
-        Animated.spring(translateXTabOne, {
-          toValue: width,
-          duration: 20,
-        }).start(),
-        Animated.spring(translateXTabTwo, {
-          toValue: width,
-          duration: 20,
-        }).start(),
-        Animated.spring(translateXTabThree, {
-          toValue: 0,
-          duration: 20,
-        }).start(),
-      ]);
-    }
-  };
 
   componentDidMount = () => {
     this.getEmplyeesUserHierarchy();
-  };
+  const countryId = store.getState().session.country_id
+    this.setState({
+      countryId
+    })
 
+  };
+handleActiveIndex = (index)=>{
+  this.setState({
+    active:index,
+    announcementType: index,
+    listData: [],
+  })
+}
  
+
   createdDateTime = strDate => {
     let date = '';
     if (strDate) {
@@ -249,7 +193,7 @@ Linking.canOpenURL(url).then(supported => {
 
 
   renderCarAttendanceCell = ({index}) => {
-    const {isCheckInPermission, userID} = this.state;
+    const {isCheckInPermission, userID,countryId} = this.state;
 
     const item = this.state.carAttendanceList[index];
 
@@ -757,9 +701,6 @@ Linking.canOpenURL(url).then(supported => {
 
   getLocationReport = () => {
     const {EmployeeID,startDate,startTime,endTime} = this.state
-
-
-
     // GetDailyEmployeeLocationForMAP{Token=58837e26-afeb-483b-8e81-546c749f1da3; EmployeeID=1; StartTime=04-Nov-2021 00:05; EndTime=04-Nov-2021 23:55; }
     const _Date = Utils.formatDate(startDate, 'DD-MMM-YYYY');
     const _sTime = Utils.formatDate(startTime, 'HH:mm');
@@ -862,8 +803,10 @@ Linking.canOpenURL(url).then(supported => {
       attendanceList,
       startTime,
       endTime,
-      locationList
+      locationList,
+      countryId
     } = this.state;
+    console.log("activeactiveactive",active)
     return (
       <MainContainer
         header={{
@@ -901,139 +844,10 @@ Linking.canOpenURL(url).then(supported => {
                   marginTop: ResponsivePixels.size15,
                   padding: ResponsivePixels.size5,
                 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    marginTop: ResponsivePixels.size15,
-                    height: ResponsivePixels.size40,
-                    position: 'relative',
-                  }}>
-                  <Animated.View
-                    style={{
-                      position: 'absolute',
-                      width: animatedWidth || '50%',
-                      height: '100%',
-                      top: 0,
-                      left: 0,
-                      backgroundColor: Colors.Red900,
-                      borderRadius: 50,
-                      transform: [
-                        {
-                          translateX,
-                        },
-                      ],
-                    }}
-                  />
 
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: Colors.Red900,
-                      borderRadius: 50,
-                      borderRightWidth: 0,
-                      borderTopRightRadius: 0,
-                      borderBottomRightRadius: 0,
-                    }}
-                    onLayout={event =>
-                      this.setState({
-                        xTabOne: event.nativeEvent.layout.x,
-                      })
-                    }
-                    onPress={() =>
-                      this.setState(
-                        {
-                          active: 0,
-                          animatedWidth: '25%',
-                          announcementType: 2,
-                          listData: [],
-                        },
-                        () => {
-                          //  this.getAllAnnouncementNews();
-                          this.handleSlide(xTabOne);
-                        },
-                      )
-                    }>
-                    <Text
-                      style={{
-                        color: active === 0 ? '#fff' : Colors.secondary500,
-                      }}>
-                      Attendance
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{
-                      flex: 2,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: Colors.Red900,
-                      borderRadius: 1,
-                      borderLeftWidth: 0,
-                      borderRightWidth: 0,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                    }}
-                    onLayout={event =>
-                      this.setState({
-                        xTabTwo: event.nativeEvent.layout.x,
-                      })
-                    }
-                    onPress={() =>
-                      this.setState(
-                        {
-                          active: 1,
-                          animatedWidth: '50%',
-                          announcementType: 1,
-                          listData: [],
-                        },
-                        () => {
-                          //   this.getAllAnnouncementNews();
-                          this.handleSlide(xTabTwo);
-                        },
-                      )
-                    }>
-                    <Text
-                      style={{
-                        color: active === 1 ? '#fff' : Colors.secondary500,
-                      }}>
-                      Car Attendance
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderWidth: 1,
-                      borderColor: Colors.Red900,
-                      borderRadius: 50,
-                      borderLeftWidth: 0,
-                      borderTopLeftRadius: 0,
-                      borderBottomLeftRadius: 0,
-                    }}
-                    onLayout={event =>
-                      this.setState({
-                        xTabThree: event.nativeEvent.layout.x,
-                      })
-                    }
-                    onPress={() =>
-                      this.setState({active: 2, animatedWidth: '25%'}, () =>
-                        this.handleSlide(xTabThree),
-                      )
-                    }>
-                    <Text
-                      style={{
-                        color: active === 2 ? '#fff' : Colors.secondary500,
-                      }}>
-                      Location
-                    </Text>
-                  </TouchableOpacity>
-                </View>
+                {countryId==1?<ReportTypeIN handleActiveIndex={(index)=>{this.handleActiveIndex(index)}}/>:<ReportTypeSA handleActiveIndex={(index)=>{this.handleActiveIndex(index)}}/>}
+                    
+            
 
                 <View
                   style={{
@@ -1086,6 +900,7 @@ Linking.canOpenURL(url).then(supported => {
                     flexDirection: 'row',
                     marginTop: ResponsivePixels.size10,
                   }}>
+
                   <CustomTimePicker
                      selectedDate={startTime}
                     label={'Start Time'}

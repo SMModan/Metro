@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Image, Alert} from 'react-native';
+import {View, ImageBackground, Image, Alert, BackHandler} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
@@ -256,6 +256,23 @@ class EndTrip extends Component {
     );
   };
 
+  
+
+
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    reset("CarAttendanceList")
+    return true;
+  }
+
+
   render() {
     const {
       employeeName,
@@ -270,7 +287,7 @@ class EndTrip extends Component {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => goBack(),
+            onPress: () => replace('CarAttendanceList'),
           },
           title: 'End Trip',
           hideUnderLine: true,

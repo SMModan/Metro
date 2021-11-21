@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
+import {View, ImageBackground, Image, BackHandler} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack, push, reset} from '../../navigation/Navigator';
+import {goBack, push, replace, reset} from '../../navigation/Navigator';
 import {Images, Colors, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import CustomTimePicker from '../common/CustomTimePicker';
@@ -413,7 +413,7 @@ console.log(hh + ":" + mm + ":" + ss);
               positiveButton: {
                   onPress: () => {
                       AlertDialog.hide()
-                  goBack()
+                      replace('MarkInOutList');
                   },
                   title: "Ok"
               }
@@ -468,7 +468,8 @@ console.log(hh + ":" + mm + ":" + ss);
               positiveButton: {
                   onPress: () => {
                       AlertDialog.hide()
-                  goBack()
+                  // goBack()
+                  replace('MarkInOutList');
                   },
                   title: "Ok"
               }
@@ -525,6 +526,21 @@ console.log(hh + ":" + mm + ":" + ss);
     return blob;
   };
 
+
+  
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    reset("MarkInOutList")
+    return true;
+  }
+
   render() {
     const {
       employeeName,
@@ -552,7 +568,7 @@ console.log(hh + ":" + mm + ":" + ss);
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => goBack(),
+            onPress: () => replace('MarkInOutList'),
           },
           title: 'MarkIn-MarkOut',
           hideUnderLine: true,

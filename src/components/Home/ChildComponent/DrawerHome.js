@@ -1,31 +1,29 @@
-import React, {useState,useEffect} from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {FlatList, Image, Text, View} from 'react-native';
-import {AlertDialog, Clickable} from '../../common';
-import {Colors, FontName, Images} from '../../../utils';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Image, Text, View } from 'react-native';
+import { store } from '../../../App';
+import { push } from '../../../navigation/Navigator';
+import { Colors, FontName, Images } from '../../../utils';
+import { SIDEMENU_INDIA, SIDEMENU_PH, SIDEMENU_SA, SIDEMENU_TH } from '../../../utils/AppConstants';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
-import HomeTabs from './MyBottomTab';
+import { Clickable } from '../../common';
+import EndTrip from '../../ManageCarAttendance/EndTrip';
 import CarAttendance from '../../ManageCarAttendance/List/CarAttendance';
-import LeaveList from '../../ManageLeave/List/LeaveList';
+import StartTrip from '../../ManageCarAttendance/StartTrip';
+import AddCashAdvance from '../../ManageCashAdvance/AddCashAdvance';
 import CashAdvance from '../../ManageCashAdvance/List/CashAdvance';
+import AddLeaveRequest from '../../ManageLeave/AddLeaveRequest';
+import LeaveList from '../../ManageLeave/List/LeaveList';
+import AddReimbursement from '../../ManageReimbursement/AddReimbursement';
 import Reimbursement from '../../ManageReimbursement/List/Reimbursement';
 import ReportList from '../../ManageReports/List/ReportList';
-import {NavigationContainer} from '@react-navigation/native';
-import {push, reset} from '../../../navigation/Navigator';
-import StartTrip from '../../ManageCarAttendance/StartTrip';
-import AddLeaveRequest from '../../ManageLeave/AddLeaveRequest';
-import AddCashAdvance from '../../ManageCashAdvance/AddCashAdvance';
-import AddReimbursement from '../../ManageReimbursement/AddReimbursement';
-import {store} from '../../../App';
-import {IS_LOGGED_IN} from '../../../data/PrefKeys';
-import {setSessionField} from '../../../reducers/SessionReducer';
 import AttendanceList from '../../MarkInOut/List/AttendanceList';
-import { SIDEMENU_INDIA, SIDEMENU_PH, SIDEMENU_SA, SIDEMENU_TH } from '../../../utils/AppConstants';
+import HomeTabs from './MyBottomTab';
+
+
 const Drawer = createDrawerNavigator();
-
-export default function DrawerHome() {
-
+export default function DrawerHome(props) {
 
   return (
     <Drawer.Navigator
@@ -37,10 +35,11 @@ export default function DrawerHome() {
       <Drawer.Screen component={LeaveList} name="LeaveList" />
       <Drawer.Screen component={CashAdvance} name="CashAdvanceList" />
       <Drawer.Screen component={Reimbursement} name="ReimbursementList" />
-      <Stack.Screen component={StartTrip} name="StartTrip" />
-      <Stack.Screen component={AddLeaveRequest} name="AddLeave" />
-      <Stack.Screen component={AddCashAdvance} name="AddCashAdvance" />
-      <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
+      <Drawer.Screen component={EndTrip} name="EndTrip" />
+      <Drawer.Screen component={StartTrip} name="StartTrip" />
+      <Drawer.Screen component={AddLeaveRequest} name="AddLeave" />
+      <Drawer.Screen component={AddCashAdvance} name="AddCashAdvance" />
+      <Drawer.Screen component={AddReimbursement} name="AddReimbursement" />
       <Drawer.Screen component={ReportList} name="Reports" />
       <Drawer.Screen component={AttendanceList} name="MarkInOutList" />
     </Drawer.Navigator>
@@ -66,7 +65,7 @@ const HomeStack = () => {
 const SideMenu = ({navigation}) => {
 
   const countryId = store.getState().session.country_id
-
+  const EmployeeName = store.getState().session?.user?.EmployeeName 
   const [routes, setRoutes] = useState([
     {
       title: 'Home',
@@ -197,7 +196,7 @@ const renderCell = ({index}) => {
                 color: Colors.yellow,
               },
             ]}>
-            {'Admin Admin - EMP001'}
+            {EmployeeName ||""}
           </Text>
           <Text
             style={[
@@ -218,7 +217,7 @@ const renderCell = ({index}) => {
         data={routes}
         renderItem={item => renderCell(item)}
       />
-      <Clickable
+      {/* <Clickable
         onPress={() => {
           AlertDialog.show({
             title: 'Logout',
@@ -227,12 +226,16 @@ const renderCell = ({index}) => {
               title: 'Yes',
               onPress: () => {
                 AlertDialog.hide();
-                push('SignIn');
+                // push('SignIn');
                 //    loginApi.logout()
                 store.dispatch(setSessionField('is_logged_in', false));
                 store.dispatch(setSessionField('user', {}));
-                store.dispatch(setSessionField('country_id', undefined));
-                store.dispatch(setSessionField('country_name', undefined));
+                store.dispatch(setSessionField('country_id', ""));
+                store.dispatch(setSessionField('country_name', ""));
+                store.dispatch(setSessionField('baseUrl', ""));
+                store.dispatch(setSessionField('assetsUrl',""));
+                store.dispatch(setSessionField('imageUrl', ""));
+               // NativeModules.DevSettings.reload();
                 reset('SelectCountry');
               },
             },
@@ -258,7 +261,7 @@ const renderCell = ({index}) => {
           }}
         />
         <Text style={[{marginStart: 16}]}>{'Logout'}</Text>
-      </Clickable>
+      </Clickable> */}
     </View>
   );
 };

@@ -14,6 +14,7 @@ import {ProgressDialog} from '../../common';
 import {Badge} from 'react-native-paper';
 import LeaveApprovalList from '../../ManageLeave/List/LeaveApprovalList';
 import ShowMeRoute from '../../ShowMeRoute/ShowMeRoute';
+import { store } from '../../../App';
 // import ReportsMain from '../../Reports/ChildComponent/ReportsMain';
 // import MonieMattersMain from '../../MonieMatters/ChildComponent/MonieMattersMain';
 // import PaymentMain from '../../Payments/ChildComponent/PaymentMain';
@@ -23,7 +24,13 @@ const Tab = createBottomTabNavigator();
 
 export default function HomeTabs() {
   const [PendingCount, setPendingCount] = useState(0);
+  const [Country, setCountry] = useState(1);
   useEffect(() => {
+
+  const countryId = store.getState().session.country_id
+    setCountry(countryId)
+
+console.log("countryId in my bottam bar",countryId)
     GetPendingleaveApprovalCount();
   }, []);
 
@@ -89,7 +96,8 @@ export default function HomeTabs() {
         component={Home}
       />
 
-      <Tab.Screen
+{Country !=3 && Country !=4  &&  <>
+  <Tab.Screen
         options={{
           title: 'Leaves Balance',
 
@@ -133,6 +141,8 @@ export default function HomeTabs() {
         name="LeaveApprovalList"
         component={LeaveApprovalList}
       />
+</>}
+    
 
       <Tab.Screen
         options={{

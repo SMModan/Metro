@@ -2,12 +2,12 @@ import _ from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
 import {
-  ActivityIndicator, Image, Text, View
+  ActivityIndicator, BackHandler, Image, Text, View
 } from 'react-native';
 import { Card, FAB } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { store } from '../../../App';
-import { goBack, push } from '../../../navigation/Navigator';
+import { goBack, push, replace, reset } from '../../../navigation/Navigator';
 import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import { Clickable, MainContainer, MyFlatList, ProgressDialog } from '../../common';
@@ -107,7 +107,7 @@ class CashAdvance extends Component {
         <Card style={{margin: ResponsivePixels.size10}} key={index}>
           <Clickable
             onPress={() => {
-              this.props.navigation.push('EditCashAdvance', { cashAdvanceId: item.ID });
+              replace('EditCashAdvance', { cashAdvanceId: item.ID });
 
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
@@ -324,6 +324,22 @@ class CashAdvance extends Component {
     );
   };
 
+
+  
+  
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    replace("Home")
+    return true;
+  }
+
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
@@ -336,7 +352,7 @@ class CashAdvance extends Component {
           left: {
             image: Images.ic_BackWhite,
             onPress: () => {
-              goBack()
+              replace("Home")
             },
           },
           title: 'Cash Advance',
@@ -378,7 +394,7 @@ class CashAdvance extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            push('AddCashAdvance');
+            replace('AddCashAdvance');
           }}
         />
       </MainContainer>

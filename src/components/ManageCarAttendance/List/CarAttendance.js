@@ -8,6 +8,7 @@ import {
   Alert,
   Animated,
   Dimensions,
+  BackHandler,
 } from 'react-native';
 import {
   Clickable,
@@ -26,7 +27,7 @@ import {Images, Colors, FontName, Utils} from '../../../utils';
 import {Chip, Card, Title, FAB} from 'react-native-paper';
 import AppointmentApi from '../Api/CarAttendanceApi';
 import _ from 'lodash';
-import {goBack, push} from '../../../navigation/Navigator';
+import {goBack, push, replace, reset} from '../../../navigation/Navigator';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import CheckIn from '../../CheckInOut/CheckIn';
 import {Image} from 'react-native';
@@ -145,6 +146,22 @@ class CarAttendance extends Component {
       },
     );
   };
+
+  
+componentWillMount() {
+  BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+}
+
+componentWillUnmount() {
+  BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+}
+
+handleBackButtonClick() {
+  reset("Home")
+  return true;
+}
+
+
 
   splitDate = strDate => {
     let date = '';
@@ -355,7 +372,7 @@ class CarAttendance extends Component {
                     }}
                     title="End Trip"
                     onPress={() => {
-                      push('EndTrip', {item});
+                      replace('EndTrip', {item});
                     }}
                   />
                 ) : null}
@@ -401,7 +418,7 @@ class CarAttendance extends Component {
             image: Images.ic_BackWhite,
             onPress: () => {
               console.log('this.props.navigation', this.props.navigation);
-         goBack()
+              reset("Home")
             },
           },
           title: 'Car Attendance',
@@ -533,9 +550,21 @@ class CarAttendance extends Component {
                 showsHorizontalScrollIndicator={false}
                 renderItem={item => this.renderCell(item)}
                 style={{flex: 1, margin: ResponsivePixels.size5}}
-                refreshing={refreshing}
+                loading={loading}
+              refreshing={refreshing}
                 onRefresh={() => {
-                  this.getAllList();
+
+                  this.setState(
+                    {
+                      refreshing: false,
+                      loading:false,
+                      listData:[]
+                    },
+                    () => {
+                      this.getAllList();
+                    },
+                    );
+
                 }}
               />
             </View>
@@ -548,7 +577,7 @@ class CarAttendance extends Component {
             icon="plus"
             color={Colors.white}
             onPress={() => {
-              push('StartTrip');
+              replace('StartTrip');
             }}
           />
         ) : null}

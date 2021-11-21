@@ -1,14 +1,14 @@
 import _ from 'lodash';
-import React, { Component } from 'react';
-import { Image, Platform, Text, View } from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {BackHandler, Image, Platform, Text, View} from 'react-native';
+import {connect} from 'react-redux';
 import session from 'redux-persist/lib/storage/session';
-import { store } from '../../../App';
-import { strings } from '../../../language/Language';
-import { push, reset } from '../../../navigation/Navigator';
-import { setSessionField } from '../../../reducers/SessionReducer';
-import { Colors, Images } from '../../../utils';
-import { syncAllData } from '../../../utils/SyncDataManager';
+import {store} from '../../../App';
+import {strings} from '../../../language/Language';
+import {push, reset} from '../../../navigation/Navigator';
+import {setSessionField} from '../../../reducers/SessionReducer';
+import {Colors, Images} from '../../../utils';
+import {syncAllData} from '../../../utils/SyncDataManager';
 import Utils from '../../../utils/Utils';
 import {
   Button,
@@ -16,7 +16,7 @@ import {
   FloatingEditText,
   MainContainer,
   ProgressDialog,
-  ScrollContainer
+  ScrollContainer,
 } from '../../common';
 import loginApi from '../apis/LoginApis';
 import styles from '../styles/SignIn.style';
@@ -36,8 +36,6 @@ class SignIn extends Component {
     // createDefaultTables();
   }
 
- 
-
   login = () => {
     const params = {
       Username: this.state.userName,
@@ -47,14 +45,12 @@ class SignIn extends Component {
     loginApi.login(
       params,
       res => {
-
         if (res) {
           store.dispatch(setSessionField('user', res));
           store.dispatch(setSessionField('is_logged_in', true));
           reset('Home');
           ProgressDialog.hide();
-        } else
-          ProgressDialog.hide();
+        } else ProgressDialog.hide();
       },
       error => {
         ProgressDialog.hide();
@@ -64,30 +60,42 @@ class SignIn extends Component {
   };
 
   
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    reset("SelectCountry")
+    return true;
+  }
+
   render() {
     return (
       <MainContainer
-        header={{ hideUnderLine: true,
+        header={{
+          hideUnderLine: true,
           isHome: true,
-           backgroundColor: Colors.white }}
-        >
+          backgroundColor: Colors.white,
+        }}>
         <ScrollContainer>
           {/* <ProgressDialog visible={true} /> */}
 
           <View style={styles.ContainerView}>
-            <Image source={Images.ic_Logo} style={styles.logo}/>
+            <Image source={Images.ic_Logo} style={styles.logo} />
 
             <View style={styles.ContainView}>
+              <Text style={styles.loginTitle}>{strings.LoginTitle}</Text>
 
-            <Text style={styles.loginTitle}>{strings.LoginTitle}</Text>
-            
-           
               <FloatingEditText
                 leftIcon={Images.ic_Person}
                 inputType="email-address"
                 style={styles.textEmail}
                 // value={this.state.userName}
-                onChangeText={text => this.setState({ userName: text })}
+                onChangeText={text => this.setState({userName: text})}
                 label={strings.txtUserName}
               />
               <FloatingEditText
@@ -95,28 +103,22 @@ class SignIn extends Component {
                 leftIcon={Images.ic_Password}
                 style={styles.textPassword}
                 value={this.state.password}
-                onChangeText={text => this.setState({ password: text })}
+                onChangeText={text => this.setState({password: text})}
                 label={strings.txtPassword}
               />
-            
+
               <View style={styles.bottomShadowView}>
                 <Button
-                   disabled={!this.state.userName || !this.state.password}
-                  onPress={()=>{
-     this.login()
+                  disabled={!this.state.userName || !this.state.password}
+                  onPress={() => {
+                    this.login();
                   }}
                   title={strings.btnLogin}
                 />
               </View>
-              
             </View>
           </View>
-
-
-
-
-
-   </ScrollContainer>
+        </ScrollContainer>
       </MainContainer>
     );
   }

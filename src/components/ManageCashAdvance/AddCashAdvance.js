@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
+import {View, ImageBackground, Image, BackHandler} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack, push} from '../../navigation/Navigator';
+import {goBack, push, replace, reset} from '../../navigation/Navigator';
 import {Images, Colors,Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -351,7 +351,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request submitted successfully');
-             goBack()
+            replace("CashAdvanceList")
           }
         },
         (error) => {
@@ -363,30 +363,25 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
     }
   };
 
-
-
-
-
-
+  
+  
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    replace("CashAdvanceList")
+    return true;
+  }
 
 
   render() {
     const {
-      employeeName,
-      contactNo,
       supervisor,
-      applicationDate,
-      leaveTypeList,
-      leaveTypeId,
-      fromDate,
-      toDate,
-      fromDateIsCheck,
-      toDateIsCheck,
-      isAllDayCheck,
-      balance,
-      remarks,
-      selectedAttachment,
-      totalDays,
       empList,
       EmployeeID,
       cashAdvanceDate,
@@ -406,7 +401,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => goBack(),
+            onPress: () => replace("CashAdvanceList"),
           },
           title: 'Add Cash Advance',
           hideUnderLine: true,

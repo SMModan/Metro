@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
+import {View, ImageBackground, Image, BackHandler} from 'react-native';
 
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
-import {goBack, push, reset} from '../../navigation/Navigator';
+import {goBack, push, replace, reset} from '../../navigation/Navigator';
 import {Images, Colors,Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
@@ -261,7 +261,7 @@ class EditCashAdvance extends Component {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request updated successfully');
-            goBack()
+            reset("CashAdvanceList")
           }
         },
         (error) => {
@@ -271,6 +271,20 @@ class EditCashAdvance extends Component {
       );
     }
   };
+  
+  
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    replace("CashAdvanceList")
+    return true;
+  }
 
 
   render() {
@@ -298,7 +312,7 @@ class EditCashAdvance extends Component {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => goBack(),
+            onPress: () => replace("CashAdvanceList"),
           },
           title: 'Edit Cash Advance',
           hideUnderLine: true,

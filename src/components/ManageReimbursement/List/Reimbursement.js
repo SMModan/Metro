@@ -5,6 +5,7 @@ import {
   FlatList,
   ScrollView,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import {Clickable, MainContainer, MyFlatList, ProgressDialog} from '../../common';
 import {connect} from 'react-redux';
@@ -14,7 +15,7 @@ import {Images, Colors, FontName} from '../../../utils';
 import {Chip, Card, Title, Button, FAB} from 'react-native-paper';
 import AppointmentApi from '../Api/ReimbursementApi';
 import _ from 'lodash';
-import {goBack, push} from '../../../navigation/Navigator';
+import {goBack, push, replace} from '../../../navigation/Navigator';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import CheckIn from '../../CheckInOut/CheckIn';
 import {Image} from 'react-native';
@@ -117,7 +118,7 @@ class Reimbursement extends Component {
         <Card style={{margin: ResponsivePixels.size10}} key={index}>
           <Clickable
             onPress={() => {
-               this.props.navigation.push('EditReimbursement', {item});
+               replace('EditReimbursement', {item});
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
               <View style={{flexDirection: 'column'}}>
@@ -282,6 +283,21 @@ class Reimbursement extends Component {
     );
   };
 
+
+  
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+  }
+  
+  handleBackButtonClick() {
+    replace("Home")
+    return true;
+  }
+
   searchOppDelayed = _.debounce(this.searchOpp, 1000);
 
   render() {
@@ -294,7 +310,7 @@ class Reimbursement extends Component {
           left: {
             image: Images.ic_BackWhite,
             onPress: () => {
-              goBack()
+              replace("Home")
             },
           },
           title: 'Reimbursement',

@@ -525,10 +525,6 @@ componentDidMount() {
                           headName,
                           projectName
                         } = item
-
-
-                      
-                        
             
                         return (
                           <Card
@@ -740,32 +736,7 @@ componentDidMount() {
                   />
                 </View>
                 </Clickable>
-
-                                {/* <ImageButton
-                                  source={Images.ic_close}
-                                  imageStyle={{
-                                    width: ResponsivePixels.size15,
-                                    height: ResponsivePixels.size15,
-                                    flex: 1,
-                                    justifyContent: 'flex-end',
-                                    alignItems: 'center',
-                                  }}
-                                  onPress={() => {
-                                    let otherInformation =
-                                      this.state.otherInformation;
-                                    var index = otherInformation.findIndex(
-                                      function (o) {
-                                        return o._ID === item._ID;
-                                      },
-                                    );
-                                    if (index !== -1)
-                                      otherInformation.splice(index, 1);
-
-                                    this.setState({
-                                      otherInformation: otherInformation,
-                                    });
-                                  }}
-                                /> */}
+                         
                               </View>
                             </View>
                           </Card>

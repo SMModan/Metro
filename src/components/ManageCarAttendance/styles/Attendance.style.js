@@ -293,7 +293,7 @@ export default styles = StyleSheet.create({
         },
         uploadText: {
             color: Colors.blueGray900,
-            fontSize: ResponsivePixels.size15,
+            fontSize: ResponsivePixels.size14,
             lineHeight: ResponsivePixels.size22,
             fontWeight: "600"
         }

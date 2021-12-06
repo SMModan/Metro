@@ -28,6 +28,7 @@ import backgroundServer from 'react-native-background-actions';
 import {setSessionField} from '../../reducers/SessionReducer';
 import Geolocation from 'react-native-geolocation-service';
 import { unSubscribeForLocation } from './LocationAndRequestService';
+import { Label } from 'native-base';
 
 class EndTrip extends Component {
   state = {
@@ -83,6 +84,7 @@ class EndTrip extends Component {
             'res >>>>>>>>>>>>>>>>>>>>>>>=======================>',
             res,
           );
+          this.InsertDailyAttendanceForLocation();
         }
       },
       res => {
@@ -321,12 +323,15 @@ class EndTrip extends Component {
                 label="Car Number"
                 editable={false}
               />
+              <Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400}}>eg: GJ01-KH 1234</Label>
+
               <FloatingEditText
                 value={carReleaseKM}
                 onChangeText={text => this.onTextChanged('carReleaseKM', text)}
                 inputType="numeric"
                 label={'Car Release KM'}
               />
+<Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400}}>Enter actual km shown on speedometer</Label>
 
               <FloatingEditText
                 value={remarks}
@@ -371,11 +376,13 @@ class EndTrip extends Component {
                           alignItems: 'center',
                         }}>
                         <Image source={Images.ic_upload} />
-                        <Text style={styles.uploadText}>Upload here</Text>
+                        <Text style={styles.uploadText}>Capture Photo</Text>
                       </View>
                     ) : null}
                   </ImageBackground>
                 </Clickable>
+<Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400,alignSelf:"center"}}>Take picture of Speedometer with actual KM shown</Label>
+
               </View>
             </ViewWithTitle>
 

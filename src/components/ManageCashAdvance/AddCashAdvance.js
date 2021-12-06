@@ -4,7 +4,7 @@ import {View, ImageBackground, Image, BackHandler} from 'react-native';
 import {connect} from 'react-redux';
 import {strings} from '../../language/Language';
 import {goBack, push, replace, reset} from '../../navigation/Navigator';
-import {Images, Colors,Utils} from '../../utils';
+import {Images, Colors, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Button,
@@ -28,20 +28,20 @@ class AddCashAdvance extends Component {
   state = {
     loading: false,
     user: this.props.session.user,
-    empList:[],
-    EmployeeID:0,
-    cashAdvanceDate : undefined,
-    supervisor: "",
-    supervisorId:0,
-    projectList:[],
-    headList:[],
-    headId:"",
-    remainingCredit:"0",
-    adhocAmount:"0",
-    projectId:"",
-    amount:"",
-    reason:"",
-    useAdHocAmount:false
+    empList: [],
+    EmployeeID: 0,
+    cashAdvanceDate: undefined,
+    supervisor: '',
+    supervisorId: 0,
+    projectList: [],
+    headList: [],
+    headId: '',
+    remainingCredit: '0',
+    adhocAmount: '0',
+    projectId: '',
+    amount: '',
+    reason: '',
+    useAdHocAmount: false,
   };
 
   componentDidMount() {
@@ -55,7 +55,7 @@ class AddCashAdvance extends Component {
       },
     );
   }
-  
+
   getBasicUserProfile = () => {
     const params = {};
 
@@ -76,8 +76,8 @@ class AddCashAdvance extends Component {
               },
               () => {
                 this.getSupervisor();
-                this.getProjectsByEmployeeIDForDailyAttendance()
-                this.getCirclewiseCreditLimitAndRemainingAmountForCashAdvance()
+                this.getProjectsByEmployeeIDForDailyAttendance();
+                this.getCirclewiseCreditLimitAndRemainingAmountForCashAdvance();
               },
             );
           }
@@ -91,35 +91,34 @@ class AddCashAdvance extends Component {
     );
   };
 
-
-
   getCirclewiseCreditLimitAndRemainingAmountForCashAdvance = () => {
-    const {EmployeeID,cashAdvanceDate} = this.state
+    const {EmployeeID, cashAdvanceDate} = this.state;
     const _date = Utils.formatDate(cashAdvanceDate, 'MM/DD/YYYY');
-  
-      const params = {
-        employeeID:EmployeeID,
-        cashAdvanceDate:_date
-      };
-  
+
+    const params = {
+      employeeID: EmployeeID,
+      cashAdvanceDate: _date,
+    };
+
     ProgressDialog.show();
     CashAdvanceApi.getCirclewiseCreditLimitAndRemainingAmountForCashAdvance(
       params,
       res => {
         ProgressDialog.hide();
         if (res) {
+          const table = res.Table;
+          console.log('tabletabletabletabletable', table);
 
-         const table = res.Table
-         console.log("tabletabletabletabletable",table)
-
-         if(table){
-
-          
-           this.setState({
-            remainingCredit:table.RemainingCredit?table.RemainingCredit.toString():"0",
-            adhocAmount:table.AdhocAmount?table.AdhocAmount.toString():"0"
-          })
-         }
+          if (table) {
+            this.setState({
+              remainingCredit: table.RemainingCredit
+                ? table.RemainingCredit.toString()
+                : '0',
+              adhocAmount: table.AdhocAmount
+                ? table.AdhocAmount.toString()
+                : '0',
+            });
+          }
         }
       },
       () => {
@@ -128,14 +127,12 @@ class AddCashAdvance extends Component {
     );
   };
 
-
-getProjectsByEmployeeIDForDailyAttendance = () => {
-  const {EmployeeID,cashAdvanceDate} = this.state
-
+  getProjectsByEmployeeIDForDailyAttendance = () => {
+    const {EmployeeID, cashAdvanceDate} = this.state;
 
     const params = {
-      empID:EmployeeID,
-      AttDate:""
+      empID: EmployeeID,
+      AttDate: '',
     };
 
     ProgressDialog.show();
@@ -163,9 +160,8 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
               };
               list.push(objData);
             }
-          
-            this.setState({projectList: list
-            });
+
+            this.setState({projectList: list});
           }
         }
       },
@@ -203,9 +199,8 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
               };
               list.push(objData);
             }
-          
-            this.setState({headList: list
-            });
+
+            this.setState({headList: list});
           }
         }
       },
@@ -214,7 +209,6 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
       },
     );
   };
-
 
   getEmplyeesUserHierarchy = () => {
     const params = {};
@@ -254,7 +248,6 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
     );
   };
 
-
   getSupervisor = () => {
     const EmpId = this.state.EmployeeID;
 
@@ -284,15 +277,11 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
     );
   };
 
-
-
   onTextChanged = (key, value) => {
     this.setState({
       [key]: value,
     });
   };
-
-
 
   handleSubmit = () => {
     const {
@@ -305,45 +294,42 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
       reason,
       remainingCredit,
       useAdHocAmount,
-      adhocAmount
-      } = this.state;
+      adhocAmount,
+    } = this.state;
 
-     const _cashAdvanceDate = Utils.formatDate(cashAdvanceDate, 'DD-MM-yyyy');
+    const _cashAdvanceDate = Utils.formatDate(cashAdvanceDate, 'DD-MM-yyyy');
     // const _toDate = Utils.formatDate(toDate, 'yyyy-MM-DD');
 
-
-    const intRemainingCredit= parseInt(remainingCredit)
-    const intAdhocAmountCredit= parseInt(adhocAmount)
-    const intamount= parseInt(amount)
-
+    const intRemainingCredit = parseInt(remainingCredit);
+    const intAdhocAmountCredit = parseInt(adhocAmount);
+    const intamount = parseInt(amount);
 
     if (!projectId) {
       Utils.showToast('Please select project.');
-    }else if (!headId) {
+    } else if (!headId) {
       Utils.showToast('Please select Expense Head.');
     } else if (!amount) {
       Utils.showToast('please enter amount.');
-    } else if (intRemainingCredit<intamount) {
+    } else if (intRemainingCredit < intamount) {
       Utils.showToast('amount should be less then credit availble.');
-    }else if (intAdhocAmountCredit<intamount) {
+    } else if (intAdhocAmountCredit < intamount) {
       Utils.showToast('amount should be less then Ad Hoc Amount availble.');
     } else if (!reason) {
       Utils.showToast('please enter reason.');
     } else {
       let params = {
-            cashAdvanceDate:_cashAdvanceDate,
-            employeeID:EmployeeID,
-            projectID:projectId,
-            expenseHeadID:headId,
-            amount:amount,
-            adhocAmount:adhocAmount,
-            isAdhocApply:useAdHocAmount,
-            remarks:reason,
-            remainingAmount:remainingCredit
-
+        cashAdvanceDate: _cashAdvanceDate,
+        employeeID: EmployeeID,
+        projectID: projectId,
+        expenseHeadID: headId,
+        amount: amount,
+        adhocAmount: adhocAmount,
+        isAdhocApply: useAdHocAmount,
+        remarks: reason,
+        remainingAmount: remainingCredit,
       };
 
-      console.log("paramsparamsparamsparams",params)
+      console.log('paramsparamsparamsparams', params);
       ProgressDialog.show();
       CashAdvanceApi.insertCashAdvance(
         params,
@@ -351,11 +337,11 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
           ProgressDialog.hide();
           if (res) {
             Utils.showToast('Cash advance request submitted successfully');
-            replace("CashAdvanceList")
+            replace('CashAdvanceList');
           }
         },
-        (error) => {
-           alert(error)
+        error => {
+          alert(error);
           // Utils.showToast('Cash advance request submitted successfully');
           ProgressDialog.hide();
         },
@@ -363,21 +349,24 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
     }
   };
 
-  
-  
   componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-  
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-  }
-  
-  handleBackButtonClick() {
-    replace("CashAdvanceList")
-    return true;
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   }
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
+
+  handleBackButtonClick() {
+    replace('CashAdvanceList');
+    return true;
+  }
 
   render() {
     const {
@@ -393,7 +382,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
       amount,
       reason,
       adhocAmount,
-      useAdHocAmount
+      useAdHocAmount,
     } = this.state;
 
     return (
@@ -401,7 +390,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
         header={{
           left: {
             image: Images.ic_BackWhite,
-            onPress: () => replace("CashAdvanceList"),
+            onPress: () => replace('CashAdvanceList'),
           },
           title: 'Add Cash Advance',
           hideUnderLine: true,
@@ -410,7 +399,7 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
         <ScrollContainer>
           <View>
             <ViewWithTitle title="General Details">
-            <CustomPicker
+              <CustomPicker
                 list={empList || []}
                 selectedItem={{id: EmployeeID}}
                 label={'Employee Name'}
@@ -422,8 +411,8 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
                     },
                     () => {
                       this.getSupervisor();
-                      this.getProjectsByEmployeeIDForDailyAttendance()
-                      this.getCirclewiseCreditLimitAndRemainingAmountForCashAdvance()
+                      this.getProjectsByEmployeeIDForDailyAttendance();
+                      this.getCirclewiseCreditLimitAndRemainingAmountForCashAdvance();
                     },
                   );
                 }}
@@ -448,44 +437,49 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
                 disabled={true}
                 rightIcon={Images.ic_Calendar}
               />
-               <CustomPicker list={projectList||[]}  
-               selectedItem={{ id: projectId }} label={'Project Name'} onSelect={(item) => this.onTextChanged("projectId", item.id)} />
-                <CustomPicker list={headList || []}  selectedItem={{ id: headId }} label={'Expense Head'} onSelect={(item) => this.onTextChanged("headId", item.id)} />
+              <CustomPicker
+                list={projectList || []}
+                selectedItem={{id: projectId}}
+                label={'Project Name'}
+                onSelect={item => this.onTextChanged('projectId', item.id)}
+              />
+              <CustomPicker
+                list={headList || []}
+                selectedItem={{id: headId}}
+                label={'Expense Head'}
+                onSelect={item => this.onTextChanged('headId', item.id)}
+              />
             </ViewWithTitle>
 
             <ViewWithTitle title="Amount">
               <View style={{flexDirection: 'row', width: '100%'}}>
-              <FloatingEditText
-                value={amount}
-                onChangeText={text => this.onTextChanged('amount', text)}
-                label={'Amount'}
-                inputType="numeric"
-                style={{width:"50%",marginRight:ResponsivePixels.size10}}
-              />
                 <FloatingEditText
-                value={remainingCredit}
-                label={'Remaining Amount'}
-                editable={false}
-                style={{width:"50%"}}
-              />
-             
+                  value={amount}
+                  onChangeText={text => this.onTextChanged('amount', text)}
+                  label={'Amount'}
+                  inputType="numeric"
+                  style={{width: '50%', marginRight: ResponsivePixels.size10}}
+                />
+                <FloatingEditText
+                  value={remainingCredit}
+                  label={'Remaining Amount'}
+                  editable={false}
+                  style={{width: '50%'}}
+                />
               </View>
-
-
-
 
               <View
                 style={{flexDirection: 'row', width: '100%', flexWrap: 'wrap'}}>
-                 <FloatingEditText
-                value={adhocAmount}
-                label={'Ad Hoc Amount'}
-                editable={false}
-                style={{width:"50%"}}
-              />
+                <FloatingEditText
+                  value={adhocAmount}
+                  label={'Ad Hoc Amount'}
+                  editable={false}
+                  style={{width: '50%'}}
+                />
                 <Checkbox
                   label="AdhocAmmount"
                   color={Colors.Red900}
-                  style={{marginTop:ResponsivePixels.size20}}
+                  style={{marginTop: ResponsivePixels.size20}}
                   checked={useAdHocAmount}
                   onPress={() => {
                     this.onTextChanged('useAdHocAmount', !useAdHocAmount);
@@ -504,8 +498,9 @@ getProjectsByEmployeeIDForDailyAttendance = () => {
             <Button
               title={strings.submit}
               style={{margin: ResponsivePixels.size16}}
-              onPress={()=>{this.handleSubmit()}}
-
+              onPress={() => {
+                this.handleSubmit();
+              }}
             />
           </View>
         </ScrollContainer>

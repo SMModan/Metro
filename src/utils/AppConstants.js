@@ -28,7 +28,7 @@ export const DROPDWON_GET_RELATED_TO= "GetRelatedTo"
 
 
     export const VALUE_INDIA_BASE_URL_DEV = "http://120.72.93.235:5001/Webservice/Metroservice.asmx/"
-    export const VALUE_INDIA_IMAGE_UPLOAD_URL_DEV = "http://120.72.93.235:8050/Webservice/Metroservice.asmx?wsdl"
+    export const VALUE_INDIA_IMAGE_UPLOAD_URL_DEV = "http://120.72.93.235:5001/Webservice/Metroservice.asmx?wsdl"
     export const VALUE_INDIA_ASSETS_URL_DEV = "http://120.72.93.235:5001/"
 
     export const VALUE_PH_BASE_URL_DEV = "http://120.72.93.235:5001/PH/WebService/MetroService.asmx/"
@@ -68,6 +68,10 @@ export const DROPDWON_GET_RELATED_TO= "GetRelatedTo"
           title: 'Car Attendence',
           icon: Images.ic_Appointment,
           route: 'CarAttendanceList',
+        },  {
+          title: 'Markin - Markout',
+          icon: Images.ic_Appointment,
+          route: 'MarkInOutList',
         },
         {
           title: 'Leave',

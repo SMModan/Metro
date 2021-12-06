@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList, Image, Platform} from 'react-native';
+import {View, Text, FlatList, Image, Platform, BackHandler} from 'react-native';
 import {
   MainContainer,
   ScrollContainer,
@@ -120,26 +120,29 @@ class Home extends Component {
     //console.log("this.props.session.user.EmployeeName",this.props.session.user)
     // setTimeout(() => this.loadPermissions(), 300)
 
+    setTimeout(() => {
+      askForLocationPermission(status => {
+        console.log('status ========<<<<<', '>>>>>>>>>>>>>> ' + status);
+        // ProgressDialog.show()
+  
+        // Geolocation.getCurrentPosition(async (position) => {
+        //   const { latitude, longitude } = position.coords
+        //   Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
+        //   let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
+        //   try {
+        //     address = await Geocoder.from(latitude, longitude)
+        //   } catch (error) {
+        //     console.log(error)
+        //   }
+        //   store.dispatch(setSessionField("current_location", position.coords))
+        //  store.dispatch(setSessionField("currentTrip", "123"))
+  
+        // })
+        // ProgressDialog.hide()
+      });
+    }, 500);
 
-    askForLocationPermission(status => {
-      console.log('status ========<<<<<', '>>>>>>>>>>>>>> ' + status);
-      // ProgressDialog.show()
-
-      // Geolocation.getCurrentPosition(async (position) => {
-      //   const { latitude, longitude } = position.coords
-      //   Geocoder.init("AIzaSyAvE_MSDLTAi8UGeTfU4UOC-aV8awuKHLs");
-      //   let address = { results: [{ formatted_address: "Ahmedabad" }] }//Need to change
-      //   try {
-      //     address = await Geocoder.from(latitude, longitude)
-      //   } catch (error) {
-      //     console.log(error)
-      //   }
-      //   store.dispatch(setSessionField("current_location", position.coords))
-      //  store.dispatch(setSessionField("currentTrip", "123"))
-
-      // })
-      // ProgressDialog.hide()
-    });
+    
 
 
 
@@ -286,6 +289,45 @@ class Home extends Component {
     return date;
   };
 
+
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    
+      Alert.alert(
+        'Exit App',
+        'Are you sure you want to exit?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'Ok',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+  };
+
+
+
+
+
+
+
+
   renderHolidayCell = ({index}) => {
     const item = this.state.holidayList[index];
 
@@ -323,27 +365,27 @@ class Home extends Component {
 
   renderCellAnnouncement = ({index}) => {
     const item = this.state.listDataAnnouncement[index];
-
-    // var date = new Date(item.CreatedDate);
-    // date.toISOString().substring(0, 10);
-
-    // let myDate = `${date.getDate()}-${date.getMonth() + 1
-    //   }-${date.getFullYear()}`;
+console.log("item <<<<<<<<<<====>",item)
+    
     return (
-      <Card
-        style={{margin: ResponsivePixels.size5}}
-        key={item?.index}
-        onPress={() => {}}>
+    
+      <TouchableOpacity onPress={()=>{
+        push("AnnouncementDetails",{item})
+      }}
+      style={{margin: ResponsivePixels.size5}}>
         <View style={{margin: ResponsivePixels.size5, flexDirection: 'row'}}>
           <View
             style={{flexDirection: 'column', width: '100%', color: '#485780'}}>
+              
             {/* <Text style={{ fontSize: 12, fontWeight: "bold", marginBottom: ResponsivePixels.size10 }}>{"12-12-2200"}</Text> */}
             <Text style={{fontSize: ResponsivePixels.size17, color: '#1B2655'}}>
               {item?.ShortTitle}
             </Text>
+
           </View>
         </View>
-      </Card>
+      </TouchableOpacity>
+
     );
   };
 
@@ -595,25 +637,12 @@ class Home extends Component {
                       data={listDataAnnouncement || []}
                       renderItem={item => this.renderCellAnnouncement(item)}
                       style={{flex: 1}}
-                      refreshing={refreshing}
                       loading={loading}
-                      onRefresh={() => {
-                        this.setState(
-                          {
-                            refreshing: true,
-                            listDataAnnouncement: [],
-                          },
-                          () => {
-                            this.getAllAnnouncement();
-                            //   this.getAllNotification();
-                          },
-                        );
-                      }}
                       horizontal={false}
                       scrollEnabled={true}
+                      
                       showsVerticalScrollIndicator={false}
                       showsHorizontalScrollIndicator={false}
-                      keyExtractor={(item, index) => 'key' + index}
                     />}
                    
 

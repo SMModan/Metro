@@ -141,6 +141,12 @@ class EditMoreReimbursement extends Component {
 
             }
             updateMoreInformation(objInfo)
+          }else{
+            const ErrorMessage = jsonResponse?.ErrorMessage
+
+            if(ErrorMessage){
+              alert(ErrorMessage)
+            }
           }
 
 

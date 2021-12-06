@@ -13,11 +13,13 @@ export default Button = (props) => {
         height: ResponsivePixels.size56,
         borderColor: bordered ? Colors.primaryColor500 : undefined,
         borderRadius: ResponsivePixels.size8,
+        
     }
     const textStyle = {
         color: textColor ? textColor : Colors.White,
         fontFamily: FontName.semibold,
         fontSize: FontSize.fontSize17,
+        
     }
 
     return (

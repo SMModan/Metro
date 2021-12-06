@@ -15,6 +15,7 @@ import HelpDesk from '../components/HelpDesk/List/HelpDesk';
 import MyCheckin from '../components/HelpDesk/List/MyCheckin';
 import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
 import AddNotes from '../components/Home/ChildComponent/AddNotes';
+import AnnouncementDetails from '../components/Home/ChildComponent/AnnouncementDetails';
 import DrawerHome from '../components/Home/ChildComponent/DrawerHome';
 import MyLeaveCount from '../components/Home/ChildComponent/MyLeaveCount';
 import SignIn from '../components/Login/ChildComponent/SignIn';
@@ -22,7 +23,9 @@ import EndTrip from '../components/ManageCarAttendance/EndTrip';
 import CarAttendance from '../components/ManageCarAttendance/List/CarAttendance';
 import StartTrip from '../components/ManageCarAttendance/StartTrip';
 import AddCashAdvance from '../components/ManageCashAdvance/AddCashAdvance';
+import AddCashAdvancePH from '../components/ManageCashAdvance/AddCashAdvancePH';
 import EditCashAdvance from '../components/ManageCashAdvance/EditCashAdvance';
+import EditCashAdvancePH from '../components/ManageCashAdvance/EditCashAdvancePH';
 import CashAdvance from '../components/ManageCashAdvance/List/CashAdvance';
 import AddLeaveRequest from '../components/ManageLeave/AddLeaveRequest';
 import LeaveApprovalList from '../components/ManageLeave/List/LeaveApprovalList';
@@ -64,8 +67,8 @@ export default () => {
     const session = store.getState().session;
     console.log('session.is_logged_in', session.country_id);
     
-    //  setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'CarAttendanceList':"CarAttendanceList");
-    setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
+     setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'CashAdvanceList':"CashAdvanceList");
+    // setInitialRoute(!session.country_id ? 'SelectCountry':!session.is_logged_in ? 'SignIn':"Home");
     SplashScreen.hide();
 
     setLoaded(true);
@@ -86,6 +89,8 @@ export default () => {
           <Stack.Screen component={AddLeaveRequest} name="AddLeave" />
           <Stack.Screen component={CashAdvance} name="CashAdvanceList" />
           <Stack.Screen component={AddCashAdvance} name="AddCashAdvance" />
+          <Stack.Screen component={AddCashAdvancePH} name="AddCashAdvancePH" />
+          <Stack.Screen component={EditCashAdvancePH} name="EditCashAdvancePH" />
           <Stack.Screen component={EditCashAdvance} name="EditCashAdvance" />
           <Stack.Screen component={Reimbursement} name="ReimbursementList" />
           <Stack.Screen component={AddReimbursement} name="AddReimbursement" />
@@ -99,10 +104,7 @@ export default () => {
           <Stack.Screen component={Profile} name="Profile" />
           <Stack.Screen component={ShowMeRoute} name="ShowMeRoute" />
           <Stack.Screen component={EndTrip} name="EndTrip" />
-
-
-
-
+          <Stack.Screen component={AnnouncementDetails} name="AnnouncementDetails" />
 
 
 

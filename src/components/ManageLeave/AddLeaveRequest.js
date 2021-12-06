@@ -378,7 +378,14 @@ class AddLeaveRequest extends Component {
 
           } else {
             const message = jsonResponse.Massage;
-            alert(message);
+            const ErrorMessage = jsonResponse.ErrorMessage;
+            if(message){
+                alert(message);
+            }else if(ErrorMessage){
+              alert(ErrorMessage);
+            }else{
+              alert("Somthing went wrong.");
+            }
           }
           ProgressDialog.hide();
         },
@@ -544,9 +551,15 @@ class AddLeaveRequest extends Component {
                   selectedDate={toDate}
                   minimumDate={fromDate}
                   onDateChanged={date => {
+
+
                     this.setState(
                       {
                         toDate: date,
+                        fromDateIsCheck:false,
+                        toDateIsCheck:false,
+                        isAllDayCheck:false,
+                        totalDays:0
                       },
                       () => {
                         console.log('toDate===>', this.state.toDate);

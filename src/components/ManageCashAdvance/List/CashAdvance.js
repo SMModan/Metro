@@ -107,7 +107,15 @@ class CashAdvance extends Component {
         <Card style={{margin: ResponsivePixels.size10}} key={index}>
           <Clickable
             onPress={() => {
-              replace('EditCashAdvance', { cashAdvanceId: item.ID });
+
+              const countryId = store.getState().session.country_id
+              if(countryId==2){
+                replace('EditCashAdvancePH', { cashAdvanceId: item.ID });
+
+              }else{
+                replace('EditCashAdvance', { cashAdvanceId: item.ID });
+              }
+
 
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
@@ -394,7 +402,12 @@ class CashAdvance extends Component {
           icon="plus"
           color={Colors.white}
           onPress={() => {
-            replace('AddCashAdvance');
+            const countryId = store.getState().session.country_id
+            if(countryId==2){
+              replace('AddCashAdvancePH');
+            }else{
+              replace('AddCashAdvance');
+            }
           }}
         />
       </MainContainer>

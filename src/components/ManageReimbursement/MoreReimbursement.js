@@ -1,41 +1,37 @@
-import React, { Component } from 'react';
-import { View,ImageBackground,Image } from 'react-native';
-import { connect } from 'react-redux';
-import { strings } from '../../language/Language';
-import { goBack } from '../../navigation/Navigator';
-import { Images,Colors, Utils } from '../../utils';
+import React, {Component} from 'react';
+import {View, ImageBackground, Image} from 'react-native';
+import {connect} from 'react-redux';
+import {strings} from '../../language/Language';
+import {goBack} from '../../navigation/Navigator';
+import {Images, Colors, Utils} from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Button, Clickable, CustomPicker,
+  Button,
+  Clickable,
+  CustomPicker,
   FloatingEditText,
   MainContainer,
   ProgressDialog,
   ScrollContainer,
   ViewWithTitle,
-
 } from '../common';
 import PhotoPicker from '../common/PhotoPicker';
 import {Text} from 'react-native-paper';
 import styles from './styles/Reimbursement.style';
 import ReimbursementApi from './Api/ReimbursementApi';
 
-
-
-
-
 class MoreReimbursement extends Component {
   state = {
     loading: false,
     AssignUserRemarks: [],
     selectedAttachment: '',
-    projectId:"",
-      headId:"",
-      amount:"",
-      projectName:"",
-      headName:"",
-      attachment:""
+    projectId: '',
+    headId: '',
+    amount: '',
+    projectName: '',
+    headName: '',
+    attachment: '',
   };
-
 
   onTextChanged = (key, value) => {
     this.setState({
@@ -43,20 +39,20 @@ class MoreReimbursement extends Component {
     });
   };
 
-
-
-  handleSubmit =()=>{
-    const {attachment,
+  handleSubmit = () => {
+    const {
+      attachment,
       selectedAttachment,
       projectId,
       headId,
       projectName,
       headName,
-      amount,} = this.state
-      const {EmployeeID,getMoreInformation} = this.props
-const fileName = attachment.fileName
-const fileType = attachment.type
-const DocumentContent = attachment?.base64;
+      amount,
+    } = this.state;
+    const {EmployeeID, getMoreInformation} = this.props;
+    const fileName = attachment.fileName;
+    const fileType = attachment.type;
+    const DocumentContent = attachment?.base64;
 
     if (!projectId) {
       Utils.showToast('please select project.');
@@ -68,7 +64,7 @@ const DocumentContent = attachment?.base64;
       let params = {
         fileName,
         DocumentContent,
-        EmployeeID
+        EmployeeID,
       };
 
       ProgressDialog.show();
@@ -79,23 +75,28 @@ const DocumentContent = attachment?.base64;
           console.log('\n JSONResponse', jsonResponse);
           const isSucceed = jsonResponse.IsSucceed;
 
-          if(isSucceed){
+          if (isSucceed) {
             let objInfo = {
-              ProjectID:projectId,
-              ExpenseHeadID:headId,
-              Amount:amount,
-              FileName:fileName,
-              fileType:fileType,
-              FilePath:jsonResponse?.FilePath,
+              ProjectID: projectId,
+              ExpenseHeadID: headId,
+              Amount: amount,
+              FileName: fileName,
+              fileType: fileType,
+              FilePath: jsonResponse?.FilePath,
               headName,
               projectName,
-              ExpenseHeadName:headName,
-              ProjectName:projectName
+              ExpenseHeadName: headName,
+              ProjectName: projectName,
+            };
+
+            getMoreInformation(objInfo);
+          }else{
+            const ErrorMessage = jsonResponse?.ErrorMessage
+
+            if(ErrorMessage){
+              alert(ErrorMessage)
             }
-
-            getMoreInformation(objInfo)
           }
-
 
           // if (isSucceed) {
           //   Utils.showToast('Leave request submitted successfully');
@@ -106,61 +107,55 @@ const DocumentContent = attachment?.base64;
           // }
           ProgressDialog.hide();
         },
-        () => {
+        (error) => {
           ProgressDialog.hide();
         },
       );
     }
-
-
-
-
-  }
+  };
 
   render() {
-    const {
-      projectId,
-      headId,
-      amount,
-      selectedAttachment,
-    } = this.state;
+    const {projectId, headId, amount, selectedAttachment} = this.state;
 
-    const {handleMoreInformation,headList,projectList,EmployeeID} = this.props
+    const {handleMoreInformation, headList, projectList, EmployeeID} =
+      this.props;
     return (
       <MainContainer
         header={{
-         
           title: 'Add Reimbursement Details',
           hideUnderLine: true,
           light: true,
           isHome: true,
-          
         }}>
         <ScrollContainer>
           <View>
             <ViewWithTitle title="Reimbursement Details">
-             
+              <CustomPicker
+                list={headList || []}
+                selectedItem={{id: headId}}
+                label={'Expense Head'}
+                onSelect={item => {
+                  this.onTextChanged('headId', item.id);
+                  this.onTextChanged('headName', item.name);
+                }}
+              />
 
-
-<CustomPicker list={headList || []}  selectedItem={{ id: headId }} label={'Expense Head'} onSelect={(item) => {
-  this.onTextChanged("headId", item.id)
-  this.onTextChanged("headName", item.name)
-
-  }} />
-
-          <CustomPicker list={projectList||[]}  
-          selectedItem={{ id: projectId }} label={'Project Name'} onSelect={(item) => {
-
-            this.onTextChanged("projectId", item.id)
-            this.onTextChanged("projectName", item.name)
-          }} />
- <FloatingEditText
+              <CustomPicker
+                list={projectList || []}
+                selectedItem={{id: projectId}}
+                label={'Project Name'}
+                onSelect={item => {
+                  this.onTextChanged('projectId', item.id);
+                  this.onTextChanged('projectName', item.name);
+                }}
+              />
+              <FloatingEditText
                 value={amount}
                 onChangeText={text => this.onTextChanged('amount', text)}
                 label={'Amount'}
                 inputType="numeric"
               />
-                 <View
+              <View
                 style={{backgroundColor: Colors.white, paddingHorizontal: 16}}>
                 <View>
                   <Clickable
@@ -206,28 +201,34 @@ const DocumentContent = attachment?.base64;
                   </Clickable>
                 </View>
               </View>
-        
             </ViewWithTitle>
-
-  
           </View>
-          <View style={{flexDirection:"row",width:"100%",padding:ResponsivePixels.size10}}>
-<Button
-              title={"Cancel"}
-              style={{marginRight: ResponsivePixels.size16,width:"40%",backgroundColor:Colors.gray}}
-              onPress={()=>{handleMoreInformation()}}
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              padding: ResponsivePixels.size10,
+            }}>
+            <Button
+              title={'Cancel'}
+              style={{
+                marginRight: ResponsivePixels.size16,
+                width: '40%',
+                backgroundColor: Colors.gray,
+              }}
+              onPress={() => {
+                handleMoreInformation();
+              }}
             />
-                      <Button
+            <Button
               title={strings.submit}
-              style={{width:"50%",marginRight:ResponsivePixels.size16}}
-              onPress={()=>{this.handleSubmit()}}
+              style={{width: '50%', marginRight: ResponsivePixels.size16}}
+              onPress={() => {
+                this.handleSubmit();
+              }}
             />
-  
-</View>
-
-          </ScrollContainer>
-
-   
+          </View>
+        </ScrollContainer>
       </MainContainer>
     );
   }

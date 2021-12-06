@@ -121,7 +121,7 @@ export default class SelectionView extends Component {
                         <SearchBar editable onChangeText={this.onSearch} />
                         {this.state.list && this.state.list.length > 0 ? <FlatList
                             data={this.state.list}
-                            style={{ marginBottom: 32 }}
+                            style={{ marginBottom: ResponsivePixels.size100 }}
                             keyboardShouldPersistTaps={"handled"}
                             initialNumToRender={100}
                             renderItem={({ item }) =>

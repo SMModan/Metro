@@ -8,7 +8,9 @@ import {
   GET_DAILY_ATTENDANCE_DETAILS_FOR_VEHICLE,
   InsertDailyAttendanceForLocation,
   InsertDailyAttendanceForVehicle,
-  GetPendingCarOutNumber
+  GetPendingCarOutNumber,
+  GET_EMPLOYEES_USER_HIERARCHY,
+  GET_USER_BASIC_PROFILE
 } from '../../../network/ApiConstants';
 import apiCall from '../../../network/ApiService';
 
@@ -18,6 +20,37 @@ const CarAttendanceApi = {
 
     apiCall(
       GET_DAILY_ATTENDANCE_DETAILS_FOR_VEHICLE,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  },getEmplyeesUserHierarchy(params, onDone, onError) {
+
+    apiCall(
+      GET_EMPLOYEES_USER_HIERARCHY,
+      params,
+      res => {
+        if (onDone) {
+          onDone(res);
+        }
+      },
+      error => {
+        if (onError) {
+          onError(error);
+        }
+      },
+    );
+  }, getBasicUserProfile(params, onDone, onError) {
+    apiCall(
+      GET_USER_BASIC_PROFILE,
       params,
       res => {
         if (onDone) {

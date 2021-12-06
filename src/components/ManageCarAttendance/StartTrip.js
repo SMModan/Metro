@@ -4,7 +4,7 @@ import { View, ImageBackground, Image, Alert, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import { strings } from '../../language/Language';
 import { goBack, push, replace, reset } from '../../navigation/Navigator';
-import { Images, Utils } from '../../utils';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Button,
@@ -29,6 +29,7 @@ import { store } from '../../App';
 import { askForLocationPermission, subscribeForLocationAndRequestService } from './LocationAndRequestService';
 import Geocoder from 'react-native-geocoding';
 import { setSessionField } from '../../reducers/SessionReducer';
+import { Label } from 'native-base';
 class StartTrip extends Component {
   state = {
     circleList: [],
@@ -43,11 +44,9 @@ class StartTrip extends Component {
     longitude:0
   };
   componentDidMount() {
-
-
-    
-
      this.GetWorkLocation()
+     this.getBasicUserProfile()
+
     // this.GetProjectByLocationId()
   }
 
@@ -190,7 +189,7 @@ class StartTrip extends Component {
       ProgressDialog.hide()
 
       if (res) {
-        console.log("res >>>>>>>>>>>>>>>>>>>>>>>=======================>", res)
+        this.InsertDailyAttendanceForLocation()
       }
 
     }, (res) => {
@@ -311,7 +310,7 @@ class StartTrip extends Component {
     }, (error) => {
       Alert.alert("Warn", error, [{
         text: "Ok", onPress: () => {
-          goBack()
+          replace("CarAttendanceList")
         }
       }])
       ProgressDialog.hide()
@@ -333,7 +332,77 @@ class StartTrip extends Component {
     reset("CarAttendanceList")
     return true;
   }
+
   
+  getEmplyeesUserHierarchy = () => {
+    const params = {};
+
+    ProgressDialog.show();
+    CarAttendanceApi.getEmplyeesUserHierarchy(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const Table = res.Table;
+          if (Table) {
+            let list = [];
+            if (Array.isArray(Table)) {
+              for (let index = 0; index < Table.length; index++) {
+                const emp = Table[index];
+                let objData = {
+                  id: emp.ID,
+                  name: emp.EmployeeName,
+                };
+                list.push(objData);
+              }
+            } else {
+              let objData = {
+                id: Table.ID,
+                name: Table.EmployeeName,
+              };
+              list.push(objData);
+            }
+            this.setState({empList: list}, () => {
+              this.getBasicUserProfile()
+            });
+          }
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
+
+  
+  getBasicUserProfile = () => {
+    const params = {};
+
+    ProgressDialog.show();
+    CarAttendanceApi.getBasicUserProfile(
+      params,
+      res => {
+        ProgressDialog.hide();
+        if (res) {
+          const {Table} = res;
+
+          if (Table) {
+            this.setState(
+              {
+                EmployeeID: Table.Id,
+                employeeName: Table.Name,
+                contactNo: Table.MobileNo1,
+              }
+            );
+          }
+          console.log('===========> getBasicUserProfile ===========>', Table);
+        }
+      },
+      () => {
+        ProgressDialog.hide();
+      },
+    );
+  };
   render() {
     const {
       employeeName,
@@ -370,7 +439,6 @@ class StartTrip extends Component {
               <FloatingEditText
                 value={employeeName}
                 onChangeText={text => onTextChanged('employeeName', text)}
-                label={'Admin Admin EMP001'}
                 editable="false"
               />
               <CustomDatePicker
@@ -403,19 +471,20 @@ class StartTrip extends Component {
                 onChangeText={text => this.onTextChanged('carDetails', text)}
                 label={'Car Details  (OLA/UBER)'}
               />
-
+              <Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400}}>eg: OLA,Shiva etc.</Label>
               <FloatingEditText
                 value={carNumber}
                 onChangeText={text => this.onTextChanged('carNumber', text)}
                 label="Car Number"
               />
+              <Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400}}>eg: GJ01-KH 1234</Label>
 
               <FloatingEditText
                 value={riggerName}
                 onChangeText={text => this.onTextChanged('riggerName', text)}
                 label="Rigger Name"
               />
-
+<Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400}}>eg: FullName:- EmpCode</Label>
 
               <FloatingEditText
                 value={receivedKM}
@@ -423,6 +492,7 @@ class StartTrip extends Component {
                 onChangeText={text => this.onTextChanged('receivedKM', text)}
                 label="Car Received KM"
               />
+<Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400}}>Enter actual km shown on speedometer</Label>
 
               <ChipViewContainer
                 selectedChip={{ id: attendanceTypeId }}
@@ -503,11 +573,16 @@ class StartTrip extends Component {
                           alignItems: 'center',
                         }}>
                         <Image source={Images.ic_upload} />
-                        <Text style={styles.uploadText}>Upload here</Text>
+                        <Text style={styles.uploadText}>Capture Photo</Text>
+
                       </View>
                     ) : null}
+
+
                   </ImageBackground>
                 </Clickable>
+<Label style={{marginTop:ResponsivePixels.size5,fontSize:ResponsivePixels.size15,color:Colors.blueGray400,alignSelf:"center"}}>Take picture of Speedometer with actual KM shown</Label>
+
               </View>
             </ViewWithTitle>
 

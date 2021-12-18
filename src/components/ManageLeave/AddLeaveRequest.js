@@ -45,7 +45,7 @@ class AddLeaveRequest extends Component {
     totalDays: 0,
     ReportingManagerId: 0,
     attachment: '',
-    remarks: 'test',
+    remarks: '',
   };
 
   componentDidMount() {

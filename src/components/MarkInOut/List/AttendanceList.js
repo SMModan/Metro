@@ -79,7 +79,6 @@ class AttendanceList extends Component {
 
   componentDidMount = () => {
     this.getAllList();
-
     askForLocationPermission(status => {
       console.log('status ========<<<<<', '>>>>>>>>>>>>>> ' + status);
     });
@@ -95,12 +94,32 @@ class AttendanceList extends Component {
     return date;
   };
 
+
+  splitMarkInOutTimeForDisplay = (strDate,attDate)=>{
+    // const attDate = "01 Dec 2020"
+    // const strDate = "Mar  2 2020  7:03PM"
+    let time =""
+    if(attDate && strDate){
+
+      const oneDate =  moment(attDate);
+      const year = oneDate?.format('yyyy');
+      if (strDate) {
+        const TStartSplit = strDate.split(year);
+        const stime = TStartSplit[1];
+        time = `${stime}`;
+      }
+    }
+    
+    return time;
+  }
+
   splitTime = strDate => {
     let date = '';
     if (strDate) {
       const TStartSplit = strDate.split('  ');
       const stime = TStartSplit[1];
       date = `${stime}`;
+
     }
     return date;
   };
@@ -113,11 +132,27 @@ class AttendanceList extends Component {
     const dayName = oneDate?.format('dddd');
     const day = oneDate?.format('DD');
     const Month = oneDate?.format('MMM');
+    const markIn = item.MarkinTime||undefined
+    const markOut = item.MarkoutTime||undefined
+    const attDate = item?.attDate ||""
+    let _splitMarkInTime
+    let _splitMarkOutTime
 
-    const _splitMarkInTime = this.splitTime(item?.MarkinTime);
-    const _splitMarkOutTime = this.splitTime(item?.MarkoutTime);
 
-    // console.log("_split",_splitMarkInTime)
+    if(markIn){
+       _splitMarkInTime = this.splitMarkInOutTimeForDisplay(markIn,attDate);
+    }else{
+      _splitMarkInTime="-"
+    }
+
+
+
+    if(markOut){
+      _splitMarkOutTime = this.splitMarkInOutTimeForDisplay(markOut,attDate);
+   }else{
+    _splitMarkOutTime="-"
+   }
+   
 
     return (
       <View>
@@ -202,7 +237,7 @@ class AttendanceList extends Component {
                         fontSize: ResponsivePixels.size20,
                         color: Colors.black,
                       }}>
-                      {_splitMarkInTime}
+                      {_splitMarkInTime||"-"}
                     </Text>
                   </View>
                   <View
@@ -236,7 +271,7 @@ class AttendanceList extends Component {
                         color: Colors.black,
                         textAlign: 'center',
                       }}>
-                      {_splitMarkOutTime}
+                      {_splitMarkOutTime||"-"}
                     </Text>
                   </View>
                 </View>
@@ -465,15 +500,7 @@ class AttendanceList extends Component {
                 scrollEnabled={true}
                 data={
                   listData || [
-                    {
-                      ID: '1',
-                      attDate: '23 Oct 2021',
-                      thedate: '2021-10-23T00:00:00+05:30',
-                      TotalWorkingHrs: '02:46',
-                      MarkinTime: 'Oct 23 2021  2:44PM',
-                      MarkoutTime: 'Oct 23 2021  5:30PM',
-                      Status: 'Present',
-                    },
+                    
                   ]
                 }
                 showsHorizontalScrollIndicator={false}

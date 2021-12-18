@@ -111,15 +111,16 @@ class LeaveApprovalList extends Component {
   };
 
   UpdateApprovalStatus = () => {
-    const {StatusID,SupervisorRemarks, ProgramRowID} = this.state
+    const {StatusID,SupervisorRemarks,Remarks, ProgramRowID,UniqueID} = this.state
     const EmployeeID= store.getState().session.user.EmployeeID
 
 
     const params = {
-      ApprovalUniqueID:EmployeeID,
+      ApprovalUniqueID:UniqueID,
       SupervisorRemarks,
       StatusID,
       ProgramRowID,
+      Remarks
     };
     console.log("params          ============================================>",params)
 
@@ -131,8 +132,15 @@ class LeaveApprovalList extends Component {
       params,
       res => {
         ProgressDialog.hide();
-
+        
         if (res) {
+          const message = res.Massage
+          if(message){
+            alert(message)
+            this.GetLeaveApproval();
+          }
+          console.log("ress =======================>",res)
+
         }
       },
       () => {
@@ -161,7 +169,7 @@ class LeaveApprovalList extends Component {
     const _date = this.splitDate(item?.LeaveApplicationDate);
     const dayName = oneDate?.format('dddd');
     console.log('dayName====', dayName);
-    const {ApprovalUniqueID, ProgramRowID} = item;
+    const {UniqueID, ProgramRowID,Remarks} = item;
     const {remarksDialogue} = this.state
     return (
       <View>
@@ -183,10 +191,64 @@ class LeaveApprovalList extends Component {
               // this.props.navigation.push('AddAppointments', {item});
             }}>
             <View style={{margin: ResponsivePixels.size15}}>
-              <View
+          
+            <View
                 style={{
                   flexDirection: 'row',
                   width: '100%',
+                  marginTop: ResponsivePixels.size10,
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    width: ResponsivePixels.size35,
+                    height: ResponsivePixels.size35,
+                    borderRadius: 100 / 2,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: Colors.BlackColor100,
+                  }}>
+                  <Image
+                    source={Images.ic_Person}
+                    style={{
+                      width: ResponsivePixels.size15,
+                      height: ResponsivePixels.size15,
+                    }}
+                    resizeMode={'contain'}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    marginLeft: ResponsivePixels.size20,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size13,
+                      color: Colors.grayColor,
+                    }}>
+                    Employee Code
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size15,
+                      color: Colors.black,
+                      fontWeight: 'bold',
+                    }}>
+                    {item?.EmployeeID}
+                  </Text>
+                </View>
+              </View>
+             
+
+
+          <View style={{width:"100%",flexDirection:"row"}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '50%',
                   alignItems: 'center',
                 }}>
                 <View
@@ -233,7 +295,59 @@ class LeaveApprovalList extends Component {
                   </Text>
                 </View>
               </View>
+              </View>
+             
 
+              <View
+                style={{
+                  flexDirection: 'row',
+                  width: '100%',
+                  marginTop: ResponsivePixels.size10,
+                  alignItems: 'center',
+                }}>
+                <View
+                  style={{
+                    width: ResponsivePixels.size35,
+                    height: ResponsivePixels.size35,
+                    borderRadius: 100 / 2,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: Colors.BlackColor100,
+                  }}>
+                  <Image
+                    source={Images.ic_Person}
+                    style={{
+                      width: ResponsivePixels.size15,
+                      height: ResponsivePixels.size15,
+                    }}
+                    resizeMode={'contain'}
+                  />
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: 'column',
+                    marginLeft: ResponsivePixels.size20,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size13,
+                      color: Colors.grayColor,
+                    }}>
+                    Employee Name
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: ResponsivePixels.size15,
+                      color: Colors.black,
+                      fontWeight: 'bold',
+                    }}>
+                    {item?.EmployeeName}
+                  </Text>
+                </View>
+              </View>
+             
               <View
                 style={{
                   flexDirection: 'row',
@@ -283,6 +397,8 @@ class LeaveApprovalList extends Component {
                   </Text>
                 </View>
               </View>
+
+              
             </View>
           </Clickable>
           <Text
@@ -322,6 +438,7 @@ class LeaveApprovalList extends Component {
               style={{
                 alignItems: 'flex-start',
                 width: '45%',
+                height:"100%",
                 backgroundColor: Colors.BlackColor100,
                 marginRight: ResponsivePixels.size10,
               }}
@@ -333,7 +450,8 @@ class LeaveApprovalList extends Component {
                 this.setState({
                   remarksDialogue:true,
                   StatusID:4,
-                  ApprovalUniqueID, ProgramRowID
+                   ProgramRowID,
+                  UniqueID,Remarks
                 })
               
               }}></Button>
@@ -347,6 +465,7 @@ class LeaveApprovalList extends Component {
               style={{
                 alignItems: 'flex-start',
                 width: '54%',
+                height:"100%",
                 borderEndColor: '#2262F7',
                 backgroundColor: Colors.Red900,
               }}
@@ -357,7 +476,7 @@ class LeaveApprovalList extends Component {
                 this.setState({
                   remarksDialogue:true,
                   StatusID:3,
-                  ApprovalUniqueID, ProgramRowID
+                   ProgramRowID,UniqueID,Remarks
                 })
               
               }}>
@@ -394,7 +513,7 @@ class LeaveApprovalList extends Component {
                       const {SupervisorRemarks} = this.state;
                       if (SupervisorRemarks) {
                         this.setState({remarksDialogue: false},()=>{
-                          this.UpdateApprovalStatus()
+                           this.UpdateApprovalStatus()
                         })
                       }
                     }}>

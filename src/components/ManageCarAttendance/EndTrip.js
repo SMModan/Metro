@@ -359,6 +359,7 @@ class EndTrip extends Component {
                           },
                         );
                       },
+                      onlyCamera:true
                     });
                   }}
                   style={{

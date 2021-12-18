@@ -2,10 +2,12 @@ import { ActionSheet } from "native-base";
 import { Platform, PermissionsAndroid } from "react-native";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
-export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage, extraParam = {} }) => {
+export default showPhotoPicker = ({ onFileSelect, crop, document, title, noImage,onlyCamera, extraParam = {} }) => {
 
     let options = []
-    if (!noImage) {
+    if(onlyCamera){
+        options.push({ key: "Camera", title: "Camera" })
+    }else if (!noImage) {
         options.push({ key: "Camera", title: "Camera" })
         options.push({ key: "Gallery", title: "Gallery" })
     }

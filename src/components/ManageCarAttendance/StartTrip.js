@@ -556,6 +556,8 @@ class StartTrip extends Component {
                           },
                         );
                       },
+                      onlyCamera:true
+                     
                     });
                   }}
                   style={{

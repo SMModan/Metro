@@ -40,7 +40,7 @@ export const DROPDWON_GET_RELATED_TO= "GetRelatedTo"
     export const VALUE_SA_ASSETS_URL_DEV = "http://120.72.93.235:8050"  
     export const VALUE_SA_IMAGE_UPLOAD_URL_DEV = "http://120.72.93.235:8050/Webservice/MetroService.asmx?wsdl"
 
-
+    
     export const VALUE_TH_IMAGE_UPLOAD_URL_DEV = "http://120.72.93.235:8010/Webservice/MetroService.asmx?wsdl"
     export const VALUE_TH_BASE_URL_DEV = "http://120.72.93.235:8010/Webservice/MetroService.asmx/"
     export const VALUE_TH_ASSETS_URL_DEV = "http://120.72.93.235:8010/"

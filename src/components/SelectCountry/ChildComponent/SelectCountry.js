@@ -20,6 +20,7 @@ import {
   VALUE_SA_IMAGE_UPLOAD_URL_DEV,
   VALUE_TH_ASSETS_URL_DEV,
   VALUE_TH_BASE_URL_DEV,
+  VALUE_TH_IMAGE_UPLOAD_URL_DEV,
 } from '../../../utils/AppConstants';
 import Utils from '../../../utils/Utils';
 import {
@@ -144,7 +145,7 @@ class SelectCountry extends Component {
                           setSessionField('assetsUrl', VALUE_TH_ASSETS_URL_DEV),
                         );
                         store.dispatch(
-                          setSessionField('imageUrl', VALUE_TH_ASSETS_URL_DEV),
+                          setSessionField('imageUrl', VALUE_TH_IMAGE_UPLOAD_URL_DEV),
                         );
                       }
                       reset('SignIn');

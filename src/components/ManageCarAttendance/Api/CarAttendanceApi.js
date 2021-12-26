@@ -172,7 +172,7 @@ const CarAttendanceApi = {
       const token = store.getState().session.user.AuthenticationToken;
       const imageUrl = store.getState().session.imageUrl;
 
-
+console.log("imageUrlimageUrlimageUrl ===============>>>>>> ",imageUrl)
 
 
       let xmls = `<?xml version="1.0" encoding="utf-8"?>

@@ -392,7 +392,9 @@ console.log(hh + ":" + mm + ":" + ss);
       EmployeeId:EmployeeID,
       MarkInTime:"",
       MarkOutTime:"",
-      projectID:0
+      projectID:0,
+      workTypeID:0,
+      remarks:""
     };
 
     
@@ -448,7 +450,9 @@ console.log(hh + ":" + mm + ":" + ss);
       EmployeeId:EmployeeID,
       MarkInTime:"",
       MarkOutTime:isOldDateMarkout?oldMarkoutDateAndTime:"",
-      projectID:projectId
+      projectID:projectId,
+      workTypeID:0,
+      remarks:""
     };
 
     ProgressDialog.show();
@@ -476,11 +480,21 @@ console.log(hh + ":" + mm + ":" + ss);
           })
           } else {
             const message = jsonResponse.Massage;
-            alert(message);
+            const ErrorMessage = jsonResponse.ErrorMessage;
+            if(ErrorMessage){
+            alert(ErrorMessage);
+            }else if(message){
+              alert(message);
+            }
           }
           ProgressDialog.hide();
         },
-        () => {
+        (err) => {
+
+          console.log('\n errerrerr', err);
+          if(err){
+            alert(err);
+          }
           ProgressDialog.hide();
         },
       );

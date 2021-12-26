@@ -220,7 +220,7 @@ class StartTrip extends Component {
       Location:latLang,
        Remarks:"=",
        Time:_date,
-        Address:"Key Need to setto get address",
+        Address:"Key Need to set to get address",
         EmployeeID
        }
 
@@ -271,7 +271,7 @@ class StartTrip extends Component {
     }
 
 
-    const params = {
+    let params = {
       EmployeeId:EmployeeID,
       DocumentName: res?.FileName || "",
       DocumentPath: res?.FilePath || "",
@@ -294,7 +294,10 @@ class StartTrip extends Component {
       MarkType: 1,
       AttendanceType: attendanceTypeId || 0
     }
-    console.log("params", params)
+
+
+
+    console.log("params =========================>>>>>>>>>>>", params)
     CarAttendanceApi.InsertDailyAttendanceForVehicle(params, (res) => {
       if (res) {
        subscribeForLocationAndRequestService()

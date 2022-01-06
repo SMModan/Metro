@@ -1,33 +1,20 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Modal, Image, BackHandler} from 'react-native';
-
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack, push, replace} from '../../navigation/Navigator';
-import {Images, Colors, Utils} from '../../utils';
+import React, { Component } from 'react';
+import { BackHandler, Image, View } from 'react-native';
+import { Card, Text } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { replace } from '../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Button,
-  ChipViewContainer,
-  CustomDatePicker,
-  CustomPicker,
-  FloatingEditText,
-  MainContainer,
-  ScrollContainer,
-  ViewWithTitle,
-  ImageButton,
-  Checkbox,
-  ProgressDialog,
-  Clickable,
+  Button, Clickable, FloatingEditText,
+  MainContainer, ProgressDialog, ScrollContainer,
+  ViewWithTitle
 } from '../common';
-import {RadioButton, Text,Card} from 'react-native-paper';
-import styles from './styles/Reimbursement.style';
-
-import PhotoPicker from '../common/PhotoPicker';
-import MoreReimbursement from './MoreReimbursement';
 import ReimbursementApi from './Api/ReimbursementApi';
 import EditMoreReimbursement from './EditMoreReimbursement';
-import { AddmoreInfoDialogue } from '../Customer/BaseComponents';
+import MoreReimbursement from './MoreReimbursement';
+
+
 class EditReimbursement extends Component {
   state = {
     loading: false,

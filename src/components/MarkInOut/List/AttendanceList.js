@@ -1,11 +1,11 @@
 import moment from 'moment';
-import React, {Component} from 'react';
-import {ActivityIndicator, BackHandler, Image, Text, View} from 'react-native';
-import {Card, FAB} from 'react-native-paper';
-import {connect} from 'react-redux';
-import {store} from '../../../App';
-import {goBack, push, replace, reset} from '../../../navigation/Navigator';
-import {Colors, Images, Utils} from '../../../utils';
+import React, { Component } from 'react';
+import { ActivityIndicator, BackHandler, Image, Text, View } from 'react-native';
+import { Card, FAB } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { replace, reset } from '../../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
   Clickable,
@@ -13,10 +13,10 @@ import {
   MainContainer,
   MyFlatList,
   ProgressDialog,
-  ScrollContainer,
+  ScrollContainer
 } from '../../common';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
-import {askForLocationPermission} from '../../ManageCarAttendance/LocationAndRequestService';
+import { askForLocationPermission } from '../../ManageCarAttendance/LocationAndRequestService';
 import AttendanceApi from '../Api/AttendanceApi';
 
 class AttendanceList extends Component {

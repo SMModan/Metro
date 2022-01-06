@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Text, Dimensions } from 'react-native'
-import Dialog, { DialogContent, DialogTitle, DialogFooter, DialogButton } from 'react-native-popup-dialog'
 import { View } from 'native-base';
-import { Images, Colors, FontName, FontSize } from '../../utils';
+import React, { Component } from 'react';
+import { Dimensions, Text } from 'react-native';
+import Dialog, { DialogButton, DialogContent, DialogFooter, DialogTitle } from 'react-native-popup-dialog';
+import { Colors } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 
 

@@ -1,13 +1,12 @@
+import { decode } from 'html-entities';
 import React, { Component } from 'react';
 import {
-  StyleSheet, useWindowDimensions, View
+  StyleSheet, View
 } from 'react-native';
-import RenderHTML from "react-native-render-html";
+import { WebView } from 'react-native-webview';
 import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import { MainContainer } from '../../common';
-import {decode} from 'html-entities'
-import { WebView } from 'react-native-webview';
 
 export default class AnnouncementDetails extends Component {
 

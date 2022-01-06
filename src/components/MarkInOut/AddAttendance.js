@@ -1,37 +1,23 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Image, BackHandler} from 'react-native';
-
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack, push, replace, reset} from '../../navigation/Navigator';
-import {Images, Colors, Utils} from '../../utils';
-import ResponsivePixels from '../../utils/ResponsivePixels';
-import CustomTimePicker from '../common/CustomTimePicker';
+import React, { Component } from 'react';
+import { BackHandler, Image, View } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-
-import {
-  Button,
-  ChipViewContainer,
-  CustomDatePicker,
-  CustomPicker,
-  FloatingEditText,
-  MainContainer,
-  ScrollContainer,
-  ViewWithTitle,
-  Clickable,
-  Checkbox,
-  ProgressDialog,
-  AlertDialog,
-} from '../common';
-import {Card, RadioButton, Text} from 'react-native-paper';
-
-import PhotoPicker from '../common/PhotoPicker';
-import AttendanceApi from './Api/AttendanceApi';
-import {store} from '../../App';
 import Geolocation from 'react-native-geolocation-service';
+import { Card, Text } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../App';
+import { replace, reset } from '../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../utils';
+import ResponsivePixels from '../../utils/ResponsivePixels';
+import {
+  AlertDialog, Button, CustomPicker, MainContainer, ProgressDialog, ScrollContainer,
+  ViewWithTitle
+} from '../common';
+import CustomTimePicker from '../common/CustomTimePicker';
+import AttendanceApi from './Api/AttendanceApi';
 
-import moment from 'moment';
-import { utils } from '@react-native-firebase/app';
+
+
+
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"

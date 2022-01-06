@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack} from '../../navigation/Navigator';
-import {Images, Colors, Utils} from '../../utils';
+import React, { Component } from 'react';
+import { Image, ImageBackground, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { strings } from '../../language/Language';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Button,
@@ -13,12 +13,11 @@ import {
   MainContainer,
   ProgressDialog,
   ScrollContainer,
-  ViewWithTitle,
+  ViewWithTitle
 } from '../common';
 import PhotoPicker from '../common/PhotoPicker';
-import {Text} from 'react-native-paper';
-import styles from './styles/Reimbursement.style';
 import ReimbursementApi from './Api/ReimbursementApi';
+import styles from './styles/Reimbursement.style';
 
 class MoreReimbursement extends Component {
   state = {

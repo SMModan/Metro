@@ -1,25 +1,20 @@
-import _ from 'lodash';
 import moment from 'moment';
-import React, {Component} from 'react';
-import {ActivityIndicator, Image, Text, View} from 'react-native';
+import React, { Component } from 'react';
+import { ActivityIndicator, Image, Text, View } from 'react-native';
 import {
-  Button as DialogButton,
-  Dialog,
+  Button as DialogButton, Card, Dialog,
   Portal,
-  TextInput,
+  TextInput
 } from 'react-native-paper';
-import {Card, FAB} from 'react-native-paper';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import { store } from '../../../App';
-import {push} from '../../../navigation/Navigator';
-import {Colors, Images} from '../../../utils';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
-  Clickable,
+  Button, Clickable,
   MainContainer,
   MyFlatList,
-  ProgressDialog,
-  Button,
+  ProgressDialog
 } from '../../common';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
 import LeaveApi from '../Api/LeaveApi';

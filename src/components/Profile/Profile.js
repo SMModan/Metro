@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {Text, View, Image} from 'react-native';
-import {Card} from 'react-native-paper';
+import React, { Component } from 'react';
+import { Image, Text, View } from 'react-native';
+import { Card } from 'react-native-paper';
 import { goBack } from '../../navigation/Navigator';
-
-import {Images, Colors} from '../../utils';
+import { Colors, Images } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
-import {MainContainer, ProgressDialog} from '../common';
+import { MainContainer, ProgressDialog } from '../common';
 import UserProfileApi from './Api/UserProfileApi';
+
 
 export default class Profile extends Component {
 constructor(props) {

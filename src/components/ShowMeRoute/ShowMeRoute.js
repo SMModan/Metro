@@ -1,11 +1,8 @@
-import { isAndroid } from '@nativescript/core';
 import React, { Component } from 'react';
 import { Dimensions, Linking, Platform, View } from 'react-native';
-import { getDeviceType } from 'react-native-device-info';
 import Geolocation from 'react-native-geolocation-service';
 import { Card } from 'react-native-paper';
 import StepIndicator from 'react-native-step-indicator';
-import { goBack } from '../../navigation/Navigator';
 import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {

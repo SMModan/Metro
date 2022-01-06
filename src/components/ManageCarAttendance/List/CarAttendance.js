@@ -1,43 +1,25 @@
-import React, {Component} from 'react';
+import _ from 'lodash';
+import React, { Component } from 'react';
+import { BackHandler, Dimensions, Image, Text, View } from 'react-native';
+import { Card, FAB } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { replace, reset } from '../../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../../utils';
+import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
-  View,
-  Text,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-  Alert,
-  Animated,
-  Dimensions,
-  BackHandler,
-} from 'react-native';
-import {
+  Button,
   Clickable,
+  CustomDatePicker,
   MainContainer,
   MyFlatList,
-  CustomPicker,
   ProgressDialog,
-  Button,
-  CustomDatePicker,
-  ScrollContainer,
+  ScrollContainer
 } from '../../common';
-import {connect} from 'react-redux';
 import styles from '../../HomeDetails/styles/HelpDesk.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors, FontName, Utils} from '../../../utils';
-import {Chip, Card, Title, FAB} from 'react-native-paper';
-import AppointmentApi from '../Api/CarAttendanceApi';
-import _ from 'lodash';
-import {goBack, push, replace, reset} from '../../../navigation/Navigator';
-import ResponsivePixels from '../../../utils/ResponsivePixels';
-import CheckIn from '../../CheckInOut/CheckIn';
-import {Image} from 'react-native';
-
-import {DrawerActions} from '@react-navigation/native';
-import {store} from '../../../App';
 import CarAttendanceApi from '../Api/CarAttendanceApi';
-import {setSessionField} from '../../../reducers/SessionReducer';
-import backgroundServer from 'react-native-background-actions';
-import {askForLocationPermission} from '../LocationAndRequestService';
+import { askForLocationPermission } from '../LocationAndRequestService';
+
 const {width} = Dimensions.get('window');
 
 class CarAttendance extends Component {
@@ -147,21 +129,24 @@ class CarAttendance extends Component {
     );
   };
 
-  
-componentWillMount() {
-  BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
-}
+  componentWillMount() {
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
 
-componentWillUnmount() {
-  BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
-}
+  componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+  }
 
-handleBackButtonClick() {
-  reset("Home")
-  return true;
-}
-
-
+  handleBackButtonClick() {
+    reset('Home');
+    return true;
+  }
 
   splitDate = strDate => {
     let date = '';
@@ -418,7 +403,7 @@ handleBackButtonClick() {
             image: Images.ic_BackWhite,
             onPress: () => {
               console.log('this.props.navigation', this.props.navigation);
-              reset("Home")
+              reset('Home');
             },
           },
           title: 'Car Attendance',
@@ -551,20 +536,18 @@ handleBackButtonClick() {
                 renderItem={item => this.renderCell(item)}
                 style={{flex: 1, margin: ResponsivePixels.size5}}
                 loading={loading}
-              refreshing={refreshing}
+                refreshing={refreshing}
                 onRefresh={() => {
-
                   this.setState(
                     {
                       refreshing: false,
-                      loading:false,
-                      listData:[]
+                      loading: false,
+                      listData: [],
                     },
                     () => {
                       this.getAllList();
                     },
-                    );
-
+                  );
                 }}
               />
             </View>

@@ -1,21 +1,13 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack} from '../../navigation/Navigator';
-import {Images, Colors, Utils} from '../../utils';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { connect } from 'react-redux';
+import { strings } from '../../language/Language';
+import { Colors, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Button,
-  Clickable,
-  CustomPicker,
-  FloatingEditText,
-  MainContainer,
-  ProgressDialog,
-  ScrollContainer,
-  ViewWithTitle,
+  Button, CustomPicker,
+  FloatingEditText, ViewWithTitle
 } from '../common';
-import PhotoPicker from '../common/PhotoPicker';
 
 class MoreCashAdvance extends Component {
   state = {

@@ -1,41 +1,23 @@
-import React, {Component} from 'react';
-import _ from 'lodash';
+import React, { Component } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  PermissionsAndroid,
-  Platform,
-  ScrollView,
-  Text,
-  View,
+  Alert, PermissionsAndroid,
+  Platform, View
 } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import Geolocation from 'react-native-geolocation-service';
 import {
   Button,
-  Button as DialogButton,
-  Card,
-  Chip,
-  Dialog,
-  FAB,
-  Portal,
-  TextInput,
-  Title,
+  Button as DialogButton, Dialog, Portal,
+  TextInput
 } from 'react-native-paper';
-import {AirbnbRating} from 'react-native-ratings';
-import {connect} from 'react-redux';
-import {Colors, Images, Utils} from '../../utils';
+import { connect } from 'react-redux';
+import { push } from '../../navigation/Navigator';
+import { Colors, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Clickable,
-  FloatingEditText,
-  MainContainer,
-  MyFlatList,
-  ProgressDialog,
+  ProgressDialog
 } from '../common';
 import CheckInApi from './Api/CheckInApi';
-import { push } from '../../navigation/Navigator';
 
 export class CheckIn extends Component {
 

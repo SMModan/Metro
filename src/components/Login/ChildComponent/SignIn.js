@@ -59,17 +59,22 @@ class SignIn extends Component {
     );
   };
 
-  
   componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   }
-  
+
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
   }
-  
+
   handleBackButtonClick() {
-    reset("SelectCountry")
+    reset('SelectCountry');
     return true;
   }
 

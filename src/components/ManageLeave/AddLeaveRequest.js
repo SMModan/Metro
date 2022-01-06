@@ -1,32 +1,26 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Image} from 'react-native';
-
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack, push, reset} from '../../navigation/Navigator';
-import {Images, Colors, Utils} from '../../utils';
+import moment from 'moment';
+import React, { Component } from 'react';
+import { Image, ImageBackground, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../App';
+import { strings } from '../../language/Language';
+import { goBack } from '../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Button,
-  ChipViewContainer,
-  CustomDatePicker,
+  Button, Checkbox, Clickable, CustomDatePicker,
   CustomPicker,
   FloatingEditText,
-  MainContainer,
-  ScrollContainer,
-  ViewWithTitle,
-  Clickable,
-  Checkbox,
-  ProgressDialog,
+  MainContainer, ProgressDialog, ScrollContainer,
+  ViewWithTitle
 } from '../common';
-import {RadioButton, Text} from 'react-native-paper';
-
 import PhotoPicker from '../common/PhotoPicker';
 import LeaveApi from './Api/LeaveApi';
-import {store} from '../../App';
 import styles from './styles/Leave.style';
 
-import moment from 'moment';
+
+
 class AddLeaveRequest extends Component {
   state = {
     fromDate: new Date(),

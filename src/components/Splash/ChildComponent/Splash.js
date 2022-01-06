@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Image, View, StatusBar, StyleSheet } from 'react-native'
-import { connect } from 'react-redux'
-import * as actions from '../../../actions/CommonActions'
-import { Images, FontName, FontSize, Colors } from '../../../utils';
+import React, { Component } from 'react';
+import { Image, View } from 'react-native';
+import { connect } from 'react-redux';
+import * as actions from '../../../actions/CommonActions';
+import { Colors, Images } from '../../../utils';
 
 
 class Splash extends Component {

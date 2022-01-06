@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Images, Colors, FontName, FontSize } from '../../../utils';
+import { Colors, FontName, FontSize } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 
 export default styles = StyleSheet.create({

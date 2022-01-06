@@ -3,17 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { store } from '../App';
-import AddAppointments from '../components/Appointments/AddAppointments';
-import Appointments from '../components/Appointments/List/Appointments';
-import AddContacts from '../components/Contacts/AddContacts';
-import Contacts from '../components/Contacts/List/Contacts';
-import AddCustomer from '../components/Customer/AddCustomer';
-import EditCustomer from '../components/Customer/EditCustomer';
-import Customer from '../components/Customer/List/Customer';
-import AddHelpDesk from '../components/HelpDesk/AddHelpDesk';
-import HelpDesk from '../components/HelpDesk/List/HelpDesk';
-import MyCheckin from '../components/HelpDesk/List/MyCheckin';
-import UpdateHelpDesk from '../components/HelpDesk/UpdateHelpDesk';
 import AddNotes from '../components/Home/ChildComponent/AddNotes';
 import AnnouncementDetails from '../components/Home/ChildComponent/AnnouncementDetails';
 import DrawerHome from '../components/Home/ChildComponent/DrawerHome';
@@ -36,22 +25,11 @@ import Reimbursement from '../components/ManageReimbursement/List/Reimbursement'
 import ReportList from '../components/ManageReports/List/ReportList';
 import AddAttendance from '../components/MarkInOut/AddAttendance';
 import AttendanceList from '../components/MarkInOut/List/AttendanceList';
-import AddOpportunity from '../components/Opportunity/AddOpportunity/AddOpportunity';
-import OppAttachment from '../components/Opportunity/AddOpportunity/attachment/OppAttachment';
-import AddOppContact from '../components/Opportunity/AddOpportunity/customer/AddOppContact/AddOppContact';
-import Opportunity from '../components/Opportunity/list/Opportunity';
 import Profile from '../components/Profile/Profile';
-import QuotationList from '../components/Quotation/QuotationList';
-import QuotationView from '../components/Quotation/QuotationView';
 import SelectCountry from '../components/SelectCountry/ChildComponent/SelectCountry';
 import ShowMeRoute from '../components/ShowMeRoute/ShowMeRoute';
 /////Skyward
 import Splash from '../components/Splash/ChildComponent/Splash';
-import AddNewTask from '../components/Task/AddNewTask';
-import AddRemarks from '../components/Task/AddRemarks';
-import TaskAttachment from '../components/Task/attachment/TaskAttachment';
-import TaskList from '../components/Task/List/TaskList';
-import MainAddTask from '../components/Task/MainAddTask';
 import { navigationRef } from './Navigator';
 
 
@@ -109,28 +87,6 @@ export default () => {
 
 
 
-          <Stack.Screen component={HelpDesk} name="HelpDesk" />
-          <Stack.Screen component={AddHelpDesk} name="AddHelpDesk" />
-          <Stack.Screen component={UpdateHelpDesk} name="UpdateHelpDesk" />
-          <Stack.Screen component={Opportunity} name="Opportunity" />
-          <Stack.Screen component={AddOpportunity} name="AddOpportunity" />
-          <Stack.Screen component={AddOppContact} name="AddOppContact" />
-          <Stack.Screen component={Appointments} name="Appointments" />
-          <Stack.Screen component={AddAppointments} name="AddAppointments" />
-          <Stack.Screen component={OppAttachment} name="OppAttachment" />
-          <Stack.Screen component={TaskAttachment} name="TaskAttachment" />
-          <Stack.Screen component={Customer} name="Customer" />
-          <Stack.Screen component={Contacts} name="Contacts" />
-          <Stack.Screen component={AddContacts} name="AddContacts" />
-          <Stack.Screen component={AddCustomer} name="AddCustomer" />
-          <Stack.Screen component={EditCustomer} name="EditCustomer" />
-          <Stack.Screen component={TaskList} name="Tasks" />
-          <Stack.Screen component={QuotationList} name="Quotation" />
-          <Stack.Screen component={QuotationView} name="QuotationView" />
-          <Stack.Screen component={MainAddTask} name="MainAddTask" />
-          <Stack.Screen component={AddNewTask} name="AddNewTask" />
-          <Stack.Screen component={AddRemarks} name="AddRemarks" />
-          <Stack.Screen component={MyCheckin} name="MyCheckInOut" />
         </Stack.Navigator>
       </NavigationContainer>
     )

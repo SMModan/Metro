@@ -1,29 +1,18 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Image, BackHandler} from 'react-native';
-
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack, push, replace, reset} from '../../navigation/Navigator';
-import {Images, Colors,Utils} from '../../utils';
+import React, { Component } from 'react';
+import { BackHandler, View } from 'react-native';
+import { connect } from 'react-redux';
+import { replace, reset } from '../../navigation/Navigator';
+import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Button,
-  ChipViewContainer,
-  CustomDatePicker,
-  CustomPicker,
+  Button, Checkbox, CustomPicker,
   FloatingEditText,
-  MainContainer,
-  ScrollContainer,
-  ViewWithTitle,
-  Clickable,
-  Checkbox,
-  ProgressDialog,
+  MainContainer, ProgressDialog, ScrollContainer,
+  ViewWithTitle
 } from '../common';
-import {RadioButton, Text} from 'react-native-paper';
-
-import PhotoPicker from '../common/PhotoPicker';
-import CashAdvance from './List/CashAdvance';
 import CashAdvanceApi from './Api/CashAdvanceApi';
+
+
 class EditCashAdvance extends Component {
   state = {
     loading: false,

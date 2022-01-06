@@ -1,35 +1,29 @@
+import { Label } from 'native-base';
 import React, { Component } from 'react';
-import { View, ImageBackground, Image, Alert, BackHandler } from 'react-native';
-
+import { Alert, BackHandler, Image, ImageBackground, View } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import { Text } from 'react-native-paper';
 import { connect } from 'react-redux';
-import { strings } from '../../language/Language';
-import { goBack, push, replace, reset } from '../../navigation/Navigator';
+import { store } from '../../App';
+import { replace, reset } from '../../navigation/Navigator';
+import { setSessionField } from '../../reducers/SessionReducer';
 import { Colors, Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
   Button,
-  ChipViewContainer,
-  CustomDatePicker,
+  ChipViewContainer, Clickable, CustomDatePicker,
   CustomPicker,
   FloatingEditText,
-  MainContainer,
-  ScrollContainer,
-  ViewWithTitle,
-  Clickable,
-  ProgressDialog,
+  MainContainer, ProgressDialog, ScrollContainer,
+  ViewWithTitle
 } from '../common';
-import { RadioButton, Text } from 'react-native-paper';
-import styles from './styles/Attendance.style';
-
 import PhotoPicker from '../common/PhotoPicker';
 import CarAttendanceApi from './Api/CarAttendanceApi';
-import Geolocation from 'react-native-geolocation-service';
+import { subscribeForLocationAndRequestService } from './LocationAndRequestService';
+import styles from './styles/Attendance.style';
 
-import { store } from '../../App';
-import { askForLocationPermission, subscribeForLocationAndRequestService } from './LocationAndRequestService';
-import Geocoder from 'react-native-geocoding';
-import { setSessionField } from '../../reducers/SessionReducer';
-import { Label } from 'native-base';
+
+
 class StartTrip extends Component {
   state = {
     circleList: [],

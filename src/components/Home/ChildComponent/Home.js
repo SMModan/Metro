@@ -1,32 +1,19 @@
-import React, {Component} from 'react';
-import {View, Text, FlatList, Image, Platform, BackHandler} from 'react-native';
-import {
-  MainContainer,
-  ScrollContainer,
-  Clickable,
-  Button,
-  EditText,
-  ProgressDialog,
-  ProgressView,
-  MyFlatList,
-} from '../../common';
-import {connect} from 'react-redux';
-import styles from '../styles/Home.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors, Utils} from '../../../utils';
-import {syncAllData} from '../../../utils/SyncDataManager';
-import {push, reset} from '../../../navigation/Navigator';
-import {Alert} from 'react-native';
-import {store} from '../../../App';
-import {setSessionField} from '../../../reducers/SessionReducer';
-import loginApi from '../../Login/apis/LoginApis';
-
+import React, { Component } from 'react';
+import { Alert, Animated, BackHandler, Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { Card } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { push } from '../../../navigation/Navigator';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
-import {Card} from 'react-native-paper';
-import HomeApis from '../apis/HomeApis';
-
-import {TouchableOpacity, Animated, ScrollView, Dimensions} from 'react-native';
+import {
+  MainContainer, MyFlatList, ProgressDialog
+} from '../../common';
 import { askForLocationPermission } from '../../ManageCarAttendance/LocationAndRequestService';
+import HomeApis from '../apis/HomeApis';
+import styles from '../styles/Home.style';
+
+
 const {width} = Dimensions.get('window');
 
 class Home extends Component {

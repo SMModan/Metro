@@ -3,7 +3,7 @@ import {
   INSERT_USER_DEVICE_TOKEN,
   LOGOUTAPI,
   USERPERMISSION,
-  USER_AUTHENTICATION,
+  USER_AUTHENTICATION
 } from '../../../network/ApiConstants';
 import apiCall, { METHOD } from '../../../network/ApiService';
 

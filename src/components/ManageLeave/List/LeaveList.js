@@ -1,9 +1,6 @@
-import _ from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
-import {
-  ActivityIndicator, Image, Text, View
-} from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { Card, FAB } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { push } from '../../../navigation/Navigator';

@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Alert,
-  ScrollView,
-  TextInput,
-  FlatList,
-  Button
+  FlatList, Image, StyleSheet,
+  Text, TextInput, TouchableOpacity, View
 } from 'react-native';
 import { Card } from 'react-native-paper';
 import { store } from '../../../App';
 import { setSessionField } from '../../../reducers/SessionReducer';
-import { Images,Colors } from '../../../utils';
+import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
-import { Clickable, ImageButton, MainContainer,ProgressDialog } from '../../common';
+import { MainContainer } from '../../common';
 
 
 export default class AddNotes extends Component {

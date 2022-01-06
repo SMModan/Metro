@@ -1,27 +1,18 @@
-import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  ScrollView,
-  ActivityIndicator,
-  BackHandler,
-} from 'react-native';
-import {Clickable, MainContainer, MyFlatList, ProgressDialog} from '../../common';
-import {connect} from 'react-redux';
-import styles from '../../HomeDetails/styles/HelpDesk.style';
-import {strings} from '../../../language/Language';
-import {Images, Colors, FontName} from '../../../utils';
-import {Chip, Card, Title, Button, FAB} from 'react-native-paper';
-import AppointmentApi from '../Api/ReimbursementApi';
 import _ from 'lodash';
-import {goBack, push, replace} from '../../../navigation/Navigator';
-import ResponsivePixels from '../../../utils/ResponsivePixels';
-import CheckIn from '../../CheckInOut/CheckIn';
-import {Image} from 'react-native';
-import ReimbursementApi from '../Api/ReimbursementApi';
-import { store } from '../../../App';
 import moment from 'moment';
+import React, { Component } from 'react';
+import {
+  BackHandler, Image, Text, View
+} from 'react-native';
+import { Card, FAB } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { push, replace } from '../../../navigation/Navigator';
+import { Colors, Images } from '../../../utils';
+import ResponsivePixels from '../../../utils/ResponsivePixels';
+import { Clickable, MainContainer, MyFlatList, ProgressDialog } from '../../common';
+import styles from '../../HomeDetails/styles/HelpDesk.style';
+import ReimbursementApi from '../Api/ReimbursementApi';
 
 class Reimbursement extends Component {
   state = {

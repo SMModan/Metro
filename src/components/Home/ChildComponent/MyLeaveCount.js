@@ -1,17 +1,12 @@
-import React, {Component} from 'react';
-import {View, Text, FlatList, Image} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View } from 'react-native';
+import { connect } from 'react-redux';
+import { Images } from '../../../utils';
 import {
-  MainContainer,
-  ScrollContainer,
-  Clickable,
-  Button,
-  EditText,
-  ProgressDialog,
+  MainContainer, ProgressDialog
 } from '../../common';
-import {connect} from 'react-redux';
-import styles from '../styles/Home.style';
-import {Images, Colors} from '../../../utils';
 import HomeApis from '../apis/HomeApis';
+import styles from '../styles/Home.style';
 
 class MyLeaveCount extends Component {
 

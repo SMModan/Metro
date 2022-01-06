@@ -1,13 +1,11 @@
 import _ from 'lodash';
 import moment from 'moment';
 import React, { Component } from 'react';
-import {
-  ActivityIndicator, BackHandler, Image, Text, View
-} from 'react-native';
+import { BackHandler, Image, Text, View } from 'react-native';
 import { Card, FAB } from 'react-native-paper';
 import { connect } from 'react-redux';
 import { store } from '../../../App';
-import { goBack, push, replace, reset } from '../../../navigation/Navigator';
+import { replace } from '../../../navigation/Navigator';
 import { Colors, Images } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import { Clickable, MainContainer, MyFlatList, ProgressDialog } from '../../common';

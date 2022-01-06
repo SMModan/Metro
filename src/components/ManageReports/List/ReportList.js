@@ -1,21 +1,16 @@
-import _ from 'lodash';
 import moment from 'moment';
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  ActivityIndicator,
-  Animated,
   Dimensions,
   Image,
   Linking,
-  Text,
-  TouchableOpacity,
-  View,
+  Text, View
 } from 'react-native';
-import {Card} from 'react-native-paper';
-import {connect} from 'react-redux';
+import { Card } from 'react-native-paper';
+import { connect } from 'react-redux';
 import { store } from '../../../App';
 import { goBack } from '../../../navigation/Navigator';
-import {Colors, Images, Utils} from '../../../utils';
+import { Colors, Images, Utils } from '../../../utils';
 import ResponsivePixels from '../../../utils/ResponsivePixels';
 import {
   Clickable,
@@ -24,7 +19,7 @@ import {
   MainContainer,
   MyFlatList,
   ProgressDialog,
-  ScrollContainer,
+  ScrollContainer
 } from '../../common';
 import CustomTimePicker from '../../common/CustomTimePicker';
 import styles from '../../HomeDetails/styles/HelpDesk.style';

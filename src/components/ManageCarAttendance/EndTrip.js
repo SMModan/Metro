@@ -1,34 +1,26 @@
-import React, {Component} from 'react';
-import {View, ImageBackground, Image, Alert, BackHandler} from 'react-native';
-
-import {connect} from 'react-redux';
-import {strings} from '../../language/Language';
-import {goBack, push, replace, reset} from '../../navigation/Navigator';
-import {Images, Utils} from '../../utils';
+import { Label } from 'native-base';
+import React, { Component } from 'react';
+import { Alert, BackHandler, Image, ImageBackground, View } from 'react-native';
+import backgroundServer from 'react-native-background-actions';
+import Geolocation from 'react-native-geolocation-service';
+import { Text } from 'react-native-paper';
+import { connect } from 'react-redux';
+import { store } from '../../App';
+import { replace, reset } from '../../navigation/Navigator';
+import { setSessionField } from '../../reducers/SessionReducer';
+import { Images, Utils } from '../../utils';
 import ResponsivePixels from '../../utils/ResponsivePixels';
 import {
-  Button,
-  ChipViewContainer,
-  CustomDatePicker,
-  CustomPicker,
-  FloatingEditText,
-  MainContainer,
-  ScrollContainer,
-  ViewWithTitle,
-  Clickable,
-  ProgressDialog,
+  Button, Clickable, CustomDatePicker, FloatingEditText,
+  MainContainer, ProgressDialog, ScrollContainer,
+  ViewWithTitle
 } from '../common';
-import {RadioButton, Text} from 'react-native-paper';
-import styles from './styles/Attendance.style';
-
 import PhotoPicker from '../common/PhotoPicker';
 import CarAttendanceApi from './Api/CarAttendanceApi';
-import {store} from '../../App';
-import backgroundServer from 'react-native-background-actions';
-import {setSessionField} from '../../reducers/SessionReducer';
-import Geolocation from 'react-native-geolocation-service';
 import { unSubscribeForLocation } from './LocationAndRequestService';
-import { Label } from 'native-base';
+import styles from './styles/Attendance.style';
+
+
 
 class EndTrip extends Component {
   state = {

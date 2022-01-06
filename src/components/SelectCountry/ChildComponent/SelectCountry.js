@@ -1,13 +1,11 @@
-import _ from 'lodash';
-import React, {Component} from 'react';
-import {Image, Platform, Text, View} from 'react-native';
-import {connect} from 'react-redux';
-import session from 'redux-persist/lib/storage/session';
-import {store} from '../../../App';
-import {strings} from '../../../language/Language';
-import {push, reset} from '../../../navigation/Navigator';
-import {setSessionField} from '../../../reducers/SessionReducer';
-import {Colors, Images} from '../../../utils';
+import React, { Component } from 'react';
+import { Image, Text, View } from 'react-native';
+import { connect } from 'react-redux';
+import { store } from '../../../App';
+import { strings } from '../../../language/Language';
+import { reset } from '../../../navigation/Navigator';
+import { setSessionField } from '../../../reducers/SessionReducer';
+import { Colors, Images } from '../../../utils';
 import {
   VALUE_INDIA_ASSETS_URL_DEV,
   VALUE_INDIA_BASE_URL_DEV,
@@ -20,17 +18,10 @@ import {
   VALUE_SA_IMAGE_UPLOAD_URL_DEV,
   VALUE_TH_ASSETS_URL_DEV,
   VALUE_TH_BASE_URL_DEV,
-  VALUE_TH_IMAGE_UPLOAD_URL_DEV,
+  VALUE_TH_IMAGE_UPLOAD_URL_DEV
 } from '../../../utils/AppConstants';
-import Utils from '../../../utils/Utils';
 import {
-  Button,
-  ChipViewContainer,
-  CustomPicker,
-  FloatingEditText,
-  MainContainer,
-  ProgressDialog,
-  ScrollContainer,
+  ChipViewContainer, MainContainer, ScrollContainer
 } from '../../common';
 import styles from '../styles/SelectCountry.style';
 

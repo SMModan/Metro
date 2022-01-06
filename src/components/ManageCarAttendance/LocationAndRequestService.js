@@ -1,11 +1,11 @@
-import backgroundServer from "react-native-background-actions"
-import { PERMISSIONS, request, requestMultiple } from "react-native-permissions";
+import { getDistance } from "geolib";
+import { Platform } from "react-native";
+import backgroundServer from "react-native-background-actions";
 import Geolocation from 'react-native-geolocation-service';
+import { PERMISSIONS, requestMultiple } from "react-native-permissions";
 import { store } from "../../App";
-import { AppState, Linking, Platform } from "react-native";
 import { setSessionField } from "../../reducers/SessionReducer";
 import { Colors } from "../../utils";
-import { getDistance } from "geolib"
 export const subscribeForLocationAndRequestService = () => {
     const options = {
         taskName: 'MetroBgTask',

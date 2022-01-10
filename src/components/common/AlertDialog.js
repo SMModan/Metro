@@ -60,7 +60,7 @@ export default class AlertDialog extends Component {
     return (
 
       <Dialog
-        visible={visible}
+        visible={visible || false}
         dialogStyle={{ margin: 24 }}
         onTouchOutside={() => {
           if (cancelable) {
@@ -89,11 +89,11 @@ export default class AlertDialog extends Component {
           </DialogFooter>
         }
         dialogTitle={
-          title ? <DialogTitle style={{ color: Colors.Black,fontWeight: 'bold', fontSize: ResponsivePixels.size20 ,backgroundColor: 'white' }} title={title}></DialogTitle> : undefined
+          title ? <DialogTitle style={{ color: Colors.Black, fontWeight: 'bold', fontSize: ResponsivePixels.size20, backgroundColor: 'white' }} title={title}></DialogTitle> : undefined
         }
       >
         <DialogContent style={{ backgroundColor: 'white', width: Dimensions.get('window').width - 80, justifyContent: 'center', alignItems: 'center' }}>
-          {message ? <Text style={{ fontSize: 16, marginTop: 10,textAlign:'center' }}>{message}</Text> : null}
+          {message ? <Text style={{ fontSize: 16, marginTop: 10, textAlign: 'center' }}>{message}</Text> : null}
           {children}
         </DialogContent>
       </Dialog>

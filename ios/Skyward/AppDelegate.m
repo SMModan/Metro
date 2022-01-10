@@ -31,18 +31,18 @@ static void InitializeFlipper(UIApplication *application) {
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
-
+  
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Skyward"
                                             initialProperties:nil];
-
+  
   if (@available(iOS 13.0, *)) {
-      rootView.backgroundColor = [UIColor systemBackgroundColor];
+    rootView.backgroundColor = [UIColor systemBackgroundColor];
   } else {
-      rootView.backgroundColor = [UIColor whiteColor];
+    rootView.backgroundColor = [UIColor whiteColor];
   }
-if ([FIRApp defaultApp] == nil) {
+  if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

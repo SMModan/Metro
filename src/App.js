@@ -40,7 +40,7 @@ export default class App extends Component {
     if (notif.notification && notif.notification.body) {
       const { body, title } = notif.notification
       this.notif.localNotif(body, title)
-       Alert.alert(title, body);
+      Alert.alert(title, body);
     }
     else if (notif.userInteraction) {
       navigate("Home", { screen: "Notifications" })

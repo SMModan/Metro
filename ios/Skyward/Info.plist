@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Skyward</string>
+	<string>Metro HRMS</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,18 +36,24 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>App needs your location to show the routes</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>App needs your location to show the routes</string>
+	<key>NSCameraUsageDescription</key>
+	<string>App needs camera access to attach photos on forms</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App needs photo library access to attach photos on forms</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>roboto_bold.ttf</string>
-		<string>roboto_light.ttf</string>
-		<string>roboto_medium.ttf</string>
-		<string>roboto_regular.ttf</string>
-		<string>sourcesanspro_black.ttf</string>
-		<string>sourcesanspro_bold.ttf</string>
-		<string>sourcesanspro_light.ttf</string>
-		<string>sourcesanspro_regular.ttf</string>
-		<string>sourcesanspro_semibold.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>SourceSansPro-Black.ttf</string>
+		<string>SourceSansPro-Bold.ttf</string>
+		<string>SourceSansPro-Light.ttf</string>
+		<string>SourceSansPro-Regular.ttf</string>
+		<string>SourceSansPro-SemiBold.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>

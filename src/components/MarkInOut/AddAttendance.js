@@ -270,10 +270,12 @@ console.log(hh + ":" + mm + ":" + ss);
     // const EmployeeID = store.getState().session.user.EmployeeID;
 
     const date = new Date()
-    const _date = `${date.getDate().toString().padStart(2, "0")}-${date.getMonth()+1}-${date.getFullYear()}`
-
+    const _month = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1)
+    const _date = `${date.getDate().toString().padStart(2, "0")}-${_month}-${date.getFullYear()}`
+    // 23-01-2022
 
     const {EmployeeID} = this.state;
+    // alert(date.getMonth())
     const params = {
       empID: EmployeeID,
       AttDate:_date
